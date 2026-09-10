@@ -77,17 +77,17 @@ one(r'EXPERTISE = \[\n.*?\n\]\n', '''EXPERTISE = [
 ''', True)
 one(r'SKILL_GROUPS = \[\n.*?\n\]\n', '''SKILL_GROUPS = [
     ("Salesforce Platform", [
-        ("salesforce", "Sales Cloud"), ("salesforce", "Service Cloud"), ("salesforce", "Health Cloud"),
-        ("salesforce", "Marketing Cloud"), ("salesforce", "OmniStudio"), ("salesforce", "Agentforce")]),
+        ("mono:SC", "Sales Cloud"), ("mono:SV", "Service Cloud"), ("mono:HC", "Health Cloud"),
+        ("mono:MC", "Marketing Cloud"), ("mono:OS", "OmniStudio"), ("mono:AF", "Agentforce")]),
     ("Systems &amp; Integration", [
-        ("oracle", "NetSuite ERP"), ("mulesoft", "MuleSoft"), ("postman", "APIs"),
-        ("snowflake", "Data models"), ("tableau", "Tableau"), ("okta", "IAM · SSO · MFA")]),
+        ("mono:NS", "NetSuite ERP"), ("mono:MS", "MuleSoft"), ("postman", "APIs"),
+        ("snowflake", "Data models"), ("mono:TB", "Tableau"), ("okta", "IAM · SSO · MFA")]),
     ("AI &amp; Automation", [
-        ("salesforce", "Einstein"), ("anthropic", "Claude API"), ("openai", "LLMs"),
+        ("mono:EI", "Einstein"), ("anthropic", "Claude API"), ("mono:AI", "LLMs"),
         ("zapier", "Workflow automation"), ("googlesheets", "Data readiness"), ("json", "Governance")]),
     ("Product &amp; Delivery", [
         ("jira", "Jira"), ("confluence", "Confluence"), ("miro", "Miro"),
-        ("figma", "Figma"), ("scrumalliance", "Scrum · SAFe"), ("slack", "Slack")]),
+        ("figma", "Figma"), ("scrumalliance", "Scrum · SAFe"), ("mono:SL", "Slack")]),
 ]
 ''', True)
 one(r'FEATURED = \[\n.*?\n\]\n', '''FEATURED = [
@@ -225,6 +225,7 @@ one(r'<div class="foot">\n.*?\n  </div>', f'''<div class="foot">
 # ---------------------------------------------------------------- scripts: drop the mascot game and the Loom embed
 one(r"\(function\(\)\{var b=document\.getElementById\('loomplay'\);.*?\n", "", True)
 one("(function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');", "(function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');if(!v||!b)return;")
+one('        \'<div class="icon hv" data-rv="zoom"><img src="https://cdn.simpleicons.org/\' + slug + \'/ffffff" alt="\' + label +', '        \'<div class="icon hv" data-rv="zoom"><img src="\' + (("data:image/svg+xml;utf8," + __import__("urllib.parse").parse.quote(\'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="none" stroke="#6C2BD9" stroke-width="3"/><text x="24" y="30" text-anchor="middle" font-family="Space Grotesk,Arial,sans-serif" font-size="17" font-weight="700" fill="#AAFF00">\' + slug[5:] + \'</text></svg>\')) if slug.startswith("mono:") else "https://cdn.simpleicons.org/" + slug + "/ffffff") + \'" alt="\' + label +')
 SPR = HERE / "assets" / "spr" / "meta.json"
 if SPR.exists():
     # ---- mascot game stays on, with Dedric + Rev strips rendered from Blender (world/blend_sprites.py + strip.py) ----
@@ -318,6 +319,7 @@ nav .nlinks a{color:#d9d6e6}nav .nlinks a:hover{color:#fff}
 .fbot b,.fbot small,.vo{color:#a07ff0!important}
 .cinfo .st,.cinfo b,.form .mono.red,.hello{color:#fff!important}
 .pin.solid .xnum{color:#d9c7ff!important}
+.icon img{filter:none!important}
 .hero video{object-position:50% 12%}
 @media(min-width:981px){.hero video{left:auto!important;right:0;width:46%!important;object-position:50% 8%!important;filter:brightness(1.1) contrast(1.04);-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}.hero h1{font-size:clamp(36px,4.1vw,56px)!important;max-width:50vw!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .shade{background:linear-gradient(90deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,.25) 42%,rgba(5,5,7,0) 58%),linear-gradient(180deg,rgba(5,5,7,.3),transparent 22%,transparent 70%,#050507 100%)!important}}
 @media(max-width:980px){
