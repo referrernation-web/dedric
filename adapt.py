@@ -223,9 +223,32 @@ one(r'<div class="foot">\n.*?\n  </div>', f'''<div class="foot">
   </div>''', True)
 
 # ---------------------------------------------------------------- scripts: drop the mascot game and the Loom embed
-one(r"\(function\(\)\{var DBG=/mgdebug/.*?\n(?=\(function\(\)\{var imgs=document\.querySelectorAll\('img\.lq)", "", True)
 one(r"\(function\(\)\{var b=document\.getElementById\('loomplay'\);.*?\n", "", True)
-s = s.replace(".mg-play", ".mg-play-off")
+SPR = HERE / "assets" / "spr" / "meta.json"
+if SPR.exists():
+    # ---- mascot game stays on, with Dedric + Rev strips rendered from Blender (world/blend_sprites.py + strip.py) ----
+    import base64
+    from PIL import Image as _Im
+    meta = json.load(open(SPR))
+    one(r"var META=\{[^;]*\};", "var META=" + json.dumps(meta) + ";", True)
+
+    def fb(pre):
+        fp = HERE / "assets" / "spr" / (pre + "run-fb.png")
+        im = _Im.open(fp); return base64.b64encode(fp.read_bytes()).decode(), im.width / im.height
+    dfb, dr = fb("d-"); pfb, pr = fb("p-")
+    one(r"var FB=\{'d-':'data:image/png;base64,[^']*','p-':'data:image/png;base64,[^']*'\}", "var FB={'d-':'data:image/png;base64," + dfb + "','p-':'data:image/png;base64," + pfb + "'}", True)
+    one(r"FBW=\{'d-':[^}]*\}", "FBW={'d-':%.4f,'p-':%.4f}" % (dr, pr), True)
+    one("Pp.off=-58;Pp.bouncy=true;Pp.flipRun=false;Pp.flipSit=true;", "Pp.off=-58;Pp.bouncy=true;Pp.flipRun=false;Pp.flipSit=false;")
+    one("tag.textContent='DIANNA AI';", "tag.textContent='DEDRIC';")
+    one("tag2.textContent='KIMPOY';", "tag2.textContent='REV';")
+    one("say(\"Hi! I'm Dianna, named after Mark's daughter. Scroll or hover a card and we jump!\",3800)", "say(\"Hi, I'm Dedric. Scroll or hover a card and Rev and I will jump there.\",3800)")
+    one("var BARKS=['Woof! Woof!','Arf!','Woof?'];var REPLY=['Tara, Kimpoy!','Halika, Kimpoy!','Sandali lang, Kimpoy!'];", "var BARKS=['Beep!','Boop-beep!','Beep?'];var REPLY=['Come on, Rev!','This way, Rev!','One second, Rev.'];")
+    one(r"var LINES=\[.*?\];", "var LINES=['Roadmap ownership: vision, intake, acceptance criteria, then the numbers Finance signs.','Salesforce to NetSuite, quote to cash. One system of record.','GTM and RevOps: pipeline, forecasting, renewals. Time-to-insight down 40%.','Agentforce, but governed first. Two workflows held until the data was ready.'];", True)
+    one("&#9654; WATCH DIANNA PLAY", "&#9654; WATCH DEDRIC PLAY")
+    s = s.replace('<link rel="preload" as="image" href="assets/spr/d-run.webp" media="(min-width:981px)">', '<link rel="preload" as="image" href="assets/spr/d-run.webp" media="(min-width:981px)"><link rel="preload" as="image" href="assets/spr/p-run.webp" media="(min-width:981px)">')
+else:
+    one(r"\(function\(\)\{var DBG=/mgdebug/.*?\n(?=\(function\(\)\{var imgs=document\.querySelectorAll\('img\.lq)", "", True)
+    s = s.replace(".mg-play", ".mg-play-off")
 
 # ---------------------------------------------------------------- palette: blazer2role.com (dark, violet, lime)
 PAL = [("#8a1c2b", "#6C2BD9"), ("#a02538", "#7c3ae6"), ("#7a1424", "#5a22b8"), ("#9d2436", "#7c3ae6"), ("#d8293f", "#8a55f0"), ("#b23445", "#7c3ae6"), ("#5e0e1b", "#3d1a80"),
