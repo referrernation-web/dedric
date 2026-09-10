@@ -37,7 +37,7 @@ print('rest bounds', [round(x, 2) for x in lo], [round(x, 2) for x in hi])
 
 # ---- lights + ortho camera on +X looking -X (side view, character faces +X after the glTF import: -Y forward -> we spin it) ----
 root = arm if arm else meshes[0]
-root.rotation_euler = (root.rotation_euler.x, root.rotation_euler.y, root.rotation_euler.z - math.radians(90))   # -Y facing -> +X facing (camera on +X sees the right side; strip faces right)
+root.rotation_euler = (root.rotation_euler.x, root.rotation_euler.y, root.rotation_euler.z + math.radians(float(os.environ.get("SPR_ROT", "-90"))))   # SPR_ROT=90 for Rodin+UniRig rigs (they face the other way); -Y facing -> +X facing (camera on +X sees the right side; strip faces right)
 bpy.context.view_layer.update()
 
 cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam'))
