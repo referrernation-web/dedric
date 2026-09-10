@@ -459,7 +459,7 @@ nav .nlinks a{color:#d9d6e6}nav .nlinks a:hover{color:#fff}
 .cinfo .st,.cinfo b,.form .mono.red,.hello{color:#fff!important}
 .pin.solid .xnum{color:#d9c7ff!important}
 .hero video{object-position:50% 12%}
-@media(min-width:981px){.hero video{left:auto!important;right:0;width:64%!important;-webkit-mask-image:linear-gradient(90deg,transparent,#000 34%);mask-image:linear-gradient(90deg,transparent,#000 34%)}.hero .shade{background:linear-gradient(90deg,rgba(5,5,7,.6) 0%,rgba(5,5,7,.35) 40%,rgba(5,5,7,0) 60%),linear-gradient(180deg,rgba(5,5,7,.45),transparent 30%,transparent 65%,#050507 100%)!important}}
+@media(min-width:981px){.hero video{left:auto!important;right:0;width:46%!important;object-position:50% 8%!important;filter:brightness(1.1) contrast(1.04);-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}.hero h1{font-size:clamp(36px,4.1vw,56px)!important;max-width:50vw!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .shade{background:linear-gradient(90deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,.25) 42%,rgba(5,5,7,0) 58%),linear-gradient(180deg,rgba(5,5,7,.3),transparent 22%,transparent 70%,#050507 100%)!important}}
 @media(max-width:980px){
 .hero{align-items:flex-end!important}
 .hero .hcontent{padding:58vh 0 96px!important}
