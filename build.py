@@ -1,502 +1,736 @@
-# -*- coding: utf-8 -*-
-"""Dedric Brown — resume site. `python build.py` -> index.html (+ llms.txt, sitemap.xml, robots.txt).
-Data source of truth: Downloads\\Dedric Resume 2026 (1).docx (Sept 2026).
-Look (Mark, Sept 11): masontywong.com — warm peach room, white pill nav, clay 3D laptop that plays the intro, rounded everything."""
-import pathlib, re, json, html as _h
-HERE = pathlib.Path(__file__).parent
-A = HERE / "assets"
-BASE = "https://referrernation-web.github.io/dedric/"
+import base64, pathlib
+A = pathlib.Path(__file__).parent / "assets"
 
+def b64(p):
+    f = A / p
+    return base64.b64encode(f.read_bytes()).decode() if f.exists() else ""
 
 def webp(p, maxw=1280, q=80):
-    """assets/<p> -> assets/img/<stem>.webp, returns relative URL ('' if missing)."""
-    from PIL import Image, ImageOps
+    """Convert assets/<p> to assets/img/<stem>.webp and return the relative URL ('' if missing)."""
+    from PIL import Image
     f = A / p
     if not f.exists():
         return ""
-    out = A / "img"; out.mkdir(exist_ok=True)
-    o = out / (f.stem + ".webp")
+    outdir = A / "img"; outdir.mkdir(exist_ok=True)
+    o = outdir / (f.stem + ".webp")
     if not o.exists() or o.stat().st_mtime < f.stat().st_mtime:
-        im = ImageOps.exif_transpose(Image.open(f)).convert("RGB")
+        im = Image.open(f).convert("RGB")
         if im.width > maxw:
             im = im.resize((maxw, int(im.height * maxw / im.width)), Image.LANCZOS)
         im.save(o, "WEBP", quality=q, method=6)
     return "assets/img/" + o.name
 
-
-HEADSHOT = webp("headshot.jpg", 900, 82)
-DREAMFORCE = webp("dreamforce.jpg", 1100, 78)
-RENDER1 = webp("render1.jpg", 900, 78)
-RENDER2 = webp("render2.jpg", 900, 78)
-FRAME = webp("dedric-frame.jpg", 720, 80)          # clean still from the approved render (blazer + purple shirt)
-INTRO = "video/intro.mp4" if (HERE / "video" / "intro.mp4").exists() else ""   # the application intro, once rendered and approved
-
-# ---------------------------------------------------------------- data (docx)
-NAME = "Dedric Brown"
-EMAIL = "dedric.brown55@gmail.com"
-PHONE = "470-262-7774"
-LINKEDIN = "https://www.linkedin.com/in/dbrowntech"
-TRAILBLAZER = "https://www.salesforce.com/trailblazer/dbrown6422"
-CALENDLY = "https://calendly.com/dbrowntech15/30min"
-PDF = "assets/Dedric-Brown-Resume-2026.pdf"
-
-SUMMARY = ("Senior product and platform leader with 8+ years owning product vision, strategy, roadmaps and end-to-end delivery for enterprise "
-           "Salesforce CRM, go-to-market systems, revenue operations, identity, healthcare and AI automation. I partner with executives across "
-           "Sales, Marketing, Customer Success, Finance, Engineering, IT, Clinical Operations and Compliance to turn fragmented, manual processes "
-           "into governed, automated platforms with measurable revenue impact.")
-
-STATS = {
-    "sales": [("150", "$", "M+", "annual pipeline on the Sales Cloud roadmap I owned at Cloudflare"),
-              ("40", "", "%", "faster time-to-insight for Finance and Sales Ops, dashboards adopted by 12+ teams"),
-              ("35", "", "%", "Salesforce adoption lift across the GTM user base"),
-              ("15", "$", "M+", "enterprise contract value retained at Salesforce")],
-    "health": [("27.6", "", "M", "members served by the managed-care org whose Health Cloud roadmap I own"),
-               ("2", "", "", "AI workflows stopped before production for unresolved source-data issues"),
-               ("1", "", "", "provider identity, NPI-keyed, reconciling three prescriber systems"),
-               ("10", "", "-yr", "old call-logging environment being modernized into an operational CRM")],
-}
+PHOTO = ""
+HERO = webp("dedric-frame.jpg", 1280, 82)
+ABOUT = webp("headshot.jpg", 720, 82)
+INTRO = "video/intro.mp4" if (pathlib.Path(__file__).parent / "video" / "intro.mp4").exists() else ""
+THUMBS = {k: webp("thumb-" + k + ".jpg", 1280, 78) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "blazer2role"]}
 
 EXPERTISE = [
-    ("01", "Product Strategy &amp; Roadmap Ownership", "Vision, portfolio intake, business cases, prioritization, acceptance criteria, release plans and post-launch measurement across enterprise Salesforce ecosystems."),
-    ("02", "CRM &amp; ERP Systems Integration", "Salesforce to NetSuite across opportunity-to-order, order-to-cash, billing, invoicing and revenue recognition. External IDs, master data, deduplication, one system of record."),
-    ("03", "GTM &amp; Revenue Operations", "Lead-to-opportunity, pipeline management, forecasting, marketing automation, renewals and retention, KPI definition and dashboards Finance actually adopts."),
-    ("04", "Agentforce &amp; AI Automation", "Agentforce and Einstein use cases with process mapping, data-readiness gates, human-in-the-loop controls and AI governance in HIPAA-regulated workflows."),
+    ("01", "Product Strategy &amp; Roadmap Ownership",
+     "Vision, portfolio intake, business cases, prioritization, acceptance criteria, release plans and post-launch measurement across enterprise Salesforce ecosystems."),
+    ("02", "CRM &amp; ERP Systems Integration",
+     "Salesforce to NetSuite across opportunity-to-order, order-to-cash, billing, invoicing and revenue recognition. External IDs, master data, deduplication, one system of record."),
+    ("03", "GTM &amp; Revenue Operations",
+     "Lead-to-opportunity, pipeline management, forecasting, marketing automation, renewals and retention, KPI definition and the dashboards Finance actually adopts."),
+    ("04", "Agentforce &amp; AI Automation",
+     "Agentforce and Einstein use cases with process mapping, data-readiness gates, human-in-the-loop controls and AI governance in HIPAA-regulated workflows."),
 ]
 
-CAREER = [
-    ("Jan 2026 – Present", "Centene Corporation", "Senior Salesforce Product Manager", "Atlanta, GA",
-     "Fortune 500 managed care organization serving 27.6M members. Owns the Salesforce Health Cloud roadmap for specialty pharmacy and managed care with IT, Clinical Operations and Compliance.",
-     ["Lead discovery and future-state process design to modernize a 10-year-old call-logging environment into an operational Salesforce CRM: lead-to-opportunity workflows, stage-exit criteria, requirements, forecasting dashboards for member and referral volume.",
-      "Own the AI product roadmap for prior authorization, benefits investigation and referral-to-therapy; apply process mapping, data-readiness, governance and human-in-the-loop criteria to Agentforce and Einstein use cases, preventing two workflows with unresolved source-data issues from entering production.",
-      "Built the governance backbone the roadmap depends on: standardized provider and member data models plus NPI-keyed external IDs reconciling ScriptMed (Inovalon), Centene prescriber and Symphony Health into one provider identity.",
-      "Lead portfolio intake, stakeholder alignment and roadmap prioritization; translate business and regulatory needs into requirements, acceptance criteria, release plans and audit-ready controls for HIPAA workflows."],
-     ["Health Cloud", "Agentforce", "Einstein", "HIPAA", "Data governance"]),
-    ("Apr 2023 – Jan 2026", "Cloudflare", "Product Manager, GTM Business Systems", "Atlanta, GA",
-     "$2.17B FY2025 revenue, roughly 332K paying customers. Owned the Sales Cloud roadmap supporting $150M+ in annual pipeline and directed a developer team on a SAFe Program Increment cadence.",
-     ["Reduced reporting time-to-insight 40% for Finance and Sales Operations by replacing manual data pulls with KPI dashboards and forecast reporting adopted by 12+ teams.",
-      "Led end-to-end delivery of the Salesforce-to-NetSuite ERP integration across opportunity-to-order, order-to-cash, billing, invoicing and revenue recognition, creating a reconciled system of record and reducing manual handoffs at month-end close.",
-      "Increased Salesforce platform adoption 35% across the GTM user base by prioritizing automation on product analytics and business value during PI planning, paired with change management and role-based enablement.",
-      "Reduced post-launch defects 20% and accelerated feature delivery 15% by strengthening discovery, backlog refinement, sprint planning, acceptance criteria, UAT and release readiness."],
-     ["Sales Cloud", "NetSuite ERP", "SAFe", "Forecasting", "RevOps"]),
-    ("Jun 2021 – Apr 2023", "Salesforce", "Product Manager, Customer Platforms", "Atlanta, GA",
-     "Vlocity / OmniStudio and Marketing Cloud roadmap for health insurance and commercial partner accounts holding $15M+ in contract value and a $10M+ upsell and renewal book.",
-     ["Retained $15M+ in enterprise contract value by resequencing the roadmap around what health insurance and commercial partners were escalating, then holding internal stakeholders to that order through delivery.",
-      "Grew lead generation 35% and customer retention 20% by running Marketing Cloud go-to-market campaigns re-cut against performance data rather than the launch calendar.",
-      "Scaled Vlocity / OmniStudio enablement across the partner base, lifting adoption inside the $10M+ renewal book.",
-      "Prioritized enhancements from customer feedback and user research against defined success metrics, moving adoption 15% and user satisfaction to 95%."],
-     ["OmniStudio", "Marketing Cloud", "Enablement", "Renewals"]),
-    ("Jan 2020 – Jun 2021", "Salesforce", "Product Manager, Identity &amp; Security", "Atlanta, GA",
-     "Enterprise identity and access management program: SSO and MFA across 8,000+ users supporting $25M+ in regulated enterprise contracts.",
-     ["Cut access-related incidents 40% by standing up enterprise IAM frameworks and business rules and taking SSO/MFA adoption to the full 8,000-user base.",
-      "Closed 10+ critical security findings by integrating IAM with existing security infrastructure, and standardized access processes across regulated environments so compliance and audit had one story to review."],
-     ["IAM", "SSO / MFA", "Compliance", "Audit"]),
-    ("Jan 2018 – Jan 2020", "NCR Corporation", "Product Manager, CRM Platforms", "Atlanta, GA",
-     "Sales Cloud modernization for an enterprise sales org carrying $20M+ in contracts and 2M+ legacy CRM records.",
-     ["Delivered $1.8M+ in operating cost savings by automating onboarding and internal Salesforce workflows; migrated 2M+ legacy CRM records with zero downtime and improved data accuracy 35%.",
-      "Redesigned Sales Cloud lead and opportunity workflows, reducing sales-cycle time 15%, increasing lead conversion 10% and lowering Salesforce support tickets 30%."],
-     ["Sales Cloud", "Migration", "Automation"]),
+SKILL_GROUPS = [
+    ("Salesforce Platform", [
+        ("salesforce", "Sales Cloud"), ("salesforce", "Service Cloud"), ("salesforce", "Health Cloud"),
+        ("salesforce", "Marketing Cloud"), ("salesforce", "OmniStudio"), ("salesforce", "Agentforce")]),
+    ("Systems &amp; Integration", [
+        ("oracle", "NetSuite ERP"), ("mulesoft", "MuleSoft"), ("postman", "APIs"),
+        ("snowflake", "Data models"), ("tableau", "Tableau"), ("okta", "IAM · SSO · MFA")]),
+    ("AI &amp; Automation", [
+        ("salesforce", "Einstein"), ("anthropic", "Claude API"), ("openai", "LLMs"),
+        ("zapier", "Workflow automation"), ("googlesheets", "Data readiness"), ("json", "Governance")]),
+    ("Product &amp; Delivery", [
+        ("jira", "Jira"), ("confluence", "Confluence"), ("miro", "Miro"),
+        ("figma", "Figma"), ("scrumalliance", "Scrum · SAFe"), ("slack", "Slack")]),
 ]
 
-CASES = [
-    ("ERP INTEGRATION", "One system of record from quote to cash", "Cloudflare",
-     "Opportunity, order, billing and revenue recognition lived in two systems that never agreed. Month-end close ran on manual handoffs.",
-     "Owned the Salesforce-to-NetSuite integration end to end: opportunity-to-order, order-to-cash, billing, invoicing, revenue recognition. Defined the external IDs and reconciliation rules first, then the roadmap.",
-     "A reconciled system of record, fewer manual handoffs at close, and KPI dashboards Finance adopted across 12+ teams (time-to-insight down 40%).",
-     ["Sales Cloud", "NetSuite", "External IDs", "Rev rec"]),
-    ("AI GOVERNANCE", "Agentforce that clears a HIPAA gate", "Centene",
-     "Prior authorization, benefits investigation and referral-to-therapy were the obvious AI targets, but the source data behind two of them could not be trusted yet.",
-     "Built the readiness path before the use case: process mapping, data-readiness scoring, human-in-the-loop controls and audit-ready governance criteria that every Agentforce or Einstein workflow has to pass.",
-     "Two workflows held back from production until the data was fixed; the ones that shipped carry controls Compliance can review.",
-     ["Agentforce", "Einstein", "Health Cloud", "HIPAA"]),
-    ("PROVIDER IDENTITY", "Three prescriber systems, one provider", "Centene",
-     "ScriptMed (Inovalon), the Centene prescriber file and Symphony Health each described the same provider differently. Every downstream dashboard inherited the disagreement.",
-     "Standardized the provider and member data models and keyed external IDs on the National Provider Identifier so the three sources reconcile into one identity.",
-     "One provider identity the roadmap can build on, and the governance backbone for the CRM modernization.",
-     ["Master data", "NPI", "Deduplication", "Governance"]),
-    ("IDENTITY &amp; ACCESS", "SSO and MFA for 8,000 users", "Salesforce",
-     "Access-related incidents kept landing on regulated contracts worth $25M+, and every audit told a different story about who could reach what.",
-     "Stood up enterprise IAM frameworks and business rules, integrated IAM with the existing security stack and drove SSO/MFA adoption across the full user base.",
-     "Access-related incidents down 40%, 10+ critical findings closed, and one access story for compliance and audit.",
-     ["IAM", "SSO", "MFA", "Zero trust"]),
+FEATURED = [
+    ("ERP INTEGRATION • CLOUDFLARE", "One system of record from quote to cash",
+     "Opportunity, order, billing and revenue recognition lived in two systems that never agreed. I owned the Salesforce-to-NetSuite integration end to end: external IDs and reconciliation rules first, then the roadmap.",
+     "Time-to-insight down 40% &mdash; KPI dashboards adopted by 12+ teams; fewer manual handoffs at month-end close",
+     ["Sales Cloud", "NetSuite", "External IDs", "Rev rec"], "cloudflare", "#career"),
+    ("AI GOVERNANCE • CENTENE", "Agentforce that clears a HIPAA gate",
+     "Prior authorization, benefits investigation and referral-to-therapy were the obvious AI targets, but the source data behind two of them could not be trusted yet. I built the readiness path before the use case.",
+     "Two workflows held back from production until the data was fixed &mdash; the ones that shipped carry controls Compliance can review",
+     ["Agentforce", "Einstein", "Health Cloud", "HIPAA"], "centene-ai", "#career"),
+    ("PROVIDER IDENTITY • CENTENE", "Three prescriber systems, one provider",
+     "ScriptMed (Inovalon), the Centene prescriber file and Symphony Health each described the same provider differently. I standardized the data models and keyed external IDs on the NPI.",
+     "One provider identity the roadmap can build on &mdash; the governance backbone for the CRM modernization",
+     ["Master data", "NPI", "Deduplication", "Governance"], "centene-id", "#career"),
+    ("IDENTITY &amp; ACCESS • SALESFORCE", "SSO and MFA for 8,000 users",
+     "Access-related incidents kept landing on $25M+ of regulated contracts. I stood up enterprise IAM frameworks, integrated IAM with the security stack and drove SSO/MFA to the full user base.",
+     "Access incidents down 40% &mdash; 10+ critical findings closed, one access story for compliance and audit",
+     ["IAM", "SSO", "MFA", "Zero trust"], "salesforce-iam", "#career"),
+    ("SIDE PROJECT • SPEAKING", "Blazer2Role",
+     "A side project for people making a mid-career move into tech: short talks and a free resume scorer. It is where the Why Tech series lives. The day job is the roadmap above.",
+     "Seven approved talks published &mdash; Sept 2026",
+     ["Speaking", "Community", "Side project"], "blazer2role", "https://blazer2role.com"),
 ]
 
-# Approved talks (Dedric signed off): kept small, framed as speaking / side project, not as his job
-REELS = [
-    ("whytech1", "Why Tech, Part 1", "video/whytech1.mp4", webp("thumb-whytech1.jpg", 540, 72)),
-    ("whytech2", "Why Tech, Part 2", "video/whytech2.mp4", webp("thumb-whytech2.jpg", 540, 72)),
-    ("whytech3", "Why Tech, Part 3", "video/whytech3.mp4", webp("thumb-whytech3.jpg", 540, 72)),
-    ("whytech4", "Why Tech, Part 4", "video/whytech4.mp4", webp("thumb-whytech4.jpg", 540, 72)),
-    ("whytech5", "Why Tech, Part 5", "video/whytech5.mp4", webp("thumb-whytech5.jpg", 540, 72)),
-    ("topic01", "Entry-Level Now Means You", "video/topic01.mp4", webp("thumb-topic01.jpg", 540, 72)),
+SYSLOG = [
+    ("Centene &middot; Health Cloud roadmap", "Specialty pharmacy and managed care &middot; 27.6M members &middot; since Jan 2026", "Current", "#career"),
+    ("Cloudflare &middot; $150M+ pipeline", "Sales Cloud roadmap owner &middot; SAFe PI cadence &middot; adoption up 35%", "GTM", "#career"),
+    ("Salesforce &middot; Customer Platforms", "$15M+ retained &middot; $10M+ renewal book &middot; lead gen up 35%", "Retention", "#career"),
+    ("NCR &middot; CRM modernization", "2M+ records migrated with zero downtime &middot; $1.8M+ cost savings", "Migration", "#career"),
+    ("Dreamforce", "Regular attendee and speaker-track alumni &middot; San Francisco", "Community", "https://www.salesforce.com/dreamforce/"),
+    ("Why Tech series", "Five approved talks for mid-career changers &middot; Blazer2Role", "Speaking", "https://blazer2role.com"),
 ]
+
+
+
 
 CERTS = [
-    ("SALESFORCE", "Agentforce Specialist", "formerly AI Specialist · Oct 2024"),
-    ("SALESFORCE", "AI Associate", "Oct 2024"),
-    ("SALESFORCE", "Agentforce Sales Consultant", "formerly Sales Cloud Consultant · Apr 2023"),
-    ("SALESFORCE", "Platform Strategy Designer", "formerly Strategy Designer · Apr 2023"),
-    ("SALESFORCE", "Business Analyst", "Jan 2023"),
-    ("SALESFORCE", "Platform Administrator II", "formerly Advanced Administrator · Sep 2022"),
-    ("SALESFORCE", "Platform Foundations", "formerly Salesforce Associate · Sep 2022"),
-    ("SALESFORCE", "Agentforce Service Consultant", "formerly Service Cloud Consultant · Dec 2021"),
-    ("SALESFORCE", "Platform Administrator", "formerly Administrator · Oct 2020"),
-    ("SCALED AGILE", "SAFe 6 Product Owner / Product Manager", "Jun 2024"),
-    ("SCRUM ALLIANCE", "Certified ScrumMaster (CSM)", "Jan 2023"),
-    ("GOOGLE", "Google AI Essentials", "Coursera · Jun 2026"),
-    ("COMPTIA", "Security+", "CompTIA"),
-    ("TRAILHEAD", "Security Specialist Superbadge", "Salesforce Trailhead"),
-]
-
-SKILLS = [
-    ("Salesforce &amp; Enterprise Platforms", ["Sales Cloud", "Service Cloud", "Health Cloud", "Marketing Cloud", "OmniStudio / Vlocity", "Agentforce", "Einstein", "Flow Builder", "NetSuite ERP", "APIs &amp; integration"]),
-    ("Agentic AI &amp; Automation", ["Agentforce solution design", "Einstein predictive models", "LLMs &amp; prompt design", "Anthropic Claude API", "AI readiness assessment", "Human-in-the-loop", "Responsible AI"]),
-    ("Product Leadership", ["Vision &amp; strategy", "Roadmap ownership", "Business cases", "Discovery", "User research", "Backlog prioritization", "Sprint planning", "UAT &amp; release", "Change management"]),
-    ("GTM, RevOps &amp; Analytics", ["Lead-to-opportunity", "Order-to-cash", "Forecasting", "Marketing automation", "Renewals &amp; retention", "KPI definition", "Dashboards", "Revenue recognition"]),
-    ("Security, Healthcare &amp; Compliance", ["IAM · SSO · MFA", "HIPAA", "Audit readiness", "Managed care", "Specialty pharmacy", "Prior authorization", "Provider &amp; member data"]),
+    ("SALESFORCE", "01", "Agentforce Specialist", "formerly AI Specialist \u00b7 Oct 2024", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "02", "AI Associate", "Oct 2024", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "03", "Agentforce Sales Consultant", "formerly Sales Cloud Consultant \u00b7 Apr 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "04", "Platform Strategy Designer", "formerly Strategy Designer \u00b7 Apr 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "05", "Business Analyst", "Jan 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "06", "Platform Administrator II", "formerly Advanced Administrator \u00b7 Sep 2022", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "07", "Platform Foundations", "formerly Salesforce Associate \u00b7 Sep 2022", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "08", "Agentforce Service Consultant", "formerly Service Cloud Consultant \u00b7 Dec 2021", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "09", "Platform Administrator", "formerly Administrator \u00b7 Oct 2020", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SCALED AGILE", "10", "SAFe 6 Product Owner / Product Manager", "Jun 2024", "https://www.linkedin.com/in/dbrowntech"),
+    ("SCRUM ALLIANCE", "11", "Certified ScrumMaster (CSM)", "Jan 2023", "https://www.linkedin.com/in/dbrowntech"),
+    ("GOOGLE", "12", "Google AI Essentials", "Coursera \u00b7 Jun 2026", "https://www.linkedin.com/in/dbrowntech"),
+    ("COMPTIA", "13", "Security+", "CompTIA", "https://www.linkedin.com/in/dbrowntech"),
+    ("TRAILHEAD", "14", "Security Specialist Superbadge", "Salesforce Trailhead", "https://www.salesforce.com/trailblazer/dbrown6422"),
 ]
 
 
-# ---------------------------------------------------------------- html pieces
-def esc(s): return _h.escape(s, quote=True)
+def pills(items):
+    return "".join('<span class="pill">' + i + "</span>" for i in items)
 
 
-def stats_html(key):
-    return "".join(
-        f'<div class="stat"><b data-count="{n}" data-prefix="{pre}" data-suffix="{suf}">{pre}{n}{suf}</b><span>{d}</span></div>'
-        for n, pre, suf, d in STATS[key])
+ROT = ["r1", "r2", "r3", "r4"]
+expertise_html = "".join(
+    '<article class="pin ' + ROT[i] + (' solid' if i == 0 else '') + '" data-rv="' + ('right' if i % 2 == 0 else 'left') + '"><span class="ledge"></span><span class="tack"></span><div class="xnum">' + n + "</div><h3>" + t + "</h3><p>" + d + "</p></article>"
+    for i, (n, t, d) in enumerate(EXPERTISE))
 
+skills_html = ""
+for gname, icons in SKILL_GROUPS:
+    cells = "".join(
+        '<div class="icon hv" data-rv="zoom"><img src="https://cdn.simpleicons.org/' + slug + '/ffffff" alt="' + label +
+        '" loading="lazy" onerror="this.parentNode.classList.add(&quot;noico&quot;)"><span>' + label + "</span></div>"
+        for slug, label in icons)
+    skills_html += '<div class="sgroup"><h3>' + gname + '</h3><div class="igrid">' + cells + "</div></div>"
 
-expertise_html = "".join(f'<article class="pillar rv"><span class="xnum">{n}</span><h3>{t}</h3><p>{d}</p></article>' for n, t, d in EXPERTISE)
+LQ = {k: __import__("patch8_lqip").lqip(A / ("thumb-" + k + ".jpg")) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "blazer2role"]}
+feat_html = ""
+for cat, title, desc, ev, tags, thumb, url in FEATURED:
+    shot = ('<div class="shot"><img class="lq" src="data:image/jpeg;base64,' + LQ[thumb] + '" data-src="' + THUMBS[thumb] + '" alt="' + title + '" loading="lazy" decoding="async"></div>'
+            if thumb and THUMBS.get(thumb) else '<div class="shot noimg"><span>' + url.replace("https://", "") + "</span></div>")
+    slug = (thumb or url.replace("https://", "").split(".")[0])
+    feat_html += ('<article class="proj glow tilt" data-slug="' + slug + '" data-title="' + title + '" data-cat="' + cat + '" data-desc="' + desc.replace('"', '&quot;') + '" data-ev="' + ev.replace('"', '&quot;') + '" data-tags="' + ", ".join(tags) + '" data-url="' + url + '" tabindex="0" role="button" aria-haspopup="dialog">' + shot + '<div class="cat">' + cat + "</div><h3>" + title + "</h3><p>" + desc +
+                  '</p><div class="ev">' + ev + '</div><div class="tags">' + pills(tags) +
+                  '</div><span class="visit">Open case study &rarr;</span></article>')
 
-career_html = ""
-for i, (when, co, role, loc, ctx, bullets, chips) in enumerate(CAREER):
-    career_html += (f'<article class="node rv" id="role{i}"><div class="port in"></div><div class="port out"></div>'
-                    f'<header><span class="mono">{when}</span><h3>{role}</h3><div class="co">{co} <span>· {loc}</span></div></header>'
-                    f'<p class="ctx">{ctx}</p><ul>' + "".join(f"<li>{b}</li>" for b in bullets) + "</ul>"
-                    f'<div class="chips">' + "".join(f"<span>{c}</span>" for c in chips) + "</div></article>")
-
-cases_html = "".join(
-    f'<article class="case rv"><span class="mono acc">{cat}</span><h3>{t}</h3><small>{co}</small>'
-    f'<dl><dt>Problem</dt><dd>{p}</dd><dt>What I did</dt><dd>{d}</dd><dt>Result</dt><dd>{r}</dd></dl>'
-    f'<div class="chips">' + "".join(f"<span>{c}</span>" for c in chips) + "</div></article>"
-    for cat, t, co, p, d, r, chips in CASES)
-
-reels_html = "".join(
-    f'<button class="reel rv" data-src="{src}" data-title="{esc(t)}" type="button"><img src="{poster}" alt="{esc(t)}" loading="lazy" decoding="async" width="540" height="960"><span class="play">&#9654;</span><b>{t}</b></button>'
-    for k, t, src, poster in REELS)
+syslog_html = "".join(
+    '<a class="lrow hv" href="' + url + '" target="_blank" rel="noopener"><div><b>' + t + "</b><span>" + d +
+    '</span></div><em>' + tag + "</em></a>"
+    for t, d, tag, url in SYSLOG)
 
 certs_html = "".join(
-    f'<div class="flip rv"><div class="finner"><div class="fface ffront"><span class="chip">{chip}</span><h4>{t}</h4><small>{d}</small></div>'
-    f'<div class="fface fback"><small class="mono">VERIFY</small><h4>{t}</h4><a href="{TRAILBLAZER if chip in ("SALESFORCE", "TRAILHEAD") else LINKEDIN}" target="_blank" rel="noopener">{"Trailblazer profile" if chip in ("SALESFORCE", "TRAILHEAD") else "LinkedIn"} &#8599;</a></div></div></div>'
-    for chip, t, d in CERTS)
+    '<div class="flip" data-rv="drop"><div class="finner hv"><div class="fface ffront"><div class="ftop"><span class="chip">' + chip +
+    '</span><span class="cnum">' + n + '</span></div><h4>' + title + '</h4><div class="issued"><small>ISSUED SYSTEM NODE</small>' + issuer +
+    '</div></div><div class="fface fback"><div class="ftop"><span class="shield">&#9673;</span><small>SECURED NODE</small></div><small class="vo">VERIFICATION OBJECT</small><h4>' + title +
+    '</h4><a class="viewc" href="' + url + '" target="_blank" rel="noopener">View Certificate &#8599;</a><div class="fbot"><small>SYS ID: #' + n + '</small><b>VERIFIED</b></div></div></div></div>'
+    for chip, n, title, issuer, url in CERTS)
 
-skills_html = "".join(f'<div class="sgroup rv"><h3>{g}</h3><div class="chips">' + "".join(f"<span>{s}</span>" for s in items) + "</div></div>" for g, items in SKILLS)
-
-JSONLD = json.dumps({
-    "@context": "https://schema.org", "@type": "Person", "@id": BASE + "#person",
-    "name": "Dedric Brown", "jobTitle": "Senior Salesforce Product Manager", "url": BASE,
-    "email": "mailto:" + EMAIL, "telephone": "+1-" + PHONE,
-    "address": {"@type": "PostalAddress", "addressLocality": "Atlanta", "addressRegion": "GA", "addressCountry": "US"},
-    "sameAs": [LINKEDIN, TRAILBLAZER, "https://thededricbrown.com/"],
-    "worksFor": {"@type": "Organization", "name": "Centene Corporation"},
-    "alumniOf": {"@type": "CollegeOrUniversity", "name": "Morris Brown College"},
-    "knowsAbout": ["Salesforce", "Sales Cloud", "Health Cloud", "Agentforce", "Revenue Operations", "Product Management", "NetSuite", "IAM"],
-    "hasCredential": [{"@type": "EducationalOccupationalCredential", "name": c[1], "credentialCategory": "certification"} for c in CERTS],
-}, ensure_ascii=False)
-
-# laptop screen: the intro video when it exists, otherwise the approved still
-SCREEN = (f'<video id="reel" src="{INTRO}" poster="{FRAME}" muted autoplay loop playsinline preload="metadata"></video>' if INTRO
-          else f'<img id="reel" src="{FRAME}" alt="Dedric Brown" width="720" height="720"><span class="soon">INTRO VIDEO &middot; IN PRODUCTION</span>')
-
-# ---------------------------------------------------------------- css (masontywong.com treatment: peach room, clay, pills)
-CSS = r"""
-:root{--bg:#f1dcc7;--bg2:#e6c8ad;--wall:#f6e4d3;--card:#fff8f1;--ink:#4f453f;--ink2:#62564f;--mut:#8f8078;--line:rgba(79,69,63,.12);--clay:#e9a878;--clay2:#f3c39b;--dark:#4f453f;--holo:linear-gradient(120deg,#ffb27a,#ffd08a 30%,#c9a2ff 60%,#8fd3ff)}
+CSS = """
+:root{--bg:#050507;--surf:#14131d;--line:rgba(255,255,255,.1);--txt:#FAFAFA;--mut:#a9a6b8;--acc:#6C2BD9;--grn:#16a34a}
+html[data-theme=light]{--bg:#0b0a12;--surf:#14131d;--line:rgba(255,255,255,.1);--txt:#FAFAFA;--mut:#a9a6b8;--acc:#6C2BD9;--grn:#16a34a}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:400 16px/1.65 'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;background:repeating-linear-gradient(90deg,var(--wall) 0 84px,var(--bg) 84px 96px)}
-body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1200px 500px at 50% 110%,rgba(79,69,63,.18),transparent 60%)}
+body{background:#050507;color:#FAFAFA;font:400 16px/1.6 'Space Grotesk',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;z-index:99;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E")}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.mono{font:500 11px/1 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase}
+.red{color:var(--acc)}
 a{color:inherit;text-decoration:none}
-img{max-width:100%;display:block}
-.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 28px}
-.mono{font:700 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
-.acc{background:var(--holo);-webkit-background-clip:text;background-clip:text;color:transparent}
-h1,h2,h3{font-family:'Bricolage Grotesque','Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;line-height:1.05;text-wrap:balance;color:var(--ink)}
-h2{font-size:clamp(32px,4.4vw,52px);font-weight:800;margin:10px 0 14px}
-section{position:relative;padding:96px 0}
-.shead{max-width:720px;margin-bottom:44px}.shead p{color:var(--ink2);font-size:17px}
-.shead.center{margin:0 auto 44px;text-align:center}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:99px;font-weight:700;font-size:15px;border:1px solid rgba(255,255,255,.7);background:#fff;color:var(--ink);cursor:pointer;box-shadow:0 10px 24px rgba(79,69,63,.14),inset 0 -3px 0 rgba(79,69,63,.06);transition:transform .2s,box-shadow .2s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(79,69,63,.18)}
-.btn.dark{background:var(--dark);color:#fff;border-color:var(--dark)}
-.btn.holo{position:relative;background:#fff;isolation:isolate}.btn.holo::before{content:"";position:absolute;inset:-2px;border-radius:inherit;background:var(--holo);z-index:-1;opacity:.9}
-.btn:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #8fd3ff;outline-offset:2px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{font:600 12px/1 'Plus Jakarta Sans',sans-serif;padding:8px 11px;border-radius:99px;background:#fff;color:var(--ink2);box-shadow:0 3px 8px rgba(79,69,63,.08)}
-/* clay cards */
-.clay{background:var(--card);border-radius:28px;box-shadow:0 18px 40px rgba(79,69,63,.14),inset 0 -8px 16px rgba(79,69,63,.06),inset 0 3px 6px #fff;border:1px solid rgba(255,255,255,.8)}
-/* floating pill nav (Mason Wong) */
-nav.top{position:fixed;top:18px;left:18px;z-index:50;display:flex;align-items:center;gap:6px;padding:6px;border-radius:99px;background:#fff;box-shadow:0 14px 34px rgba(79,69,63,.18)}
-nav.top .logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.04em;padding:0 12px 0 14px}
-nav.top a.pl{padding:10px 16px;border-radius:99px;font-weight:600;font-size:15px;color:var(--ink);transition:background .2s}
-nav.top a.pl:hover,nav.top a.pl.on{background:#f0ebe6}
-nav.top a.w{background:var(--dark);color:#fff}
-.dock{position:fixed;top:18px;right:18px;z-index:50;display:flex;gap:6px;padding:6px;border-radius:99px;background:#fff;box-shadow:0 14px 34px rgba(79,69,63,.18)}
-.dock a{padding:10px 14px;border-radius:99px;font-weight:700;font-size:13px;color:var(--ink)}.dock a:hover{background:#f0ebe6}.dock a.l{background:var(--dark);color:#fff}
-@media(max-width:900px){nav.top a.pl{display:none}.dock{top:auto;bottom:16px;right:50%;transform:translateX(50%)}}
-/* hero: the room */
-.hero{min-height:100svh;display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:center;padding:120px 0 60px}
-.hero .kicker{display:inline-flex;align-items:center;gap:10px;font:700 12px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin-bottom:22px;padding:8px 14px;border-radius:99px;background:#fff;box-shadow:0 6px 16px rgba(79,69,63,.1)}
-.hero .kicker i{width:8px;height:8px;border-radius:50%;background:#3fb96a}
-.hero h1{font-size:clamp(40px,5.2vw,72px);font-weight:800}
-.hero h1 em{font-style:normal;background:var(--holo);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero .sub{color:var(--ink2);font-size:18px;max-width:56ch;margin:22px 0 28px}
-.hero .cta{display:flex;flex-wrap:wrap;gap:12px}
-/* the clay laptop that plays the intro */
-.scene{position:relative;perspective:1400px;justify-self:center;width:min(560px,100%);aspect-ratio:1.1}
-.desk{position:absolute;left:-6%;right:-6%;bottom:2%;height:34%;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#f6e6d8,#e7cbb3 70%,transparent 72%);filter:blur(.5px)}
-.laptop{position:absolute;left:8%;right:8%;bottom:14%;transform:rotateX(58deg) rotateZ(-14deg);transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
-.scene:hover .laptop{transform:rotateX(54deg) rotateZ(-10deg)}
-.base{height:150px;border-radius:22px;background:linear-gradient(180deg,#f3c29a,#e9a878);box-shadow:0 30px 50px rgba(79,69,63,.35),inset 0 -10px 18px rgba(0,0,0,.08),inset 0 4px 8px rgba(255,255,255,.5);position:relative}
-.base .pad{position:absolute;left:50%;top:18%;width:32%;height:44%;transform:translateX(-50%);border-radius:14px;background:linear-gradient(180deg,#e39e6c,#d99461);box-shadow:inset 0 3px 8px rgba(0,0,0,.14)}
-.base .keys{position:absolute;left:10%;right:10%;top:68%;height:16%;border-radius:10px;background:repeating-linear-gradient(90deg,#e39e6c 0 6%,transparent 6% 8%);opacity:.5}
-.lid{position:absolute;left:0;right:0;bottom:100%;height:340px;transform-origin:50% 100%;transform:rotateX(-96deg);border-radius:22px 22px 8px 8px;background:linear-gradient(180deg,#f3c29a,#e9a878);padding:14px 14px 22px;box-shadow:0 12px 30px rgba(79,69,63,.25),inset 0 4px 8px rgba(255,255,255,.5)}
-.screen{position:relative;width:100%;height:100%;border-radius:12px;overflow:hidden;background:#221a16}
-.screen video,.screen img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
-.screen .soon{position:absolute;left:12px;bottom:12px;padding:7px 10px;border-radius:99px;background:rgba(255,255,255,.9);color:var(--ink);font:800 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em}
-.unmute{position:absolute;left:50%;bottom:0;transform:translateX(-50%);padding:11px 16px;border-radius:99px;border:0;background:var(--dark);color:#fff;font:800 12px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;cursor:pointer;box-shadow:0 10px 24px rgba(79,69,63,.25)}
-.mug{position:absolute;right:2%;bottom:16%;width:70px;height:60px;border-radius:12px 12px 20px 20px;background:linear-gradient(180deg,#fff,#efe3d8);box-shadow:0 14px 24px rgba(79,69,63,.25)}
-.mug::after{content:"";position:absolute;right:-18px;top:14px;width:22px;height:26px;border:8px solid #f4ebe3;border-left:0;border-radius:0 14px 14px 0}
-.steam{position:absolute;right:5%;bottom:30%;width:30px;height:34px;color:#fff;font-size:28px;line-height:1;opacity:.8;animation:steam 3s ease-in-out infinite}
-@keyframes steam{50%{transform:translateY(-6px);opacity:.4}}
-/* the switch */
-.switch{display:inline-flex;align-items:center;gap:12px;margin:34px 0 14px;font:700 12px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
-.switch button{position:relative;width:58px;height:30px;border-radius:99px;border:0;background:#fff;box-shadow:inset 0 2px 6px rgba(79,69,63,.15);cursor:pointer}
-.switch button i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--holo);transition:left .25s cubic-bezier(.2,.8,.2,1)}
-.switch.on button i{left:31px}
-.switch.on .b,.switch:not(.on) .a{color:var(--ink)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stat{padding:16px 16px 14px;border-radius:22px;min-height:112px;display:flex;flex-direction:column;justify-content:space-between}
-.stat b{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--ink);font-variant-numeric:tabular-nums}
-.stat span{font-size:12px;color:var(--mut);line-height:1.35}
-#stats{transition:opacity .25s}#stats.fade{opacity:0}
-@media(max-width:980px){.hero{grid-template-columns:1fr;gap:34px;padding-top:110px}.scene{width:min(440px,100%)}.stats{grid-template-columns:repeat(2,1fr)}.lid{height:260px}.base{height:110px}}
-/* proof band */
-.proofband{position:relative;z-index:1;background:var(--dark);color:#fff;overflow:hidden;padding:14px 0}
-.mq{display:flex;gap:44px;width:max-content;animation:sc 48s linear infinite}.proofband:hover .mq{animation-play-state:paused}
-.pf{display:inline-flex;align-items:baseline;gap:10px;font:600 12px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.04em;white-space:nowrap;color:rgba(255,255,255,.8)}.pf b{font:800 20px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;color:#fff}
+.glow{position:relative}
+.glow::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--a,0deg),#ff3d81,#ffb020,#3dff8f,#2ec9ff,#8a5cff,#ff3d81);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 6s linear infinite;opacity:.7;pointer-events:none}
+.glow::after{content:"";position:absolute;inset:-6px;border-radius:inherit;background:conic-gradient(from var(--a,0deg),#ff3d81,#ffb020,#3dff8f,#2ec9ff,#8a5cff,#ff3d81);filter:blur(18px);opacity:.14;z-index:-1;animation:spin 6s linear infinite;pointer-events:none}
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes spin{to{--a:360deg}}
+.glass{background:rgba(20,19,29,.7);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid rgba(255,255,255,.65);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.glass-red{background:rgba(108,43,217,.78);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid rgba(255,255,255,.45);box-shadow:0 8px 30px rgba(108,43,217,.25);color:#14131d}
+.glass-dark{background:rgba(0,0,0,.28);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);border:1px solid rgba(255,255,255,.3)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:rgba(20,19,29,.96)}.glass-red{background:#6C2BD9}.glass-dark{background:rgba(0,0,0,.55)}}
+.proofband{background:var(--acc);color:#14131d;overflow:hidden;padding:14px 0;border-top:1px solid rgba(255,255,255,.3)}
+.proofband .mq-track{display:flex;gap:44px;width:max-content;animation:sc 46s linear infinite}
+.proofband:hover .mq-track{animation-play-state:paused}
+.pf{display:inline-flex;align-items:baseline;gap:10px;font:500 12px/1 'JetBrains Mono',monospace;letter-spacing:.06em;white-space:nowrap;color:rgba(255,255,255,.9)}
+.pf b{font:900 20px/1 Inter,sans-serif;letter-spacing:-.02em;color:#14131d}
 @keyframes sc{to{transform:translateX(-50%)}}
-/* about */
-.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:54px;align-items:center}
-.photo{position:relative;overflow:hidden;border-radius:32px}
-.photo img{aspect-ratio:4/5;object-fit:cover;width:100%}
-.photo .badge{position:absolute;left:16px;bottom:16px;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:99px;background:#fff;font:800 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;box-shadow:0 8px 20px rgba(79,69,63,.2)}
-.photo .badge i{width:8px;height:8px;border-radius:50%;background:#3fb96a}
-.about p{color:var(--ink2);font-size:17px;margin-bottom:16px}
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.gallery img{aspect-ratio:1;object-fit:cover;border-radius:18px;box-shadow:0 8px 18px rgba(79,69,63,.14)}
-@media(max-width:900px){.about{grid-template-columns:1fr}}
-/* expertise */
-.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.pillar{position:relative;padding:26px 22px 24px;transition:transform .25s}
-.pillar:hover{transform:translateY(-4px)}
-.pillar .xnum{font:800 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--mut);letter-spacing:.14em}
-.pillar h3{font-size:19px;margin:14px 0 10px}.pillar p{color:var(--ink2);font-size:14px}
-@media(max-width:980px){.pillars{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.pillars{grid-template-columns:1fr}}
-/* career canvas */
-.canvas{position:relative}
-.flow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.flow path{fill:none;stroke:var(--clay);stroke-width:3;stroke-dasharray:6 8;opacity:.9;animation:dash 14s linear infinite}
-@keyframes dash{to{stroke-dashoffset:-400}}
-.nodes{position:relative;display:grid;gap:34px;max-width:860px;margin:0 auto}
-.node{position:relative;padding:26px 28px}
-.node:nth-child(odd){margin-right:80px}.node:nth-child(even){margin-left:80px}
-.node .port{position:absolute;left:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--clay);transform:translateX(-50%)}
-.node .port.in{top:-8px}.node .port.out{bottom:-8px}
-.node:first-child .port.in,.node:last-child .port.out{display:none}
-.node h3{font-size:22px;margin:8px 0 4px}.node .co{font-weight:700;color:var(--ink)}.node .co span{font-weight:500;color:var(--mut)}
-.node .ctx{color:var(--ink2);font-size:15px;margin:12px 0}
-.node ul{padding-left:18px;color:var(--ink2);font-size:14.5px;display:grid;gap:8px;margin-bottom:16px}.node li::marker{color:var(--clay)}
-@media(max-width:700px){.node:nth-child(odd),.node:nth-child(even){margin:0}}
-/* cases */
-.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.case{padding:26px}
-.case h3{font-size:22px;margin:10px 0 4px}.case small{color:var(--mut)}
-.case dl{margin:18px 0 16px;display:grid;gap:10px}.case dt{font:800 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;color:var(--mut)}.case dd{color:var(--ink2);font-size:14.5px}
-@media(max-width:800px){.cases{grid-template-columns:1fr}}
-/* certs */
-.cwrap{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 18px;scrollbar-width:thin}
-.flip{flex:0 0 250px;scroll-snap-align:start;perspective:1000px;height:170px}
-.finner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
-.flip:hover .finner,.flip:focus-within .finner{transform:rotateY(180deg)}
-.fface{position:absolute;inset:0;border-radius:24px;padding:18px;background:var(--card);box-shadow:0 12px 26px rgba(79,69,63,.12),inset 0 3px 6px #fff;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;gap:8px}
-.fback{transform:rotateY(180deg);background:var(--dark);color:#fff}.fback h4{color:#fff}
-.fface h4{font-size:16px;line-height:1.25}.fface small{color:var(--mut);font-size:12px;margin-top:auto}
-.fface .chip{font:800 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;color:var(--clay)}
-.fback a{margin-top:auto;font-weight:700;color:#ffd08a}
-.arrows{display:flex;gap:8px}.arrows button{width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:var(--ink);font-size:20px;cursor:pointer;box-shadow:0 8px 18px rgba(79,69,63,.14)}
-/* skills */
-.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.sgroup{padding:22px}.sgroup h3{font-size:15px;margin-bottom:12px}
-@media(max-width:760px){.sgrid{grid-template-columns:1fr}}
-/* beyond the day job: small, honest */
-.beyond{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.reel{position:relative;border:0;border-radius:18px;overflow:hidden;background:#221a16;text-align:left;cursor:pointer;padding:0;color:#fff;transition:transform .25s;box-shadow:0 10px 22px rgba(79,69,63,.18)}
-.reel:hover{transform:translateY(-4px)}
-.reel img{aspect-ratio:9/16;object-fit:cover;width:100%;opacity:.92}
-.reel .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;font-size:14px}
-.reel b{position:absolute;left:10px;right:10px;bottom:10px;font-size:12px;text-shadow:0 2px 8px #000}
-dialog.vd{border:0;padding:0;background:transparent;max-width:min(420px,92vw);width:100%}dialog.vd::backdrop{background:rgba(79,69,63,.7);backdrop-filter:blur(8px)}
-dialog.vd video{width:100%;aspect-ratio:9/16;border-radius:22px;background:#000}
-dialog.vd .x{position:absolute;right:-6px;top:-46px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:var(--ink);font-size:20px;cursor:pointer}
-@media(max-width:860px){.beyond{grid-template-columns:1fr}}
-/* contact */
-.contact{padding-bottom:60px}
-.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
-.form{padding:26px;display:grid;gap:10px}
-.form label{font:800 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;color:var(--mut);margin-top:6px}
-.form input,.form textarea{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--ink);font:400 15px 'Plus Jakarta Sans',sans-serif}
+.csd{border:0;padding:0;background:transparent;max-width:min(920px,92vw);width:100%}
+::view-transition-old(csimg),::view-transition-new(csimg){animation-duration:.45s}
+::view-transition-group(csimg){animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+.csd::backdrop{background:rgba(17,17,17,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.csdIn{position:relative;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.86);color:#FAFAFA;display:grid;grid-template-columns:1.1fr .9fr}
+.csdShot{background:#f2f2f5;min-height:280px}.csdShot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}.csdShot.noimg{display:flex;align-items:center;justify-content:center;font:500 13px/1 'JetBrains Mono',monospace;color:#a9a6b8}
+.csdBody{padding:30px 30px 30px 26px;display:flex;flex-direction:column;gap:12px}.csdBody h3{font-size:26px;font-weight:800;letter-spacing:-.02em}.csdBody p{color:#555;font-size:14px}.csdBody .btn{align-self:flex-start;margin-top:8px}
+.csdX{position:absolute;top:12px;right:14px;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid #e3e3ea;background:#14131d;font-size:20px;cursor:pointer}
+.proj[role=button]{cursor:pointer}
+@media(max-width:760px){.csdIn{grid-template-columns:1fr}}
+.tilt{transition:transform .18s ease,box-shadow .18s ease;will-change:transform}
+.tilt:hover{box-shadow:0 18px 40px rgba(0,0,0,.10)}
+.btn,.hire,.unmute,.viewc{transition:transform .18s ease,box-shadow .18s ease}
+.btn:hover,.hire:hover,.viewc:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(108,43,217,.28)}
+.hero .spot{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(108,43,217,.16),transparent 62%);mix-blend-mode:multiply}
+@media(prefers-reduced-motion:reduce){.tilt,.btn,.hire{transition:none}.hero .spot{display:none}}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.rv[data-rv=left]{transform:translateX(-46px)}.jt.rv{transition-delay:0ms!important}.rv[data-rv=right]{transform:translateX(46px)}.rv[data-rv=zoom]{transform:scale(.82)}
+.rv[data-rv=drop]{transform:translateY(-220px);transition:none}
+.rv.in[data-rv=left],.rv.in[data-rv=right],.rv.in[data-rv=zoom]{transform:none}
+.rv[data-rv=drop].in{animation:dropBounce 1.15s cubic-bezier(.28,.84,.42,1) forwards}
+@keyframes dropBounce{0%{opacity:0;transform:translateY(-220px)}55%{opacity:1;transform:translateY(0)}72%{transform:translateY(-16px)}86%{transform:translateY(0)}94%{transform:translateY(-5px)}100%{opacity:1;transform:translateY(0)}}
+.btn:active,.hire:active,.unmute:active,.viewc:active,.proj:active,.icon:active,.arrows button:active{transform:scale(.97)!important}
+.cue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#FAFAFA;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.8);animation:bounceY 1.6s infinite}
+@keyframes bounceY{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-10px)}}
+.flabel{position:absolute;z-index:3;font:500 10px/1.5 'JetBrains Mono',monospace;letter-spacing:.14em;color:#d9d6e6;animation:softpulse 2.4s ease-in-out infinite;text-transform:uppercase}
+.flabel.tr{top:92px;right:36px;text-align:right}.flabel.bl{bottom:60px;left:36px}
+@keyframes softpulse{0%,100%{opacity:.45}50%{opacity:1}}
+nav{transition:background .4s,box-shadow .4s,border-color .4s}
+nav .wrap{transition:height .3s}
+nav.scrolled{background:rgba(5,5,7,.88);box-shadow:0 6px 30px rgba(0,0,0,.4);border-bottom-color:rgba(255,255,255,.08)}
+nav.scrolled .wrap{height:56px}
+.nlinks{position:relative}
+.nlinks a::after{display:none}
+.slide{position:absolute;bottom:-6px;height:2px;background:var(--acc);border-radius:2px;transition:left .35s cubic-bezier(.2,.7,.2,1),width .35s cubic-bezier(.2,.7,.2,1);left:0;width:0}
+.hv{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,background .25s ease}
+.hv:hover{transform:translateY(-3px) scale(1.015);border-color:rgba(108,43,217,.35);box-shadow:0 14px 34px rgba(108,43,217,.10)}
+.hv::before{transition:opacity .25s}
+.icon.hv:hover img{transform:scale(1.12);filter:invert(1) drop-shadow(0 8px 14px rgba(0,0,0,.18))}
+.icon img{transition:transform .25s,filter .25s}
+.cgrid{cursor:grab;user-select:none}.cgrid.dragging{cursor:grabbing;scroll-snap-type:none}.cgrid.dragging .flip{pointer-events:none}
+@supports (animation-timeline: view()){
+.lz .shead h2{border-bottom:0;background:linear-gradient(var(--acc),var(--acc)) no-repeat 0 100%/0% 4px;animation:draww linear both;animation-timeline:view();animation-range:entry 10% entry 60%}
+@keyframes draww{to{background-size:100% 4px}}
+.proofband .mq-track{animation:sc 46s linear infinite,none}
+.pf b{animation:pop linear both;animation-timeline:view();animation-range:entry 0% entry 40%}
+@keyframes pop{from{transform:scale(.7);opacity:.2}to{transform:none;opacity:1}}
+.shot img{animation:parallaxy linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
+@keyframes parallaxy{from{object-position:50% 0%}to{object-position:50% 100%}}
+}
+@media(prefers-reduced-motion:reduce){.rv[data-rv]{transform:none;animation:none}.cue,.flabel{animation:none}.lz .shead h2,.pf b,.shot img{animation:none}}
+.prog{position:absolute;left:0;top:0;height:3px;width:0;background:var(--acc);transition:width .1s linear}
+.nlinks a{position:relative;padding-bottom:3px}
+.nlinks a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--acc);transition:right .25s}
+.nlinks a.active{color:#FAFAFA}.nlinks a.active::after{right:0}
+.skip{position:absolute;left:-999px;top:8px;z-index:100;background:var(--acc);color:#14131d;padding:8px 14px;border-radius:8px}
+.skip:focus{left:12px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.glow::before,.glow::after,.unmute,.mq-track,.cursor{animation:none!important}html{scroll-behavior:auto}}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(5,5,7,.6);-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 4px 24px rgba(0,0,0,.3);color:#FAFAFA}
+html[data-theme=light] nav{background:rgba(5,5,7,.8);border-color:var(--line)}
+nav .wrap{display:flex;align-items:center;gap:22px;height:64px}
+.logo{font-weight:800;font-size:17px}
+.logo i{color:var(--acc);font-style:normal}
+.nlinks{display:flex;gap:24px;margin-left:auto;font-size:13px;color:#555}
+.nlinks a:hover{color:var(--txt)}
+.hire{margin-left:18px;background:var(--acc);color:#14131d;border-radius:99px;padding:8px 18px;font-size:13px;font-weight:600}
+html[data-theme=light] .hire{background:#FAFAFA;color:#14131d}
+.tgl{margin-left:10px;border:1px solid rgba(255,255,255,.25);background:transparent;color:var(--txt);border-radius:99px;width:34px;height:34px;cursor:pointer;font-size:15px}
+html[data-theme=light] .tgl{border-color:var(--line)}
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#f4f4f6}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero .shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.72) 42%,rgba(255,255,255,.05) 100%)}
+.hero .hcontent{position:relative;z-index:2;padding:110px 0 90px}
+.hero h1{color:#FAFAFA;font-size:clamp(38px,5.4vw,64px);font-weight:900;line-height:1.06;letter-spacing:-.02em;margin-bottom:18px;max-width:680px}
+.hero h1 .rot{color:var(--acc);display:inline-block;min-width:8ch;white-space:nowrap;transition:opacity .3s,filter .3s}
+.hero h1 .rot.sw{opacity:0;filter:blur(8px)}
+.hero h1 .rot .dud{opacity:.35}
+.kt span{display:inline-block;opacity:0;transform:translateY(.6em) rotate(3deg);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.uline{display:block;height:4px;width:0;background:var(--acc);border-radius:2px;margin-top:10px;animation:draw 1.1s .9s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes draw{to{width:10ch}}
+@media(prefers-reduced-motion:reduce){.kt span{opacity:1;transform:none;animation:none}.uline{width:10ch;animation:none}}
+.hero p.sub{color:#333;font-size:16px;max-width:470px;margin-bottom:30px}
+.cta{display:flex;gap:12px}
+.btn{border-radius:99px;padding:12px 26px;font-size:14px;font-weight:600}
+.btn.light{background:var(--acc);color:#14131d}
+.btn.ghosty{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.75);color:#FAFAFA;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.unmute{animation:pulse 1.6s ease-in-out infinite;position:absolute;right:34px;bottom:30px;z-index:3;display:flex;align-items:center;gap:8px;background:rgba(108,43,217,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.5);color:#14131d;border-radius:99px;padding:10px 18px;font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.12em;cursor:pointer}
+.ainote{position:absolute;left:34px;bottom:24px;z-index:3;color:#777;font:400 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em}
+section{padding:100px 0}
+.lz{--bg:#14131d;--surf:#14131d;--line:#e3e3ea;--txt:#FAFAFA;--mut:#a9a6b8;background:#14131d;color:#FAFAFA;background-image:linear-gradient(rgba(128,128,128,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(128,128,128,.045) 1px,transparent 1px);background-size:80px 80px}
+.lz .pill{background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#d9d6e6}
+.lz .icon img{filter:invert(1)}
+.lz .shot{border-color:#e3e3ea;background:#f2f2f5}
+.lz .ev{background:rgba(108,43,217,.06)}
+.lz .shead h2{display:inline-block;border-bottom:4px solid rgba(108,43,217,.35)}
+.lz .glow::before{opacity:.35}.lz .glow::after{opacity:.06}
+#about{background:var(--acc);color:#14131d}
+#about .hello{color:#14131d}
+#about h2{color:#14131d}
+#about>div>div>p{color:rgba(255,255,255,.92)}
+#about .stat{background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-color:rgba(255,255,255,.4);box-shadow:0 8px 24px rgba(0,0,0,.12)}#about .stat b{color:#14131d}#about .stat span{color:rgba(255,255,255,.85)}
+#about .pcard{border-color:rgba(255,255,255,.4);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+#about .stat.glow::before,#about .stat.glow::after{display:none}
+.shead{margin-bottom:48px}
+.shead .mono{display:block;color:var(--acc);margin-bottom:14px}
+.shead h2{font-size:clamp(28px,3.4vw,42px);font-weight:800;letter-spacing:-.02em}
+.shead p{color:var(--mut);max-width:640px;margin-top:12px}
+.center{text-align:center}
+.center p{margin-left:auto;margin-right:auto}
+.about{display:grid;grid-template-columns:320px 1fr;gap:56px;align-items:center}
+.pcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.pcard img{width:100%;display:block}
+.badge{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:8px 11px;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--grn)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 10px var(--grn)}
+.hello{font-family:Caveat,cursive;font-size:34px;color:var(--acc)}
+.about h2{font-size:clamp(28px,3vw,40px);font-weight:800;margin:6px 0 16px}
+.about>div>p{color:var(--mut);max-width:640px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.stat{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.stat b{display:block;font-size:20px;font-weight:800}
+.stat span{font:400 10px/1.4 'JetBrains Mono',monospace;color:var(--mut)}
+.jquote{max-width:760px;margin:0 auto 54px;padding:26px 30px;border-radius:18px;text-align:center}
+.jquote p{font-family:Caveat,cursive;font-size:30px;line-height:1.25;color:#FAFAFA}
+.jquote footer{margin-top:10px;font:400 11px/1.6 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.jline{list-style:none;position:relative;max-width:900px;margin:0 auto;padding:10px 0}
+.jline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(var(--acc),rgba(108,43,217,.15));transform:translateX(-50%)}
+.jt{position:relative;width:50%;padding:0 44px 44px 0}
+.jt:nth-child(even){margin-left:50%;padding:0 0 44px 44px}
+.jdot{position:absolute;top:22px;right:-9px;width:18px;height:18px;border-radius:50%;background:#14131d;border:4px solid var(--acc);box-shadow:0 0 0 6px rgba(108,43,217,.12)}
+.jt:nth-child(even) .jdot{right:auto;left:-9px}
+.jcard{background:#14131d;border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+.jyear{display:inline-block;font:700 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:var(--acc);border:1px solid rgba(108,43,217,.3);border-radius:99px;padding:6px 10px;margin-bottom:10px}
+.jcard h3{font-size:17px;font-weight:800;line-height:1.3;margin-bottom:6px}
+.jcard p{font-size:13.5px;color:var(--mut);line-height:1.6}
+@media(max-width:760px){.jline::before{left:14px}.jt,.jt:nth-child(even){width:100%;margin-left:0;padding:0 0 30px 40px}.jdot,.jt:nth-child(even) .jdot{left:5px;right:auto}}
+.roadmap{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:start}
+.rleft{position:sticky;top:96px}
+.pilltag{display:inline-block;border:1px solid var(--line);background:#14131d;border-radius:99px;padding:8px 16px;font-size:13px;font-weight:600;margin-bottom:22px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.rleft h2{font-size:clamp(34px,4.2vw,54px);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:18px}
+.rleft p{color:var(--mut);font-size:17px;max-width:460px}
+.rleft .note{text-align:left;margin-top:30px}
+.rright{position:relative;display:flex;flex-direction:column;gap:88px;padding:20px 0 20px}
+.rpath{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.pin{position:relative;width:min(330px,88%);background:#14131d;border:1px solid var(--line);border-radius:22px;padding:34px 26px 28px;box-shadow:0 18px 40px rgba(0,0,0,.08);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.pin.r1,.pin.r3{align-self:flex-end;transform:rotate(var(--rot))}.pin.r2,.pin.r4{align-self:flex-start;transform:rotate(var(--rot))}
+.pin:hover{box-shadow:0 26px 60px rgba(0,0,0,.14)}
+.pin.solid{background:var(--acc);color:#14131d;border-color:var(--acc);box-shadow:0 22px 50px rgba(108,43,217,.35)}
+.pin.solid .xnum,.pin.solid h3{color:#14131d}.pin.solid p{color:rgba(255,255,255,.92)}
+.tack{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#14131d,#bdbdc4 60%,#8a8a92);box-shadow:0 3px 6px rgba(0,0,0,.25),inset 0 0 0 3px rgba(255,255,255,.35)}
+.pin .xnum{font:italic 700 16px/1 Georgia,serif;letter-spacing:.06em;margin-bottom:12px}
+.pin h3{font-size:24px;font-weight:800;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+.pin p{font-size:15px;line-height:1.7;color:#555}
+
+.pin.r1{--rot:2deg}.pin.r2{--rot:-2deg}.pin.r3{--rot:1deg}.pin.r4{--rot:-1deg}
+.pin.rv{opacity:0;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.pin.rv[data-rv=right]{transform:translateX(90px) rotate(var(--rot))}.pin.rv[data-rv=left]{transform:translateX(-90px) rotate(var(--rot))}
+.pin.rv.in,.pin.rv.in[data-rv=right],.pin.rv.in[data-rv=left]{opacity:1;transform:rotate(var(--rot))}
+.pin.rv.in:hover{transform:rotate(0)}
+@media(max-width:980px){.roadmap{grid-template-columns:1fr}.rleft{position:static}.rright{gap:44px}}
+@media(max-width:640px){.pin,.pin.r1,.pin.r2,.pin.r3,.pin.r4{--rot:0deg;align-self:center!important;width:100%}.rpath{display:none}}
+.bigk{margin-top:auto;padding-top:18px;display:flex;align-items:baseline;gap:10px}.bigk b{font-size:64px;font-weight:900;line-height:1;color:var(--acc);letter-spacing:-.04em}.bigk small{font:500 11px/1 'JetBrains Mono',monospace;color:var(--mut);letter-spacing:.14em;text-transform:uppercase}
+.pipe{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap}.pipe span{font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.14em;border:1px solid var(--line);border-radius:99px;padding:7px 12px;background:#14131d}.pipe i{flex:1;min-width:24px;height:2px;background:linear-gradient(90deg,var(--acc),rgba(108,43,217,.15));position:relative}.pipe i::after{content:"";position:absolute;right:-1px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.xcard{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:26px 22px}
+.xnum{font:700 15px/1 'JetBrains Mono',monospace;color:var(--acc);margin-bottom:14px}
+.xcard h3{font-size:17px;font-weight:700;margin-bottom:10px}
+.xcard p{font-size:13px;color:var(--mut);line-height:1.6}
+.note{font-family:Caveat,cursive;font-size:30px;color:var(--acc);text-align:center;margin-top:44px}
+.sgroup{margin-bottom:40px}
+.sgroup h3{font-size:15px;font-weight:700;color:var(--mut);margin-bottom:18px;text-align:center;letter-spacing:.04em;text-transform:uppercase}
+.igrid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.icon{width:132px;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:18px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;transition:transform .2s,border-color .2s}
+.icon:hover{transform:translateY(-4px);border-color:var(--acc)}
+.icon img{width:44px;height:44px;object-fit:contain}
+html[data-theme=light] .icon img{filter:invert(1)}
+.icon span{font:500 11px/1.2 'JetBrains Mono',monospace;color:var(--mut);text-align:center}
+.icon.noico img{display:none}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.proj{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column}
+.shot{border-radius:11px;overflow:hidden;border:1px solid var(--line);margin-bottom:15px;aspect-ratio:720/380;background:#0a0a0a}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;opacity:.94;transition:filter .5s}.shot img.lq{filter:blur(14px);transform:scale(1.06)}
+.shot.noimg{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(108,43,217,.12),transparent 68%)}
+.shot.noimg span{font:500 13px/1 'JetBrains Mono',monospace;color:var(--mut)}
+.cat{font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:var(--acc);margin-bottom:9px}
+.proj h3{font-size:19px;font-weight:700;margin-bottom:8px}
+.proj>p{font-size:13px;color:var(--mut);line-height:1.55;flex:1}
+.ev{margin-top:12px;border-left:2px solid var(--acc);background:rgba(108,43,217,.07);border-radius:0 8px 8px 0;padding:9px 12px;font-size:12px;font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pill{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:5px 11px;font:500 10px/1 'JetBrains Mono',monospace;color:var(--mut);white-space:nowrap}
+.visit{margin-top:14px;font:600 12px/1 'JetBrains Mono',monospace;color:var(--acc)}
+.syslog{margin-top:64px}
+.syslog h3{font-size:20px;font-weight:800;margin-bottom:18px}
+.lrow{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--line);border-radius:12px;background:var(--surf);padding:14px 18px;margin-bottom:10px;transition:border-color .2s}
+.lrow:hover{border-color:var(--acc)}
+.lrow b{display:block;font-size:14.5px}
+.lrow span{font-size:12px;color:var(--mut)}
+.lrow em{font:500 10px/1 'JetBrains Mono',monospace;font-style:normal;color:var(--acc);border:1px solid var(--line);border-radius:99px;padding:5px 11px;white-space:nowrap}
+.logline{margin-top:16px;font:400 11px/1 'JetBrains Mono',monospace;color:var(--mut)}
+.cursor{display:inline-block;width:7px;height:12px;background:var(--acc);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(108,43,217,.55)}50%{box-shadow:0 0 0 12px rgba(108,43,217,0)}}
+#certifications{background:#14131d;color:#FAFAFA;background-image:linear-gradient(#f0f0f3 1px,transparent 1px),linear-gradient(90deg,#f0f0f3 1px,transparent 1px);background-size:72px 72px}
+#certifications .shead h2{color:#FAFAFA;display:inline-block;border-bottom:4px solid rgba(108,43,217,.35)}
+#certifications .shead{display:flex;align-items:flex-end;justify-content:space-between;text-align:left}
+.arrows{display:flex;gap:10px}.arrows button{width:46px;height:46px;border-radius:50%;border:1px solid #ddd;background:#14131d;color:#FAFAFA;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.cgrid{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 4px 34px;scrollbar-width:none}
+.cgrid::-webkit-scrollbar{display:none}
+.flip{perspective:1100px;min-height:230px;flex:0 0 300px;scroll-snap-align:start}
+.finner{position:relative;width:100%;height:100%;min-height:230px;border-radius:18px;transform-style:preserve-3d;transition:transform .6s}
+.flip:hover .finner{transform:rotateY(180deg)}
+.fface{position:absolute;inset:0;border-radius:18px;background:#14131d;border:1px solid #e6e6ea;padding:20px;backface-visibility:hidden;display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.fface h4{color:#FAFAFA}
+.issued{margin-top:auto;padding-top:12px;border-top:1px solid #eee;font-size:13px;color:#333}.issued small{display:block;font:500 9px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#888;margin-bottom:4px}
+.fback{background:#0b0b0d;color:#14131d;border-color:#222;justify-content:center;gap:10px;transform:rotateY(180deg)}
+.fback h4{color:#14131d;flex:0;text-align:center;font-size:14px}
+.fback small{font:500 9px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#888}
+.fback .vo{text-align:center}
+.shield{color:var(--acc);font-size:16px}
+.viewc{align-self:center;background:var(--acc);color:#14131d;border-radius:99px;padding:10px 18px;font-weight:700;font-size:13px}
+.fbot{display:flex;justify-content:space-between;align-items:center;margin-top:auto}.fbot b{font:700 10px/1 'JetBrains Mono',monospace;color:var(--acc);letter-spacing:.15em}
+
+.chip{font:600 9px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:var(--acc);border:1px solid var(--line);border-radius:99px;padding:4px 9px}
+.cnum{font:500 12px/1 'JetBrains Mono',monospace;color:#999}
+.fface h4{font-size:15px;font-weight:700;line-height:1.35;flex:1}
+.fface p{font-size:11.5px;color:var(--mut)}
+.ver{font:700 13px/1 'JetBrains Mono',monospace;color:var(--grn);letter-spacing:.2em}
+.fback a{font:600 11px/1 'JetBrains Mono',monospace;color:var(--acc)}
+.fback a.viewc{color:#14131d;font:700 13px/1 Inter,sans-serif}
+.certnote{text-align:center;font-family:Caveat,cursive;font-size:24px;color:#777}
+.introwrap{position:relative;max-width:860px;margin:0 auto;border-radius:16px;overflow:hidden;background:var(--surf);border:1px solid var(--line)}
+.introwrap iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+.loomfacade{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;width:100%;aspect-ratio:16/9;border:0;background:linear-gradient(135deg,#14131d,#f3f3f6);cursor:pointer;font:600 14px/1 Inter,sans-serif;color:#FAFAFA}.playbtn{width:72px;height:72px;border-radius:50%;background:var(--acc);color:#14131d;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 12px 30px rgba(108,43,217,.35)}
+.intronote{text-align:center;margin-top:14px;font:400 12px/1.6 'JetBrains Mono',monospace;color:var(--mut)}
+.contact{position:relative;overflow:hidden;background:#14131d;color:#FAFAFA}
+.ghost{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:clamp(70px,12vw,150px);font-weight:900;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px #e6e6ea;white-space:nowrap;pointer-events:none}
+.cgrid2{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:0;margin-top:90px;background:var(--acc);border-radius:18px;overflow:hidden}
+.form{padding:44px}.cinfo{padding:44px;background:rgba(0,0,0,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-left:1px solid rgba(255,255,255,.25)}
+.form label{display:block;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:rgba(255,255,255,.8);margin:16px 0 7px;text-transform:uppercase}
+.form .mono{color:#14131d}
+.form input,.form textarea{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.55);border-radius:0;color:#14131d;padding:10px 2px;font:400 15px/1.5 Inter,sans-serif;outline:none}.form ::placeholder{color:rgba(255,255,255,.75)}
 .form textarea{min-height:120px;resize:vertical}
-.form button{margin-top:8px}
-.cinfo{display:grid;gap:14px;align-content:start}.cinfo div{padding:18px 20px}.cinfo b{display:block;font:800 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;color:var(--mut);margin-bottom:8px}
-.cinfo a{color:var(--ink);text-decoration:underline;text-decoration-color:rgba(79,69,63,.3)}
-@media(max-width:860px){.cgrid{grid-template-columns:1fr}}
-.foot{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;color:var(--mut);font-size:13px}
-.bigname{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(48px,12vw,150px);font-weight:800;letter-spacing:-.05em;line-height:.9;color:rgba(79,69,63,.07);margin-top:40px;pointer-events:none;user-select:none}
-.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.mq,.flow path,.steam{animation:none}.laptop{transition:none}}
-.seo{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form button{margin-top:26px;background:#14131d;color:#000;border:0;border-radius:99px;padding:12px 30px;font-weight:700;font-size:14px;cursor:pointer}
+.form .consent{display:flex;gap:9px;align-items:flex-start;margin-top:18px;font:400 11px/1.6 'JetBrains Mono',monospace;letter-spacing:0;text-transform:none;color:rgba(255,255,255,.85);cursor:pointer}
+.form .consent input{width:15px;height:15px;margin-top:2px;accent-color:#000;flex:0 0 auto}
+.cinfo{font:400 12.5px/1.9 'JetBrains Mono',monospace;color:rgba(255,255,255,.85)}
+.cinfo b{display:block;color:#14131d;margin-bottom:4px;font-weight:600}
+.cinfo .st{color:#14131d;font-weight:700}
+.cinfo>div{margin-bottom:22px}
+.bigname{font-size:clamp(52px,10vw,118px);font-weight:900;letter-spacing:-.045em;line-height:.9;text-align:center;margin-top:70px;color:#FAFAFA}
+.foot{display:flex;justify-content:space-between;gap:16px;margin-top:44px;padding:20px 0 26px;border-top:1px solid var(--line);font:400 11.5px/1.7 'JetBrains Mono',monospace;color:var(--mut);flex-wrap:wrap}
+.foot a{border-bottom:1px solid var(--line)}
+@media(max-width:980px){.nlinks{display:none}.about,.cgrid2{grid-template-columns:1fr}.pgrid{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.pcard{max-width:320px}
+.pwrap{max-width:320px}.pcard{transform:rotate(-3deg);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s}.pcard:hover{transform:rotate(0) scale(1.03);box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.dot{animation:pulse 1.6s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.atext.rv{transition-delay:200ms!important}}
 """
 
-# ---------------------------------------------------------------- html
-HTML = f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+HTML = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href=\"""" + HERO + """">
 <title>Dedric Brown &mdash; Senior Salesforce Product Manager | GTM Systems &amp; Agentforce</title>
 <meta name="description" content="Senior product manager who owns Salesforce CRM and GTM systems roadmaps: $150M+ pipeline at Cloudflare, Health Cloud and Agentforce governance at Centene, IAM at Salesforce. Atlanta, open to remote.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%234f453f'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='28' font-weight='900' fill='%23ffd08a' text-anchor='middle'%3EDB%3C/text%3E%3C/svg%3E">
-<meta name="theme-color" content="#f1dcc7">
-<meta property="og:type" content="profile"><meta property="og:title" content="Dedric Brown &mdash; Senior Salesforce Product Manager"><meta property="og:description" content="Salesforce CRM, GTM systems and Agentforce product leadership. $150M+ pipeline roadmap, $15M+ retained, 8,000-user SSO/MFA. Atlanta, open to remote."><meta property="og:url" content="{BASE}"><meta property="og:image" content="{BASE}assets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="{BASE}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='28' y='44' font-family='Arial,sans-serif' font-size='26' font-weight='800' fill='%23AAFF00' text-anchor='middle'%3EDB%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#050507">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dedric Brown &mdash; Senior Salesforce Product Manager">
+<meta property="og:description" content="Salesforce CRM, GTM systems and Agentforce product leadership. $150M+ pipeline roadmap, $15M+ retained, 8,000-user SSO/MFA. Atlanta, open to remote.">
+<meta property="og:url" content="https://referrernation-web.github.io/dedric/">
+<meta property="og:image" content="https://referrernation-web.github.io/dedric/assets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
-<script type="application/ld+json">{JSONLD}</script>
-<style>{CSS}</style></head><body>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>""" + CSS + """
+h1,h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;letter-spacing:-.01em}
+/* ---- Clay + Skeuo layer (patch14) ---- */
+:root{--clay-bg:linear-gradient(145deg,#1c1b27 0%,#12111a 100%);--clay-sh:0 18px 34px rgba(0,0,0,.45),0 4px 10px rgba(0,0,0,.3),inset 0 -6px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);--clay-sh-hover:0 26px 46px rgba(108,43,217,.16),0 6px 14px rgba(0,0,0,.06),inset 0 -6px 12px rgba(0,0,0,.05),inset 0 1px 0 rgba(255,255,255,.08)}
+.stat,.icon,.proj,.jcard,.fface,.pin,.pcard,.csdIn,.lrow{background:var(--clay-bg);border:1px solid rgba(255,255,255,.1);box-shadow:var(--clay-sh)}
+.stat,.icon,.jcard,.lrow{border-radius:22px}.proj,.pin,.fface{border-radius:26px}
+.stat.glow,.proj.glow,.icon.glow{border-color:rgba(255,255,255,.9)}
+.hv:hover,.proj.tilt:hover,.pin.rv.in:hover{box-shadow:var(--clay-sh-hover);border-color:rgba(255,255,255,1)}
+.pin.solid{background:linear-gradient(145deg,#7c3ae6,#5a22b8);border-color:rgba(255,255,255,.25);box-shadow:0 22px 44px rgba(108,43,217,.35),inset 0 -8px 14px rgba(0,0,0,.28),inset 0 3px 6px rgba(255,255,255,.28)}
+#about .stat{background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,.10));border-color:rgba(255,255,255,.45);box-shadow:0 18px 34px rgba(0,0,0,.18),inset 0 -6px 12px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.35)}
+.btn,.hire,.unmute,.viewc,.arrows button,.pilltag{box-shadow:0 10px 20px rgba(17,17,17,.12),inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 5px rgba(255,255,255,.35)}
+.btn.light,.hire{background:linear-gradient(180deg,#7c3ae6,#5a22b8)}
+.btn:not(.light){background:linear-gradient(180deg,#1f1e2b,#14131d);color:#FAFAFA;border:1px solid rgba(255,255,255,.12)}
+.btn:active,.hire:active,.viewc:active{box-shadow:0 3px 8px rgba(17,17,17,.12),inset 0 4px 8px rgba(0,0,0,.22);transform:translateY(1px) scale(.98)!important}
+.pill{background:linear-gradient(180deg,#1f1e2b,#14131d);border-color:rgba(255,255,255,.12);box-shadow:none;color:#d9d6e6}
+.icon img{filter:drop-shadow(0 6px 8px rgba(0,0,0,.18))}
+.xnum,.cat{text-shadow:none}
+/* sticky notes (skeuomorphic) */
+.note,.jquote{position:relative;font-family:Caveat,cursive;color:#3a2a00;background:linear-gradient(180deg,#fff5b0,#ffe98a);box-shadow:0 12px 22px rgba(0,0,0,.14),inset 0 -12px 18px rgba(0,0,0,.06);border:0;border-radius:4px 4px 6px 4px/4px 4px 10px 4px;display:inline-block;padding:16px 26px 20px;transform:rotate(-1.5deg)}
+.note{font-size:28px;margin:44px auto 0;left:50%;transform:translateX(-50%) rotate(-1.5deg)}
+.rleft .note{left:0;transform:rotate(1.5deg);margin-top:30px}
+.jquote{display:block;max-width:760px;margin:0 auto 54px;transform:rotate(-1deg);backdrop-filter:none;-webkit-backdrop-filter:none}
+.jquote p{color:#3a2a00}.jquote footer{color:#7a5a00}
+.note::before,.jquote::before{content:"";position:absolute;top:-12px;left:50%;width:110px;height:26px;transform:translateX(-50%) rotate(-2deg);background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.05);box-shadow:0 2px 4px rgba(0,0,0,.08);backdrop-filter:blur(2px)}
+.note::after,.jquote::after{content:"";position:absolute;right:0;bottom:0;width:0;height:0;border-style:solid;border-width:0 0 22px 22px;border-color:transparent transparent #fff transparent;filter:drop-shadow(-2px -2px 2px rgba(0,0,0,.08))}
+.jquote.rv.in,.note.rv.in{transform:rotate(-1deg)}
+/* clay tack on pins gets a clay ball */
+.tack{background:radial-gradient(circle at 35% 30%,#fff 0,#d9c7ff 35%,#6C2BD9 70%,#3d1a80 100%);box-shadow:0 4px 8px rgba(0,0,0,.28),inset 0 -3px 5px rgba(0,0,0,.25)}
+@media(prefers-reduced-motion:reduce){.note,.jquote{transform:none}}
 
-<nav class="top" aria-label="Sections"><a class="logo" href="#top">DB</a><a class="pl on" href="#about">About</a><a class="pl" href="#career">Career</a><a class="pl" href="#cases">Case studies</a><a class="pl" href="#certs">Credentials</a><a class="pl w" href="world/" title="Ride the 3D resume">3D World</a></nav>
-<nav class="dock" aria-label="Quick links"><a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a><a href="{CALENDLY}" target="_blank" rel="noopener">Book a call</a><a class="l" href="{PDF}" target="_blank" rel="noopener">Resume</a></nav>
+/* ---- Journey: spatial root-tree (patch15) ---- */
+.jwrap{position:relative;max-width:960px;margin:0 auto;perspective:1400px}
+.jtree{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.jtree #jtrunk{fill:none;stroke:url(#jg);stroke-width:7;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 2.2s cubic-bezier(.2,.7,.2,1)}
+.jtree #jbr path{fill:none;stroke:#6C2BD9;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1s cubic-bezier(.2,.7,.2,1)}
+.jtree #jtw path{fill:none;stroke:#a07ff0;stroke-width:1.6;stroke-linecap:round;opacity:.8;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .8s ease}
+.jwrap.grow #jtrunk,.jwrap.grow #jbr path,.jwrap.grow #jtw path{stroke-dashoffset:0}
+.jline{position:relative;z-index:1;max-width:none;padding:24px 0}
+.jline::before{display:none}
+.jt{padding:0 96px 58px 0}.jt:nth-child(even){padding:0 0 58px 96px}
+.jdot{right:85px;width:22px;height:22px;border:5px solid var(--acc);background:radial-gradient(circle at 35% 30%,#fff,#e3d6ff 60%,#c4a8ff);box-shadow:0 4px 8px rgba(108,43,217,.25),0 0 0 6px rgba(108,43,217,.10)}
+.jt:nth-child(even) .jdot{left:85px}
+.jcard{transform:rotateY(7deg);transform-origin:right center;transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s}
+.jt:nth-child(even) .jcard{transform:rotateY(-7deg);transform-origin:left center}
+.jt:hover .jcard{transform:rotateY(0) translateZ(24px) scale(1.02);box-shadow:var(--clay-sh-hover)}
+@media(max-width:760px){.jt,.jt:nth-child(even){padding:0 0 34px 44px}.jcard,.jt:nth-child(even) .jcard{transform:none}.jdot,.jt:nth-child(even) .jdot{left:3px}}
+@media(prefers-reduced-motion:reduce){.jtree #jtrunk,.jtree #jbr path,.jtree #jtw path{stroke-dashoffset:0;transition:none}.jcard,.jt:nth-child(even) .jcard{transform:none}}
 
-<header class="wrap hero" id="top">
-  <div>
-    <span class="kicker"><i></i>Hello! I&rsquo;m Dedric &middot; Senior Salesforce PM &middot; Atlanta &middot; remote US</span>
-    <h1>I make Salesforce <em>pay for itself.</em></h1>
-    <p class="sub">Senior product manager for Salesforce CRM, go-to-market systems and Agentforce, 8+ years across NCR, Salesforce, Cloudflare and Centene. I turn fragmented, manual processes into governed, automated platforms, then prove it with the numbers Finance signs off on.</p>
-    <div class="cta"><a class="btn dark" href="{CALENDLY}" target="_blank" rel="noopener">Book a 30-minute call</a><a class="btn" href="{PDF}" target="_blank" rel="noopener">Resume PDF</a><a class="btn holo" href="#cases">Case studies</a></div>
-    <div class="switch" id="sw"><b class="a">Sales Cloud years</b><button type="button" aria-label="Switch between Sales Cloud and Health Cloud numbers"><i></i></button><b class="b">Health Cloud now</b></div>
-    <div class="stats" id="stats">{stats_html("sales")}</div>
+/* ---- green glass tree + white leaves (patch16) ---- */
+.jtree #jhalo{fill:none;stroke:#8a55f0;stroke-width:22;stroke-linecap:round;opacity:.22;filter:url(#jglow)}
+.jtree #jtrunk{stroke:url(#jg);stroke-width:8;opacity:.78}
+.jtree #jbr path{stroke:#6C2BD9;opacity:.75}
+.jtree #jtw path{stroke:#a07ff0;opacity:.8}
+.jtree .leaf{fill:rgba(255,255,255,.95);stroke:rgba(108,43,217,.75);stroke-width:1.4;transform-box:fill-box;transform-origin:0% 50%;transform:scale(0);transition:transform .6s cubic-bezier(.34,1.4,.4,1);filter:drop-shadow(0 3px 5px rgba(40,10,90,.22))}
+.jtree .leaf.v{fill:rgba(255,255,255,.7)}
+.jwrap.grow .leaf{transform:scale(1)}
+.jdot{border-color:#6C2BD9;background:radial-gradient(circle at 35% 30%,#fff,#e3d6ff 60%,#c4a8ff);box-shadow:0 4px 8px rgba(108,43,217,.28),0 0 0 6px rgba(108,43,217,.12)}
+.jcard{border-color:rgba(255,255,255,.95)}
+.jt .jcard::before{content:"";position:absolute;top:-10px;right:18px;width:34px;height:20px;border-radius:0 100% 0 100%;background:linear-gradient(135deg,#fff,#1b1a26);border:1px solid rgba(108,43,217,.35);box-shadow:0 2px 4px rgba(40,10,90,.15);transform:rotate(-20deg)}
+.jt:nth-child(even) .jcard::before{right:auto;left:18px;transform:rotate(20deg) scaleX(-1)}
+.jyear{color:var(--acc);border-color:rgba(108,43,217,.3)}
+
+/* ---- Spatial UI layer (patch17) ---- */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+.hero{perspective:1200px}
+[data-depth]{transform:translate3d(calc(var(--px,0)*var(--d,0)*1px),calc(var(--py,0)*var(--d,0)*1px),0);transition:transform .25s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.hero .flabel,.hero .ainote{transform:translate3d(calc(var(--px,0)*14px),calc(var(--py,0)*14px),0);transition:transform .3s}
+.hero .cue{transform:translate(-50%,0) translate3d(calc(var(--px,0)*10px),calc(var(--py,0)*10px),0)}
+.sheen{position:relative}
+.sheen::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.55),rgba(255,255,255,0) 60%);opacity:0;transition:opacity .3s;mix-blend-mode:screen;z-index:2}
+.sheen:hover::after{opacity:1}
+.pin.solid.sheen::after{background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.35),rgba(255,255,255,0) 60%)}
+.hv:hover,.hv:focus-visible{transform:translate3d(0,-6px,0) scale(1.02);box-shadow:0 30px 60px rgba(108,43,217,.18),0 8px 18px rgba(0,0,0,.08),inset 0 -6px 12px rgba(0,0,0,.05),inset 0 3px 6px #fff;border-color:#fff}
+.rv[data-rv=z]{transform:perspective(1200px) rotateX(7deg) translateZ(-70px);transform-origin:50% 100%}
+.rv.in[data-rv=z]{transform:none}
+.badge,.flabel.tr{animation:sfloat 4.2s ease-in-out infinite}
+@keyframes sfloat{0%,100%{translate:0 0}50%{translate:0 -4px}}
+::view-transition-old(root){animation:vt-out .45s cubic-bezier(.2,.7,.2,1) both}
+::view-transition-new(root){animation:vt-in .45s cubic-bezier(.2,.7,.2,1) both}
+@keyframes vt-out{to{transform:scale(.97);opacity:.6}}
+@keyframes vt-in{from{transform:scale(1.03);opacity:0}}
+}
+.stat,.proj,.pin,.jcard,.icon,.fface,.pcard,.lrow{box-shadow:var(--clay-sh),inset 1px 1px 0 rgba(255,255,255,.95)}
+.badge{position:absolute;left:-10px;bottom:-12px;box-shadow:0 12px 24px rgba(0,0,0,.35),0 2px 4px rgba(0,0,0,.2)}
+.pcard{overflow:visible}.pcard img{border-radius:18px}
+.flabel.tr{right:-6px;top:84px}
+body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate(.8)}
+.dock{position:fixed;top:auto;right:auto;left:50%;bottom:18px;transform:translateX(-50%);border-bottom:0;z-index:60;display:flex;gap:2px;padding:6px;border-radius:99px;background:rgba(20,19,29,.86);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);border:1px solid rgba(255,255,255,.85);box-shadow:0 20px 50px rgba(0,0,0,.16),0 2px 6px rgba(0,0,0,.06),inset 0 1px 0 #fff}
+.dock a{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1px;width:64px;padding:7px 0 6px;border-radius:99px;color:#d9d6e6;font:600 12px/1 Inter,system-ui,sans-serif;transition:color .25s,transform .25s}
+.dock a>span{font-size:9px;letter-spacing:.04em;opacity:.85}
+.dock a:hover{transform:translateY(-4px) scale(1.06);color:#fff}
+.dock a.active{color:#fff}
+.dsel{position:absolute;top:6px;left:6px;height:calc(100% - 12px);width:64px;border-radius:99px;background:linear-gradient(180deg,#7c3ae6,#5a22b8);box-shadow:0 8px 18px rgba(108,43,217,.35),inset 0 1px 0 rgba(255,255,255,.35);transition:left .4s cubic-bezier(.2,.7,.2,1),width .4s;z-index:0}
+@media(max-width:980px){.dock{display:none}}
+@media(prefers-reduced-motion:reduce){.dock a:hover{transform:none}.badge,.flabel.tr{animation:none}}
+
+/* ---- mascot game (patch18) ---- */
+.pin .ledge{position:absolute;left:6px;right:6px;top:-7px;height:11px;border-radius:8px;background:linear-gradient(180deg,#fff,#efe3e5);border:1px solid rgba(255,255,255,.95);box-shadow:0 5px 10px rgba(108,43,217,.18),inset 0 -3px 5px rgba(0,0,0,.08),inset 0 1px 0 #fff;transform:rotate(calc(var(--rot,0deg)*-1))}
+.pin.solid .ledge{background:linear-gradient(180deg,#7c3ae6,#6C2BD9);border-color:rgba(255,255,255,.35)}
+.pin .tack{top:-13px;z-index:2}
+#mg{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:visible}
+.mg-spr{position:absolute;background-repeat:no-repeat;will-change:transform;backface-visibility:hidden;transform-style:preserve-3d;image-rendering:auto;contain:layout style}
+.mg-sh{position:absolute;background:radial-gradient(ellipse,rgba(40,10,90,.28),transparent 70%);border-radius:50%;width:64px;height:11px;transform:translateX(-50%)}
+.mg-tag{position:absolute;left:0;top:0;background:rgba(255,255,255,.94);border:1px solid rgba(108,43,217,.3);border-radius:99px;padding:4px 10px;font:700 10px/1 'JetBrains Mono',monospace;color:var(--acc);box-shadow:0 8px 18px rgba(0,0,0,.12);white-space:nowrap;opacity:0;transition:opacity .4s;will-change:transform}
+#mg.tagon .mg-tag{opacity:1}
+.mg-dust,.mg-spark{position:absolute;width:7px;height:7px;border-radius:50%;background:rgba(150,110,220,.5);animation:mgpuff .5s ease-out forwards;pointer-events:none}
+.mg-spark{width:4px;height:4px;background:rgba(200,140,90,.85)}
+@keyframes mgpuff{to{transform:translate(var(--dx),var(--dy,-14px)) scale(.2);opacity:0}}
+@media(max-width:700px){#mg{display:none}}
+
+.mg-bub{position:absolute;left:0;top:0;max-width:220px;background:rgba(255,255,255,.96);border:1px solid rgba(108,43,217,.3);border-radius:14px 14px 14px 4px;padding:8px 11px;font:600 12px/1.35 Inter,system-ui,sans-serif;color:#111;box-shadow:0 10px 24px rgba(0,0,0,.14);opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;pointer-events:none;will-change:transform}
+.mg-bub.on{opacity:1;transform:translateY(0)}
+.mg-tag{pointer-events:auto;cursor:pointer}
+.mg-bub.pup{border-radius:14px 14px 4px 14px;font-size:11px;padding:6px 9px}.mg-tag2{font-size:9px;padding:3px 8px;pointer-events:none;cursor:default}
+.mg-play-off{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:9px 16px;border-radius:99px;border:1px solid rgba(108,43,217,.3);background:linear-gradient(180deg,#fff,#f3eef0);color:var(--acc);font:700 12px/1 'JetBrains Mono',monospace;letter-spacing:.06em;cursor:pointer;box-shadow:0 8px 18px rgba(108,43,217,.12),inset 0 1px 0 #fff}
+.mg-play-off:hover{transform:translateY(-2px)}
+.mg-play-off.on{background:linear-gradient(180deg,#7c3ae6,#5a22b8);color:#fff}
+@media(max-width:700px){.mg-play-off{display:none}}
+</style></head><body>
+
+<a class="skip" href="#about">Skip to content</a>
+<nav><div class="prog" id="prog"></div><div class="wrap">
+  <span class="logo">Dedric Brown<i> .</i></span>
+  <div class="nlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#journey">Journey</a><a href="#expertise">Expertise</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#certifications">Certifications</a><a href="#contact">Contact</a><span class="slide" id="slide"></span></div>
+  <a class="hire" href="https://calendly.com/dbrowntech15/30min" target="_blank" rel="noopener">Book a call</a>
+  
+</div></nav>
+<nav class="dock" id="dock" aria-label="Sections"><a href="#home" title="Home">&#8962;<span>Home</span></a><a href="#about" title="About">&#9786;<span>About</span></a><a href="#journey" title="Journey">&#10148;<span>Journey</span></a><a href="#expertise" title="Expertise">&#9733;<span>Expertise</span></a><a href="#skills" title="Skills">&#9881;<span>Skills</span></a><a href="#projects" title="Projects">&#9638;<span>Projects</span></a><a href="#certifications" title="Certifications">&#10004;<span>Certs</span></a><a href="#contact" title="Contact">&#9993;<span>Contact</span></a><span class="dsel" id="dsel"></span></nav>
+
+<header class="hero" id="home">
+  <video id="reel" data-depth="-6"\"""" + (" src=\"" + INTRO + "\"" if INTRO else "") + """ poster=\"""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>
+  <div class="shade"></div><div class="spot" id="spot"></div>
+  <div class="wrap hcontent" data-depth="8">
+    <h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Senior Product Manager</span><span class="uline"></span></h1>
+    <p class="sub">I own Salesforce CRM and go-to-market systems roadmaps, from NetSuite integrations to Agentforce governance, and turn fragmented, manual processes into platforms Finance signs off on.</p>
+    <div class="cta"><a class="btn light" href="#projects">View Case Studies</a><a class="btn ghosty" href="world/" title="3D resume: ride Rev across the cities where the career happened">&#127758; Ride the 3D World</a><a class="btn ghosty" href="assets/Dedric-Brown-Resume-2026.pdf" target="_blank" rel="noopener">Resume PDF</a></div>
   </div>
-  <div class="scene rv" aria-label="Intro video on a laptop">
-    <div class="desk"></div>
-    <div class="laptop"><div class="lid"><div class="screen">{SCREEN}</div></div><div class="base"><span class="pad"></span><span class="keys"></span></div></div>
-    <div class="mug"></div><div class="steam">&#8767;</div>
-    {'<button class="unmute" id="unmute" type="button">&#128266; PLAY WITH SOUND</button>' if INTRO else ''}
-  </div>
+  <span class="flabel tr">// Salesforce &middot; GTM Systems &middot; Agentforce<br>Centene, since Jan 2026</span>
+  <span class="flabel bl">// Atlanta &middot; remote US<br>$150M+ pipeline roadmap</span>
+  <a class="cue" href="#about" aria-label="Scroll down">&#8964;</a>
+  <span class="ainote">""" + ("APPLICATION INTRO &middot; REAL RESULTS BELOW" if INTRO else "INTRO VIDEO IN PRODUCTION &middot; REAL RESULTS BELOW") + """</span>
+  """ + ('<button class="unmute" id="unmute">&#128266; UNMUTE INTRO</button>' if INTRO else "") + """
 </header>
 
-<div class="proofband" aria-label="Highlights"><div class="mq">
-  <span class="pf"><b>$150M+</b>annual pipeline &middot; Sales Cloud roadmap &middot; Cloudflare</span><span class="pf"><b>40%</b>faster time-to-insight &middot; 12+ teams</span><span class="pf"><b>35%</b>Salesforce adoption lift &middot; GTM users</span><span class="pf"><b>$15M+</b>enterprise contracts retained &middot; Salesforce</span><span class="pf"><b>8,000+</b>users on SSO / MFA &middot; incidents down 40%</span><span class="pf"><b>2M+</b>CRM records migrated &middot; zero downtime &middot; NCR</span><span class="pf"><b>9</b>Salesforce credentials &middot; Agentforce Specialist</span>
-  <span class="pf"><b>$150M+</b>annual pipeline &middot; Sales Cloud roadmap &middot; Cloudflare</span><span class="pf"><b>40%</b>faster time-to-insight &middot; 12+ teams</span><span class="pf"><b>35%</b>Salesforce adoption lift &middot; GTM users</span><span class="pf"><b>$15M+</b>enterprise contracts retained &middot; Salesforce</span><span class="pf"><b>8,000+</b>users on SSO / MFA &middot; incidents down 40%</span><span class="pf"><b>2M+</b>CRM records migrated &middot; zero downtime &middot; NCR</span><span class="pf"><b>9</b>Salesforce credentials &middot; Agentforce Specialist</span>
-</div></div>
-
+<div class="proofband" aria-label="Evidence highlights"><div class="mq-track"><span class="pf"><b>$150M+</b>annual pipeline · Sales Cloud roadmap · Cloudflare</span><span class="pf"><b>40%</b>faster time-to-insight · 12+ teams</span><span class="pf"><b>35%</b>Salesforce adoption lift · GTM users</span><span class="pf"><b>$15M+</b>enterprise contracts retained · Salesforce</span><span class="pf"><b>8,000+</b>users on SSO / MFA · incidents down 40%</span><span class="pf"><b>2M+</b>CRM records migrated · zero downtime · NCR</span><span class="pf"><b>9</b>Salesforce credentials · Agentforce Specialist</span><span class="pf"><b>Atlanta</b>open to remote across the US</span><span class="pf"><b>$150M+</b>annual pipeline · Sales Cloud roadmap · Cloudflare</span><span class="pf"><b>40%</b>faster time-to-insight · 12+ teams</span><span class="pf"><b>35%</b>Salesforce adoption lift · GTM users</span><span class="pf"><b>$15M+</b>enterprise contracts retained · Salesforce</span><span class="pf"><b>8,000+</b>users on SSO / MFA · incidents down 40%</span><span class="pf"><b>2M+</b>CRM records migrated · zero downtime · NCR</span><span class="pf"><b>9</b>Salesforce credentials · Agentforce Specialist</span><span class="pf"><b>Atlanta</b>open to remote across the US</span></div></div>
 <section id="about"><div class="wrap about">
-  <div class="photo clay rv"><img src="{HEADSHOT}" alt="Dedric Brown" width="900" height="1125" loading="lazy" decoding="async"><span class="badge"><i></i>SENIOR SALESFORCE PM &middot; CENTENE</span></div>
-  <div class="rv">
-    <span class="mono">About</span>
-    <h2>The story behind the strategy</h2>
-    <p>{SUMMARY}</p>
-    <p>The pattern is the same every time: find the knot between the teams, untie it with a system of record everyone trusts, then put the automation and the AI on top of data that can carry it.</p>
-    <div class="chips"><span>Atlanta, GA</span><span>Open to remote (US)</span><span>SAFe PI cadence</span><span>Fortune 500 &amp; hypergrowth</span><span>BA, Morris Brown College</span></div>
-    <div class="gallery"><img src="{DREAMFORCE}" alt="Dedric at Dreamforce" loading="lazy" decoding="async"><img src="{RENDER1}" alt="Dedric speaking at Render" loading="lazy" decoding="async"><img src="{RENDER2}" alt="Dedric at the Render event" loading="lazy" decoding="async"></div>
+  <div class="pwrap" data-rv="drop"><div class="pcard glow">
+    <img src=\"""" + ABOUT + """" alt="Dedric Brown" loading="lazy" decoding="async" width="720" height="720">
+    <div class="badge"><span class="dot"></span>OPEN TO SENIOR PM ROLES</div>
+  </div></div>
+  <div class="atext" data-rv="left">
+    <span class="hello">Hello!</span>
+    <h2>I&rsquo;m Dedric Brown</h2>
+    <p>A senior product and platform leader in Atlanta with 8+ years owning product vision, strategy, roadmaps and end-to-end delivery for enterprise Salesforce CRM, go-to-market systems, revenue operations, identity, healthcare and AI automation. I partner with executives across Sales, Marketing, Finance, Engineering, IT, Clinical Operations and Compliance to turn fragmented, manual processes into governed, automated platforms with measurable revenue impact.</p>
+    <div class="stats">
+      <div class="stat glow hv" data-rv="drop"><b data-count="150" data-prefix="$" data-suffix="M+">$150M+</b><span>annual pipeline, Sales Cloud roadmap (Cloudflare)</span></div>
+      <div class="stat glow hv" data-rv="drop"><b data-count="15" data-prefix="$" data-suffix="M+">$15M+</b><span>enterprise contracts retained (Salesforce)</span></div>
+      <div class="stat glow hv" data-rv="drop"><b data-count="40" data-suffix="%">40%</b><span>faster time-to-insight, 12+ teams</span></div>
+      <div class="stat glow"><b>8,000+</b><span>users on SSO / MFA</span></div>
+    </div>
   </div>
 </div></section>
 
-<section id="expertise"><div class="wrap">
-  <div class="shead"><span class="mono">Expertise</span><h2>Four things I do at the intersection of product, platform and revenue</h2><p>Not four separate people. One PM who owns the roadmap, the integration, the operating rhythm and the AI governance.</p></div>
-  <div class="pillars">{expertise_html.replace('class="pillar rv"', 'class="pillar clay rv"')}</div>
+<section id="journey" class="lz"><div class="wrap">
+  <div class="shead center"><span class="mono">CAREER JOURNEY</span><h2>From CRM Records to the AI Roadmap</h2>
+  <p>Five roles, three Fortune 500 logos and one hypergrowth company. The same knot every time, untied at a bigger scale.</p></div>
+  <blockquote class="jquote glass" data-rv="zoom"><p>&ldquo;Every role was the same knot in a bigger company: two teams, two systems, no shared truth. Untie it, then put the automation on data that can carry it.&rdquo;</p><footer>&mdash; the line I open with in every roadmap review</footer></blockquote>
+  <div class="jwrap"><svg class="jtree" id="jtree" aria-hidden="true"><defs><linearGradient id="jg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6C2BD9"/><stop offset="1" stop-color="#c4a8ff"/></linearGradient><filter id="jglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter></defs><path id="jhalo" d=""/><path id="jtrunk" d=""/><g id="jbr"></g><g id="jtw"></g><g id="jlv"></g></svg><ol class="jline"><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2014&ndash;2017</span><h3>BA, Business Administration, Morris Brown College</h3><p>Atlanta. The business side first; the platform came after.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2018&ndash;2020</span><h3>Product Manager, CRM Platforms, NCR Corporation</h3><p>Sales Cloud modernization: $1.8M+ cost savings, 2M+ legacy records migrated with zero downtime, data accuracy up 35%.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2020&ndash;2021</span><h3>Product Manager, Identity &amp; Security, Salesforce</h3><p>SSO and MFA across 8,000+ users on $25M+ of regulated contracts. Access incidents down 40%, 10+ critical findings closed.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2021&ndash;2023</span><h3>Product Manager, Customer Platforms, Salesforce</h3><p>Vlocity / OmniStudio and Marketing Cloud roadmap. $15M+ retained, $10M+ renewal book, lead generation up 35%.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2023&ndash;2026</span><h3>Product Manager, GTM Business Systems, Cloudflare</h3><p>Sales Cloud roadmap behind $150M+ in pipeline. NetSuite ERP integration, time-to-insight down 40%, adoption up 35%.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2026</span><h3>Senior Salesforce Product Manager, Centene</h3><p>Health Cloud roadmap for specialty pharmacy. Agentforce governance, NPI-keyed provider identity, HIPAA-ready controls.</p></div></li></ol></div>
+  <div class="note">Next: your roadmap.</div>
 </div></section>
 
-<section id="career"><div class="wrap">
-  <div class="shead center"><span class="mono">Career &middot; drawn as a flow</span><h2>Where I've built</h2><p>Each node is a role. The connectors are what carried over: the system-of-record habit, the governance-first roadmap, the numbers Finance signs.</p></div>
-  <div class="canvas"><svg class="flow" id="flow" aria-hidden="true"></svg><div class="nodes" id="nodes">{career_html.replace('class="node rv"', 'class="node clay rv"')}</div></div>
-</div></section>
-
-<section id="cases"><div class="wrap">
-  <div class="shead"><span class="mono">Case studies</span><h2>Problem, what I did, result</h2><p>Four of the knots. Every number comes from the resume, not from a template.</p></div>
-  <div class="cases">{cases_html.replace('class="case rv"', 'class="case clay rv"')}</div>
-</div></section>
-
-<section id="certs"><div class="wrap">
-  <div class="shead" style="display:flex;justify-content:space-between;align-items:end;max-width:none"><div><span class="mono">Credentials</span><h2>{len(CERTS)} credentials, 9 from Salesforce</h2><p>Official names as of the July 2026 rename; prior names noted. Hover to flip and verify on Trailblazer.</p></div><div class="arrows"><button id="cprev" aria-label="Previous">&#8249;</button><button id="cnext" aria-label="Next">&#8250;</button></div></div>
-  <div class="cwrap" id="cwrap">{certs_html}</div>
-</div></section>
-
-<section id="skills"><div class="wrap">
-  <div class="shead"><span class="mono">Skills</span><h2>The stack behind the roadmap</h2></div>
-  <div class="sgrid">{skills_html.replace('class="sgroup rv"', 'class="sgroup clay rv"')}</div>
-</div></section>
-
-<section id="beyond"><div class="wrap">
-  <div class="shead"><span class="mono">Beyond the day job</span><h2>Speaking, and a side project</h2><p>Short talks I recorded for people making a mid-career move into tech, and Blazer2Role, a side project with a free resume scorer. The day job is the roadmap above.</p></div>
-  <div class="beyond">
-    <div class="reels">{reels_html}</div>
-    <div class="clay rv" style="padding:26px"><span class="mono">Side project</span><h3 style="font-size:24px;margin:8px 0 10px">Blazer2Role</h3><p style="color:var(--ink2)">Helps mid-career people translate what they already do into a role in tech. It is where the talks on the left live. <a href="https://blazer2role.com" target="_blank" rel="noopener" style="text-decoration:underline">blazer2role.com</a></p><p style="color:var(--ink2);margin-top:12px">Also: Dreamforce regular, Atlanta, and the person people call when the CRM breaks.</p></div>
+<section id="expertise" class="lz"><div class="wrap roadmap">
+  <div class="rleft">
+    <span class="pilltag">My Expertise</span>
+    <h2>Making Salesforce Pay for Itself</h2>
+    <p>One PM who owns the roadmap, the integration, the operating rhythm and the AI governance. Not four separate people.</p>
+    <div class="note">Governance first, then automation.</div>
+  </div>
+  <div class="rright" id="rright">
+    <svg class="rpath" id="rpath" aria-hidden="true"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#111"/></marker></defs><path id="rline" d="" fill="none" stroke="#111" stroke-width="1.5" stroke-dasharray="5 6" marker-end="url(#arr)"/></svg>
+    """ + expertise_html + """
   </div>
 </div></section>
 
+<section id="skills" class="lz"><div class="wrap">
+  <div class="shead center"><span class="mono">TECHNICAL STACK</span><h2>The Stack Behind the Roadmap</h2>
+  <p>Salesforce clouds, the systems they connect to, and the delivery tooling I run every sprint.</p></div>
+  """ + skills_html + """
+</div></section>
+
+<section id="projects" class="lz"><div class="wrap">
+  <div class="shead center"><span class="mono">FEATURED WORK</span><h2>Case Studies That Define the Work</h2>
+  <p>Problem, what I did, result. Every number comes from the resume, not from a template.</p></div>
+  <div class="pgrid">""" + feat_html + """</div>
+  <div class="syslog">
+    <h3>Roles &amp; Other Engagements</h3>
+    """ + syslog_html + """
+    <div class="logline">Reviewing roadmap items continuous<span class="cursor"></span></div>
+  </div>
+</div></section>
+
+<section id="certifications"><div class="wrap">
+  <div class="shead"><div><span class="mono">SYSTEM BADGES</span><h2>Professional Credentials</h2></div><div class="arrows"><button id="cprev" aria-label="Previous">&#8249;</button><button id="cnext" aria-label="Next">&#8250;</button></div></div>
+  <div class="cgrid" id="cgrid">""" + certs_html + """</div>
+  <div class="certnote">Hover a card to flip and verify &bull; Total of """ + str(len(CERTS)) + """ credentials, 9 from Salesforce. Official names as of July 2026.</div>
+</div></section>
+
+<section id="intro" class="lz"><div class="wrap">
+  <div class="shead center"><span class="mono">INTRO TRANSMISSION</span><h2>Meet Me in Forty Seconds</h2></div>
+  <div class="introwrap glow" id="loomwrap">""" + ('<video src="' + INTRO + '" poster="' + HERO + '" controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;background:#000"></video>' if INTRO else '<button class="loomfacade" id="loomplay" aria-label="Intro video in production" type="button" disabled><span class="playbtn">&#9654;</span><span>Application intro: in production</span></button>') + """</div>
+  <p class="intronote">""" + ("Who I am, what I own, three numbers, and what to do next." if INTRO else "Recording this week. The receipts above do not wait.") + """</p>
+</div></section>
+
+<dialog id="csd" class="csd" aria-labelledby="csdTitle"><div class="csdIn glass"><button class="csdX" id="csdX" aria-label="Close">&times;</button><div class="csdShot" id="csdShot"></div><div class="csdBody"><div class="cat" id="csdCat"></div><h3 id="csdTitle"></h3><p id="csdDesc"></p><div class="ev" id="csdEv"></div><div class="tags" id="csdTags"></div><a class="btn light" id="csdUrl" rel="noopener">See the role &rarr;</a></div></div></dialog>
 <section class="contact" id="contact"><div class="wrap">
-  <div class="shead"><span class="mono">Contact</span><h2>Let's talk about your roadmap</h2><p>Senior product roles, Salesforce CRM and GTM systems, Agentforce programs. Atlanta or remote across the US.</p></div>
-  <div class="cgrid">
-    <form class="form clay" action="https://formsubmit.co/{EMAIL}" method="POST">
-      <input type="hidden" name="_subject" value="Inquiry from referrernation-web.github.io/dedric"><input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false"><input type="hidden" name="_next" value="{BASE}#contact">
+  <div class="ghost">CONTACT</div>
+  <div class="cgrid2">
+    <form class="form" id="cform" action="https://formsubmit.co/dedric.brown55@gmail.com" method="POST">
+      <span class="mono red">REACH ME</span>
+      <input type="hidden" name="_subject" value="Inquiry &mdash; referrernation-web.github.io/dedric">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://referrernation-web.github.io/dedric/#contact">
       <label for="fn">Name</label><input id="fn" name="name" required placeholder="Your name">
       <label for="fe">Email</label><input id="fe" name="email" type="email" required placeholder="you@company.com">
       <label for="fm">Message</label><textarea id="fm" name="message" required placeholder="The role, the platform, the problem."></textarea>
-      <button class="btn dark" type="submit">Send</button>
+      <label class="consent"><input type="checkbox" required checked> I give permission to be contacted at this email address.</label>
+      <button type="submit">Send</button>
     </form>
     <div class="cinfo">
-      <div class="clay"><b>Book directly</b><a href="{CALENDLY}" target="_blank" rel="noopener">calendly.com/dbrowntech15/30min</a></div>
-      <div class="clay"><b>Email &amp; phone</b><a href="mailto:{EMAIL}">{EMAIL}</a><br>{PHONE}</div>
-      <div class="clay"><b>Profiles</b><a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a> &middot; <a href="{TRAILBLAZER}" target="_blank" rel="noopener">Trailblazer</a></div>
-      <div class="clay"><b>Resume</b><a href="{PDF}" target="_blank" rel="noopener">Download the PDF</a> &middot; <a href="world/">Ride the 3D version</a></div>
+      <div><b>// Senior Product Manager</b>Salesforce CRM &amp; GTM systems<br>Agentforce &amp; AI governance</div>
+      <div><b>// Status</b><span class="st">Open to senior PM roles</span><br>Atlanta &middot; remote across the US</div>
+      <div><b>// Book a call</b><a href="https://calendly.com/dbrowntech15/30min" target="_blank" rel="noopener">calendly.com/dbrowntech15/30min</a></div>
+      <div><b>// Verify</b><a href="https://www.salesforce.com/trailblazer/dbrown6422" target="_blank" rel="noopener">Trailblazer profile</a> &middot; <a href="https://www.linkedin.com/in/dbrowntech" target="_blank" rel="noopener">LinkedIn</a></div>
     </div>
   </div>
   <div class="bigname">DEDRIC BROWN</div>
-  <div class="foot"><div>&copy; 2026 Dedric Brown &middot; Atlanta, GA</div><div>v1 &middot; September 2026 &middot; <a href="world/">3D world</a></div></div>
+  <div class="foot">
+    <div>Contact Transmission<br>dedric.brown55@gmail.com &middot; 470-262-7774</div>
+    <div><a href="https://www.linkedin.com/in/dbrowntech">LinkedIn</a> &middot; <a href="https://www.salesforce.com/trailblazer/dbrown6422">Trailblazer</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.pdf">Resume PDF</a> &middot; <a href="world/">3D World</a></div>
+    <div>&copy; 2026 Dedric Brown &middot; v1 &middot; September 2026</div>
+  </div>
 </div></section>
 
-<dialog class="vd" id="vd"><button class="x" id="vdx" aria-label="Close">&times;</button><video id="vdv" controls playsinline></video></dialog>
-
-<section class="seo" aria-label="Resume text version"><h2>Dedric Brown resume</h2><p>{SUMMARY}</p><ul>{"".join(f"<li>{when}: {role}, {co}, {loc}. {ctx}</li>" for when, co, role, loc, ctx, b, c in CAREER)}</ul><p>Certifications: {", ".join(c[1] for c in CERTS)}. Education: BA Business Administration, Morris Brown College. Contact: {EMAIL}, {PHONE}, {LINKEDIN}.</p></section>
-
 <script>
-(function(){{var v=document.getElementById('reel'),b=document.getElementById('unmute');if(!v||!b||v.tagName!=='VIDEO')return;function tg(){{v.muted=!v.muted;if(!v.muted){{v.currentTime=0;v.play()}}b.innerHTML=v.muted?'&#128266; PLAY WITH SOUND':'&#128263; MUTE'}}b.onclick=tg;}})();
-(function(){{var sw=document.getElementById('sw'),st=document.getElementById('stats');if(!sw)return;var S={{sales:{json.dumps(stats_html("sales"))},health:{json.dumps(stats_html("health"))}}};var on=false;sw.querySelector('button').onclick=function(){{on=!on;sw.classList.toggle('on',on);st.classList.add('fade');setTimeout(function(){{st.innerHTML=on?S.health:S.sales;st.classList.remove('fade');count(st)}},250)}};function count(root){{root.querySelectorAll('[data-count]').forEach(function(b){{var to=parseFloat(b.dataset.count),pre=b.dataset.prefix||'',suf=b.dataset.suffix||'',dec=(String(to).split('.')[1]||'').length,t0=null;function f(t){{if(!t0)t0=t;var p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);b.textContent=pre+(to*e).toFixed(dec)+suf;if(p<1)requestAnimationFrame(f)}}requestAnimationFrame(f)}})}}if(!matchMedia('(prefers-reduced-motion:reduce)').matches)count(st);document.querySelectorAll('#stats .stat').forEach(function(e){{e.classList.add('clay')}});new MutationObserver(function(){{st.querySelectorAll('.stat').forEach(function(e){{e.classList.add('clay')}})}}).observe(st,{{childList:true}});}})();
-(function(){{var els=document.querySelectorAll('.rv');if(!('IntersectionObserver' in window)){{els.forEach(function(e){{e.classList.add('in')}});return}}var io=new IntersectionObserver(function(en){{en.forEach(function(x){{if(x.isIntersecting){{x.target.classList.add('in');io.unobserve(x.target)}}}})}},{{threshold:.12}});els.forEach(function(e,i){{e.style.transitionDelay=((i%5)*70)+'ms';io.observe(e)}});}})();
-(function(){{var svg=document.getElementById('flow'),wrap=document.getElementById('nodes');if(!svg)return;function draw(){{var r=wrap.getBoundingClientRect(),ns=[].slice.call(wrap.querySelectorAll('.node'));svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);svg.innerHTML='';for(var i=0;i<ns.length-1;i++){{var a=ns[i].getBoundingClientRect(),b=ns[i+1].getBoundingClientRect();var x1=a.left-r.left+a.width/2,y1=a.bottom-r.top,x2=b.left-r.left+b.width/2,y2=b.top-r.top;var p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d','M'+x1+','+y1+' C'+x1+','+(y1+40)+' '+x2+','+(y2-40)+' '+x2+','+y2);svg.appendChild(p)}}}}draw();addEventListener('resize',draw);setTimeout(draw,800);}})();
-(function(){{var d=document.getElementById('vd'),v=document.getElementById('vdv');if(!d||!d.showModal)return;document.querySelectorAll('.reel').forEach(function(b){{b.onclick=function(){{v.src=b.dataset.src;d.showModal();v.play()}}}});function close(){{v.pause();v.removeAttribute('src');v.load();d.close()}}document.getElementById('vdx').onclick=close;d.addEventListener('click',function(e){{if(e.target===d)close()}});}})();
-(function(){{var g=document.getElementById('cwrap');if(!g)return;var step=264;document.getElementById('cprev').onclick=function(){{g.scrollBy({{left:-step,behavior:'smooth'}})}};document.getElementById('cnext').onclick=function(){{if(g.scrollLeft+g.clientWidth>=g.scrollWidth-4)g.scrollTo({{left:0,behavior:'smooth'}});else g.scrollBy({{left:step,behavior:'smooth'}})}};}})();
-(function(){{var links=[].slice.call(document.querySelectorAll('nav.top a.pl')),secs=[].slice.call(document.querySelectorAll('section[id]'));if(!('IntersectionObserver' in window))return;var io=new IntersectionObserver(function(en){{en.forEach(function(x){{if(!x.isIntersecting)return;links.forEach(function(a){{a.classList.toggle('on',a.getAttribute('href')==='#'+x.target.id)}})}})}},{{rootMargin:'-40% 0px -50% 0px'}});secs.forEach(function(s){{io.observe(s)}});}})();
+(function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');function tg(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play();}b.innerHTML=v.muted?'&#128266; UNMUTE REEL':'&#128263; MUTE REEL';b.style.animation=v.muted?'':'none';}b.onclick=tg;v.onclick=tg;var once=function(e){if(e&&e.target&&(e.target===b||b.contains(e.target)))return;if(v.muted){tg();}document.removeEventListener('pointerdown',once,true);document.removeEventListener('keydown',once,true);};document.addEventListener('pointerdown',once,true);document.addEventListener('keydown',once,true);})();
+(function(){var R=['Senior Product Manager','Salesforce PM','GTM Systems Owner','Agentforce Lead'],el=document.getElementById('rot'),i=0,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;var G='ABCDEFGHJKLMNPQRSTUVWXYZ';function scramble(to){var from=el.textContent,len=Math.max(from.length,to.length),q=[],t0=performance.now(),tok=(el._tok=(el._tok||0)+1);for(var k=0;k<len;k++){var st=Math.random()*160,en=st+120+Math.random()*180;q.push({t:to[k]||'',s:st,e:en,c:''});}function step(){if(el._tok!==tok)return;var ms=performance.now()-t0,out='',done=0;for(var k=0;k<q.length;k++){var it=q[k];if(ms>=it.e){done++;out+=it.t;}else if(ms>=it.s){if(!it.c||Math.random()<.35)it.c=G[Math.floor(Math.random()*G.length)];out+='<span class="dud">'+it.c+'</span>';}else out+=(from[k]||'');}if(done<q.length&&ms<650){el.innerHTML=out;setTimeout(step,30);}else el.textContent=to;}step();}
+setInterval(function(){i=(i+1)%R.length;if(rm){el.textContent=R[i];}else scramble(R[i]);},3600);})();
+(function(){var els=document.querySelectorAll('.pwrap,.atext,.xcard,.pin,.jt,.jquote,.proj,.icon,.flip,.lrow,.stat,.shead,.introwrap,.cgrid2');var i=0;els.forEach(function(e){e.classList.add('rv');e.style.transitionDelay=((i++%6)*60)+'ms';});if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.08});els.forEach(function(e){io.observe(e)});})();
+(function(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;var els=document.querySelectorAll('[data-count]');var io=new IntersectionObserver(function(en){en.forEach(function(x){if(!x.isIntersecting)return;var b=x.target;io.unobserve(b);var to=parseFloat(b.dataset.count),dec=parseInt(b.dataset.dec||'0'),pre=b.dataset.prefix||'',suf=b.dataset.suffix||'',t0=null;var fin=pre+(dec?to.toFixed(dec):Math.round(to).toLocaleString())+suf;function tick(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/1300);var e=1-Math.pow(1-p,3);var v=to*e;b.textContent=pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;if(p<1)requestAnimationFrame(tick);else b.textContent=fin;}requestAnimationFrame(tick);setTimeout(function(){b.textContent=fin;},1600);});},{threshold:.6});els.forEach(function(e){io.observe(e)});})();
+(function(){var rm=matchMedia('(prefers-reduced-motion:reduce)').matches,hov=matchMedia('(hover:hover)').matches;
+document.querySelectorAll('.stat,.proj,.pin,.jcard,.icon,.fface,.pcard,.glass,.lrow').forEach(function(el){el.classList.add('sheen')});
+document.querySelectorAll('section>.wrap,.contact>.wrap').forEach(function(w){if(!w.closest('.hero')){w.classList.add('rv');w.setAttribute('data-rv','z');}});
+var zio=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');zio.unobserve(x.target);}})},{threshold:.06});document.querySelectorAll('.rv[data-rv=z]').forEach(function(w){zio.observe(w)});
+if(hov&&!rm){var h=document.querySelector('.hero'),root=document.documentElement,raf=0,px=0,py=0;document.querySelectorAll('[data-depth]').forEach(function(el){el.style.setProperty('--d',el.getAttribute('data-depth'))});
+h.addEventListener('mousemove',function(e){var r=h.getBoundingClientRect();px=((e.clientX-r.left)/r.width-.5)*2;py=((e.clientY-r.top)/r.height-.5)*2;if(!raf)raf=requestAnimationFrame(function(){root.style.setProperty('--px',px.toFixed(3));root.style.setProperty('--py',py.toFixed(3));raf=0;});});
+h.addEventListener('mouseleave',function(){root.style.setProperty('--px',0);root.style.setProperty('--py',0);});
+document.addEventListener('mousemove',function(e){var el=e.target.closest&&e.target.closest('.sheen');if(!el)return;var r=el.getBoundingClientRect();el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');el.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');},{passive:true});}
+var dock=document.getElementById('dock'),dsel=document.getElementById('dsel');if(dock){var da=[].slice.call(dock.querySelectorAll('a'));function setD(id){da.forEach(function(a){var on=a.getAttribute('href')==='#'+id;a.classList.toggle('active',on);if(on){dsel.style.left=a.offsetLeft+'px';dsel.style.width=a.offsetWidth+'px';}});}
+var secs=[].slice.call(document.querySelectorAll('section[id],header[id]'));var sio=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting)setD(x.target.id)})},{rootMargin:'-45% 0px -50% 0px'});secs.forEach(function(s){sio.observe(s)});setD('home');}
+var dlg=document.getElementById('csd');if(dlg){new MutationObserver(function(){document.body.classList.toggle('modal-open',dlg.open)}).observe(dlg,{attributes:true,attributeFilter:['open']});}
+if(!rm){var layers=[].slice.call(document.querySelectorAll('.jtree,.rpath'));var tick=0;function par(){tick=0;var vh=innerHeight;layers.forEach(function(l){var r=l.parentElement.getBoundingClientRect();var p=(r.top+r.height/2-vh/2)/vh;l.style.transform='translate3d(0,'+(p*28).toFixed(1)+'px,0)';});}window.addEventListener('scroll',function(){if(!tick)tick=requestAnimationFrame(par)},{passive:true});par();}
+})();
+(function(){var imgs=document.querySelectorAll('img.lq[data-src]');var io=new IntersectionObserver(function(en){en.forEach(function(x){if(!x.isIntersecting)return;var im=x.target;var full=new Image();full.onload=function(){im.src=im.dataset.src;im.classList.remove('lq');};full.src=im.dataset.src;io.unobserve(im);});},{rootMargin:'200px'});imgs.forEach(function(i){io.observe(i)});})();
+(function(){var d=document.getElementById('csd');if(!d||!d.showModal)return;var cards=document.querySelectorAll('.proj[data-slug]');function open(c){document.getElementById('csdCat').textContent=c.dataset.cat;document.getElementById('csdTitle').textContent=c.dataset.title;document.getElementById('csdDesc').innerHTML=c.dataset.desc;document.getElementById('csdEv').innerHTML=c.dataset.ev;document.getElementById('csdTags').innerHTML=c.dataset.tags.split(', ').map(function(t){return '<span class="pill">'+t+'</span>'}).join('');var u=document.getElementById('csdUrl');u.href=c.dataset.url;var sh=document.getElementById('csdShot');var ci=c.querySelector('.shot img');if(ci){sh.className='csdShot';sh.innerHTML='<img src="'+(ci.dataset.src||ci.src)+'" alt="">';}else{sh.className='csdShot noimg';sh.textContent=c.dataset.url.replace('https://','');}var ci2=c.querySelector('.shot img');function go(){d.showModal();}if(document.startViewTransition&&ci2&&!matchMedia('(prefers-reduced-motion:reduce)').matches){ci2.style.viewTransitionName='csimg';var vt=document.startViewTransition(function(){ci2.style.viewTransitionName='';go();var mi=document.querySelector('#csdShot img');if(mi)mi.style.viewTransitionName='csimg';});vt.finished.then(function(){var mi=document.querySelector('#csdShot img');if(mi)mi.style.viewTransitionName='';});}else go();history.replaceState(null,'','#project-'+c.dataset.slug);}
+cards.forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('a'))return;open(c)});c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open(c)}});});
+function close(){d.close();if(location.hash.indexOf('#project-')===0)history.replaceState(null,'',' ');}
+document.getElementById('csdX').onclick=close;d.addEventListener('click',function(e){if(e.target===d)close()});d.addEventListener('close',function(){if(location.hash.indexOf('#project-')===0)history.replaceState(null,'',' ')});
+var m=location.hash.match(/^#project-([a-z0-9]+)/);if(m){var c=document.querySelector('.proj[data-slug="'+m[1]+'"]');if(c)setTimeout(function(){open(c)},300);}})();
+(function(){if(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(hover:hover)').matches)return;document.querySelectorAll('.tilt').forEach(function(el){el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform='perspective(900px) rotateX('+(-y*6)+'deg) rotateY('+(x*6)+'deg) translateY(-3px)';});el.addEventListener('mouseleave',function(){el.style.transform='';});});var h=document.querySelector('.hero'),sp=document.getElementById('spot');if(h&&sp){h.addEventListener('mousemove',function(e){var r=h.getBoundingClientRect();sp.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');sp.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});}})();
+(function(){var g=document.getElementById('cgrid');var step=322;function nxt(){if(g.scrollLeft+g.clientWidth>=g.scrollWidth-4){g.scrollTo({left:0,behavior:'smooth'});}else{g.scrollBy({left:step,behavior:'smooth'});}}document.getElementById('cprev').onclick=function(){g.scrollBy({left:-step,behavior:'smooth'});rest();};document.getElementById('cnext').onclick=function(){nxt();rest();};var t=null,paused=false;function start(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;clearInterval(t);t=setInterval(function(){if(!paused)nxt();},2800);}function rest(){clearInterval(t);start();}(function(){var down=false,sx=0,sl=0,vx=0,lx=0,lt=0,raf=null;function onDown(e){if(e.pointerType==='mouse'&&e.button!==0)return;down=true;g.classList.add('dragging');sx=e.clientX;sl=g.scrollLeft;lx=e.clientX;lt=performance.now();vx=0;cancelAnimationFrame(raf);paused=true;}function onMove(e){if(!down)return;var dx=e.clientX-sx;var target=sl-dx;var max=g.scrollWidth-g.clientWidth;var over=target<0?target:(target>max?target-max:0);g.scrollLeft=over?(over<0?0:max):target;g.style.transform=over?('translateX('+(-over*0.35)+'px)'):'';var now=performance.now();vx=(e.clientX-lx)/Math.max(1,now-lt);lx=e.clientX;lt=now;}function onUp(){if(!down)return;down=false;g.classList.remove('dragging');g.style.transition='transform .35s cubic-bezier(.2,.7,.2,1)';g.style.transform='';setTimeout(function(){g.style.transition=''},380);var v=-vx*16;function step(){v*=.92;g.scrollLeft+=v;if(Math.abs(v)>.4)raf=requestAnimationFrame(step);else paused=false;}raf=requestAnimationFrame(step);}g.addEventListener('pointerdown',onDown);window.addEventListener('pointermove',onMove,{passive:true});window.addEventListener('pointerup',onUp);window.addEventListener('pointercancel',onUp);g.addEventListener('click',function(e){if(Math.abs(vx)>.2)e.preventDefault()},true);})();
+g.addEventListener('mouseenter',function(){paused=true});g.addEventListener('mouseleave',function(){paused=false});g.addEventListener('touchstart',function(){paused=true},{passive:true});g.addEventListener('touchend',function(){paused=false},{passive:true});start();})();
 </script>
 </body></html>"""
 
+import re as _re
 try:
     import htmlmin, rjsmin, rcssmin
-    H2 = re.sub(r"<style>(.*?)</style>", lambda m: "<style>" + rcssmin.cssmin(m.group(1)) + "</style>", HTML, flags=re.S)
-    H2 = re.sub(r"<script>(.*?)</script>", lambda m: "<script>" + rjsmin.jsmin(m.group(1)) + "</script>", H2, flags=re.S)
+    def _min_css(m): return "<style>" + rcssmin.cssmin(m.group(1)) + "</style>"
+    def _min_js(m):
+        return "<script>" + rjsmin.jsmin(m.group(1)) + "</script>"
+    H2 = _re.sub(r"<style>(.*?)</style>", _min_css, HTML, flags=_re.S)
+    H2 = _re.sub(r"<script>(.*?)</script>", _min_js, H2, flags=_re.S)
     H2 = htmlmin.minify(H2, remove_comments=True, remove_empty_space=True, reduce_boolean_attributes=False)
 except Exception as e:
     print("minify skipped:", e); H2 = HTML
-(HERE / "index.html").write_text(H2, encoding="utf-8")
-(HERE / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: " + BASE + "sitemap.xml\n", encoding="utf-8")
-(HERE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-                                  f'<url><loc>{BASE}</loc></url><url><loc>{BASE}world/</loc></url></urlset>', encoding="utf-8")
-(HERE / "llms.txt").write_text(f"# Dedric Brown\n\n> Senior Salesforce Product Manager (CRM, GTM systems, Agentforce), Atlanta GA, open to remote US.\n\n- Resume site: {BASE}\n- 3D resume: {BASE}world/\n- Resume PDF: {BASE}{PDF}\n- LinkedIn: {LINKEDIN}\n- Trailblazer: {TRAILBLAZER}\n\n"
-                               + "\n".join(f"- {when}: {re.sub('<[^>]+>', '', role)}, {co} ({loc})" for when, co, role, loc, *_ in CAREER) + "\n", encoding="utf-8")
-print("written", len(H2) // 1024, "KB; intro video:", INTRO or "not yet (still on the laptop)")
+out = pathlib.Path(__file__).parent / "index.html"
+out.write_text(H2, encoding="utf-8")
+print("written", len(H2) // 1024, "KB (raw", len(HTML) // 1024, "KB)")
+
