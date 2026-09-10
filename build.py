@@ -428,6 +428,38 @@ html[data-theme=light] .icon img{filter:invert(1)}
 .pwrap{max-width:320px}.pcard{transform:rotate(-3deg);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s}.pcard:hover{transform:rotate(0) scale(1.03);box-shadow:0 30px 60px rgba(0,0,0,.3)}
 .dot{animation:pulse 1.6s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 .atext.rv{transition-delay:200ms!important}}
+
+/* ---- readability overrides (blazer2role palette on Mark's layout) ---- */
+.btn.light,.hire,.viewc,.playbtn,.skip,.form button,.csd .btn.light{color:#0a1400!important;background:linear-gradient(180deg,#b8ff2a,#8fd400)!important;border:0}
+.btn.light:hover,.hire:hover,.viewc:hover{filter:brightness(1.06)}
+.pin.solid,.pin.solid h3,.pin.solid .xnum,.pin.solid p{color:#fff!important}
+.st,.hello,.mono.red{color:#c4a8ff!important}
+#about .stat b{color:#fff!important}
+.jyear,.mono,.visit,.chip,.cat,.lrow em,.shield,.logo i,.cnum,.issued small{color:#a07ff0!important}
+.jyear{border-color:rgba(160,127,240,.5)!important}
+.proj p,.jcard p,.lrow span,.pin p,.fface small,.certnote,.intronote,.sub{color:#c9c6d6!important}
+.hero .shade{background:linear-gradient(90deg,rgba(5,5,7,.94) 0%,rgba(5,5,7,.76) 42%,rgba(5,5,7,.18) 100%),linear-gradient(180deg,rgba(5,5,7,.5),transparent 35%,transparent 65%,#050507 100%)!important}
+.hero h1,.hero .kt,.hero .rot{color:#FAFAFA!important;text-shadow:0 2px 24px rgba(0,0,0,.6)}
+.hero .rot{color:#c4a8ff!important}
+.flabel{color:#e6e3f0!important;background:rgba(5,5,7,.55);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;backdrop-filter:blur(6px)}
+.cue{color:#FAFAFA!important}.ainote{color:#c9c6d6!important;background:rgba(5,5,7,.55);padding:6px 10px;border-radius:8px}
+.jquote,.jquote.glass{background:linear-gradient(180deg,#fff5b0,#ffe98a)!important;border:0!important}
+.jquote p,.jquote footer{color:#3a2a00!important}
+.note{color:#3a2a00!important}
+.badge{background:#14131d;color:#FAFAFA;border:1px solid rgba(255,255,255,.14)}
+.form input,.form textarea{background:#0b0a12!important;color:#FAFAFA!important;border-color:rgba(255,255,255,.14)!important}
+.form input::placeholder,.form textarea::placeholder{color:#7d7a8c}
+.consent{color:#c9c6d6}
+nav .nlinks a{color:#d9d6e6}nav .nlinks a:hover{color:#fff}
+.uline{background:#AAFF00!important}
+.hero{background:#050507!important}
+.pf b{color:#fff!important}.pf{color:rgba(255,255,255,.88)!important}
+.fface,.fface h4,.fface .issued{color:#FAFAFA!important}
+.fbot b,.fbot small,.vo{color:#a07ff0!important}
+.cinfo .st,.cinfo b,.form .mono.red,.hello{color:#fff!important}
+.pin.solid .xnum{color:#d9c7ff!important}
+#about h2,#about .atext p{color:#fff!important}
+.loomfacade{background:#14131d!important;color:#FAFAFA!important}
 """
 
 HTML = """<!doctype html>
