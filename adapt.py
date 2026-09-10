@@ -194,7 +194,7 @@ one('<div class="note">The journey continues.</div>', '<div class="note">Next: y
 
 # ---------------------------------------------------------------- expertise / skills / projects / certs / intro
 one('<h2>Building Sites That Rank in Google &amp; AI</h2>\n    <p>Combining WordPress engineering, technical SEO and Answer Engine Optimization to create sites that get found, cited and hired.</p>\n    <div class="note">Turning rankings into revenue!</div>\n    <button class="mg-play" id="mgplay" type="button">&#9654; WATCH DIANNA PLAY</button>',
-    '<h2>Making Salesforce Pay for Itself</h2>\n    <p>One PM who owns the roadmap, the integration, the operating rhythm and the AI governance. Not four separate people.</p>\n    <div class="note">Governance first, then automation.</div>')
+    '<h2>Making Salesforce Pay for Itself</h2>\n    <p>One PM who owns the roadmap, the integration, the operating rhythm and the AI governance. Not four separate people.</p>\n    <div class="note">Governance first, then automation.</div>\n    <button class="mg-play" id="mgplay" type="button">&#9654; WATCH DEDRIC PLAY</button>')
 one('<h2>Technologies I Work With</h2>\n  <p>Full-stack WordPress, search and AI-visibility tooling I use daily.</p>', '<h2>The Stack Behind the Roadmap</h2>\n  <p>Salesforce clouds, the systems they connect to, and the delivery tooling I run every sprint.</p>')
 one('<h2>Projects That Define My Journey</h2>\n  <p>Production client sites and AEO programs. Every number names its evidence.</p>', '<h2>Case Studies That Define the Work</h2>\n  <p>Problem, what I did, result. Every number comes from the resume, not from a template.</p>')
 one('<h3>System Logs &amp; Other Engagements</h3>', '<h3>Roles &amp; Other Engagements</h3>')
@@ -224,6 +224,7 @@ one(r'<div class="foot">\n.*?\n  </div>', f'''<div class="foot">
 
 # ---------------------------------------------------------------- scripts: drop the mascot game and the Loom embed
 one(r"\(function\(\)\{var b=document\.getElementById\('loomplay'\);.*?\n", "", True)
+one("(function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');", "(function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');if(!v||!b)return;")
 SPR = HERE / "assets" / "spr" / "meta.json"
 if SPR.exists():
     # ---- mascot game stays on, with Dedric + Rev strips rendered from Blender (world/blend_sprites.py + strip.py) ----
@@ -244,7 +245,6 @@ if SPR.exists():
     one("say(\"Hi! I'm Dianna, named after Mark's daughter. Scroll or hover a card and we jump!\",3800)", "say(\"Hi, I'm Dedric. Scroll or hover a card and Rev and I will jump there.\",3800)")
     one("var BARKS=['Woof! Woof!','Arf!','Woof?'];var REPLY=['Tara, Kimpoy!','Halika, Kimpoy!','Sandali lang, Kimpoy!'];", "var BARKS=['Beep!','Boop-beep!','Beep?'];var REPLY=['Come on, Rev!','This way, Rev!','One second, Rev.'];")
     one(r"var LINES=\[.*?\];", "var LINES=['Roadmap ownership: vision, intake, acceptance criteria, then the numbers Finance signs.','Salesforce to NetSuite, quote to cash. One system of record.','GTM and RevOps: pipeline, forecasting, renewals. Time-to-insight down 40%.','Agentforce, but governed first. Two workflows held until the data was ready.'];", True)
-    one("&#9654; WATCH DIANNA PLAY", "&#9654; WATCH DEDRIC PLAY")
     s = s.replace('<link rel="preload" as="image" href="assets/spr/d-run.webp" media="(min-width:981px)">', '<link rel="preload" as="image" href="assets/spr/d-run.webp" media="(min-width:981px)"><link rel="preload" as="image" href="assets/spr/p-run.webp" media="(min-width:981px)">')
 else:
     one(r"\(function\(\)\{var DBG=/mgdebug/.*?\n(?=\(function\(\)\{var imgs=document\.querySelectorAll\('img\.lq)", "", True)
