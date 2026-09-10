@@ -459,17 +459,20 @@ nav .nlinks a{color:#d9d6e6}nav .nlinks a:hover{color:#fff}
 .cinfo .st,.cinfo b,.form .mono.red,.hello{color:#fff!important}
 .pin.solid .xnum{color:#d9c7ff!important}
 .icon img{filter:none!important}
+.proofband{overflow:hidden!important}
+@media(max-width:980px){html,body{overflow-x:clip}}
+.hero h1 .rot{white-space:normal!important;min-width:0!important}
 .hero video{object-position:50% 12%}
 @media(min-width:981px){.hero video{left:auto!important;right:0;width:46%!important;object-position:50% 8%!important;filter:brightness(1.1) contrast(1.04);-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}.hero h1{font-size:clamp(36px,4.1vw,56px)!important;max-width:50vw!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .shade{background:linear-gradient(90deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,.25) 42%,rgba(5,5,7,0) 58%),linear-gradient(180deg,rgba(5,5,7,.3),transparent 22%,transparent 70%,#050507 100%)!important}}
 @media(max-width:980px){
 .hero{align-items:flex-end!important}
-.hero .hcontent{padding:58vh 0 96px!important}
+.hero .hcontent{padding-top:58vh!important;padding-bottom:96px!important;padding-left:24px!important;padding-right:24px!important}
 .hero video{object-position:58% 8%!important}
 .hero .shade{background:linear-gradient(180deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,0) 14%,rgba(5,5,7,0) 36%,rgba(5,5,7,.9) 56%,#050507 100%)!important}
 .hero h1{max-width:100%}
 .flabel.tr{max-width:min(62vw,340px);font-size:10px}
 }
-@media(max-width:520px){.hero h1{font-size:clamp(28px,8.6vw,38px)!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .cta{flex-wrap:wrap}.hero .hcontent{padding:52vh 0 110px!important}}
+@media(max-width:520px){.hero h1{font-size:clamp(28px,8.6vw,38px)!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .cta{flex-wrap:wrap}.hero .hcontent{padding-top:52vh!important;padding-bottom:110px!important}}
 #about h2,#about .atext p{color:#fff!important}
 .loomfacade{background:#14131d!important;color:#FAFAFA!important}
 """
@@ -621,9 +624,9 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
   <video id="reel" data-depth="-6"\"""" + (" src=\"" + INTRO + "\"" if INTRO else "") + """ poster=\"""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>
   <div class="shade"></div><div class="spot" id="spot"></div>
   <div class="wrap hcontent" data-depth="8">
-    <h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Senior Product Manager</span><span class="uline"></span></h1>
+    <h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Salesforce Product Manager</span><span class="uline"></span></h1>
     <p class="sub">I own Salesforce CRM and go-to-market systems roadmaps, from NetSuite integrations to Agentforce governance, and turn fragmented, manual processes into platforms Finance signs off on.</p>
-    <div class="cta"><a class="btn light" href="#projects">View Case Studies</a><a class="btn ghosty" href="world/" title="3D resume: ride Rev across the cities where the career happened">&#127758; Ride the 3D World</a><a class="btn ghosty" href="assets/Dedric-Brown-Resume-2026.pdf" target="_blank" rel="noopener">Resume PDF</a></div>
+    <div class="cta"><a class="btn light" href="#projects">View Case Studies</a><a class="btn ghosty" href="world/" title="3D resume: ride Rev across the cities where the career happened">&#127758; Ride the 3D World</a><a class="btn ghosty" href="assets/Dedric-Brown-Resume-2026.pdf" target="_blank" rel="noopener">Resume PDF</a><a class="btn ghosty" href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a></div>
   </div>
   <span class="flabel tr">// Salesforce &middot; GTM Systems &middot; Agentforce<br>Centene, since Jan 2026</span>
   <span class="flabel bl">// Atlanta &middot; remote US<br>$150M+ pipeline roadmap</span>
@@ -722,20 +725,21 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
       <div><b>// Senior Product Manager</b>Salesforce CRM &amp; GTM systems<br>Agentforce &amp; AI governance</div>
       <div><b>// Status</b><span class="st">Open to senior PM roles</span><br>Atlanta &middot; remote across the US</div>
       <div><b>// Book a call</b><a href="https://calendly.com/dbrowntech15/30min" target="_blank" rel="noopener">calendly.com/dbrowntech15/30min</a></div>
+      <div><b>// Resume</b><a href="assets/Dedric-Brown-Resume-2026.pdf" target="_blank" rel="noopener">Download PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Download DOCX</a></div>
       <div><b>// Verify</b><a href="https://www.salesforce.com/trailblazer/dbrown6422" target="_blank" rel="noopener">Trailblazer profile</a> &middot; <a href="https://www.linkedin.com/in/dbrowntech" target="_blank" rel="noopener">LinkedIn</a></div>
     </div>
   </div>
   <div class="bigname">DEDRIC BROWN</div>
   <div class="foot">
     <div>Contact Transmission<br>dedric.brown55@gmail.com &middot; 470-262-7774</div>
-    <div><a href="https://www.linkedin.com/in/dbrowntech">LinkedIn</a> &middot; <a href="https://www.salesforce.com/trailblazer/dbrown6422">Trailblazer</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.pdf">Resume PDF</a> &middot; <a href="world/">3D World</a></div>
+    <div><a href="https://www.linkedin.com/in/dbrowntech">LinkedIn</a> &middot; <a href="https://www.salesforce.com/trailblazer/dbrown6422">Trailblazer</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.pdf">Resume PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a> &middot; <a href="world/">3D World</a></div>
     <div>&copy; 2026 Dedric Brown &middot; v1 &middot; September 2026</div>
   </div>
 </div></section>
 
 <script>
 (function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');if(!v||!b)return;function tg(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play();}b.innerHTML=v.muted?'&#128266; UNMUTE REEL':'&#128263; MUTE REEL';b.style.animation=v.muted?'':'none';}b.onclick=tg;v.onclick=tg;var once=function(e){if(e&&e.target&&(e.target===b||b.contains(e.target)))return;if(v.muted){tg();}document.removeEventListener('pointerdown',once,true);document.removeEventListener('keydown',once,true);};document.addEventListener('pointerdown',once,true);document.addEventListener('keydown',once,true);})();
-(function(){var R=['Senior Product Manager','Salesforce PM','GTM Systems Owner','Agentforce Lead'],el=document.getElementById('rot'),i=0,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;var G='ABCDEFGHJKLMNPQRSTUVWXYZ';function scramble(to){var from=el.textContent,len=Math.max(from.length,to.length),q=[],t0=performance.now(),tok=(el._tok=(el._tok||0)+1);for(var k=0;k<len;k++){var st=Math.random()*160,en=st+120+Math.random()*180;q.push({t:to[k]||'',s:st,e:en,c:''});}function step(){if(el._tok!==tok)return;var ms=performance.now()-t0,out='',done=0;for(var k=0;k<q.length;k++){var it=q[k];if(ms>=it.e){done++;out+=it.t;}else if(ms>=it.s){if(!it.c||Math.random()<.35)it.c=G[Math.floor(Math.random()*G.length)];out+='<span class="dud">'+it.c+'</span>';}else out+=(from[k]||'');}if(done<q.length&&ms<650){el.innerHTML=out;setTimeout(step,30);}else el.textContent=to;}step();}
+(function(){var R=['Salesforce Product Manager','AI Product Manager','GTM Business Leader','Digital Transformation Solutions Leader','AI-Enabled Project Manager','Security+ Certified PM'],el=document.getElementById('rot'),i=0,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;var G='ABCDEFGHJKLMNPQRSTUVWXYZ';function scramble(to){var from=el.textContent,len=Math.max(from.length,to.length),q=[],t0=performance.now(),tok=(el._tok=(el._tok||0)+1);for(var k=0;k<len;k++){var st=Math.random()*160,en=st+120+Math.random()*180;q.push({t:to[k]||'',s:st,e:en,c:''});}function step(){if(el._tok!==tok)return;var ms=performance.now()-t0,out='',done=0;for(var k=0;k<q.length;k++){var it=q[k];if(ms>=it.e){done++;out+=it.t;}else if(ms>=it.s){if(!it.c||Math.random()<.35)it.c=G[Math.floor(Math.random()*G.length)];out+='<span class="dud">'+it.c+'</span>';}else out+=(from[k]||'');}if(done<q.length&&ms<650){el.innerHTML=out;setTimeout(step,30);}else el.textContent=to;}step();}
 setInterval(function(){i=(i+1)%R.length;if(rm){el.textContent=R[i];}else scramble(R[i]);},3600);})();
 (function(){var els=document.querySelectorAll('.pwrap,.atext,.xcard,.pin,.jt,.jquote,.proj,.icon,.flip,.lrow,.stat,.shead,.introwrap,.cgrid2');var i=0;els.forEach(function(e){e.classList.add('rv');e.style.transitionDelay=((i++%6)*60)+'ms';});if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.08});els.forEach(function(e){io.observe(e)});})();
 (function(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;var els=document.querySelectorAll('[data-count]');var io=new IntersectionObserver(function(en){en.forEach(function(x){if(!x.isIntersecting)return;var b=x.target;io.unobserve(b);var to=parseFloat(b.dataset.count),dec=parseInt(b.dataset.dec||'0'),pre=b.dataset.prefix||'',suf=b.dataset.suffix||'',t0=null;var fin=pre+(dec?to.toFixed(dec):Math.round(to).toLocaleString())+suf;function tick(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/1300);var e=1-Math.pow(1-p,3);var v=to*e;b.textContent=pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;if(p<1)requestAnimationFrame(tick);else b.textContent=fin;}requestAnimationFrame(tick);setTimeout(function(){b.textContent=fin;},1600);});},{threshold:.6});els.forEach(function(e){io.observe(e)});})();

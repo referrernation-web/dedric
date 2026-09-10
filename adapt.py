@@ -150,16 +150,16 @@ one('<a class="hire" href="#contact">Hire Me</a>', f'<a class="hire" href="{CAL}
 one('<video id="reel" data-depth="-6" src="video/heroreel.mp4" poster=\\"""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>',
     '<video id="reel" data-depth="-6"\\"""" + (" src=\\"" + INTRO + "\\"" if INTRO else "") + """ poster=\\"""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>')
 one('<h1><span class="kt" id="kt">Hi, I&rsquo;m a</span><br><span class="rot" id="rot" aria-live="polite">Full-Stack Developer</span><span class="uline"></span></h1>',
-    '<h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Senior Product Manager</span><span class="uline"></span></h1>')
+    '<h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Salesforce Product Manager</span><span class="uline"></span></h1>')
 one('<p class="sub">I build fast, scalable websites and web apps in WordPress, Node.js and React, then own the technical SEO and AI-search visibility that makes them rank.</p>',
     '<p class="sub">I own Salesforce CRM and go-to-market systems roadmaps, from NetSuite integrations to Agentforce governance, and turn fragmented, manual processes into platforms Finance signs off on.</p>')
 one('<a class="btn light" href="#projects">View My Work</a><a class="btn ghosty" href="#contact">Contact Me</a><a class="btn ghosty" href="world/" title="3D resume: ride Kimpoy with Dianna across the wonders of the world">&#127758; Ride the 3D World</a>',
-    f'<a class="btn light" href="#projects">View Case Studies</a><a class="btn ghosty" href="world/" title="3D resume: ride Rev across the cities where the career happened">&#127758; Ride the 3D World</a><a class="btn ghosty" href="{PDF}" target="_blank" rel="noopener">Resume PDF</a>')
+    f'<a class="btn light" href="#projects">View Case Studies</a><a class="btn ghosty" href="world/" title="3D resume: ride Rev across the cities where the career happened">&#127758; Ride the 3D World</a><a class="btn ghosty" href="{PDF}" target="_blank" rel="noopener">Resume PDF</a><a class="btn ghosty" href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a>')
 one('<span class="flabel tr">// Full-Stack &middot; SEO &middot; AEO<br>Available now</span>', '<span class="flabel tr">// Salesforce &middot; GTM Systems &middot; Agentforce<br>Centene, since Jan 2026</span>')
 one('<span class="flabel bl">// Makati &rarr; US &middot; CA &middot; AU<br>ET / PT overlap</span>', '<span class="flabel bl">// Atlanta &middot; remote US<br>$150M+ pipeline roadmap</span>')
 one('<span class="ainote">AI-GENERATED REEL &middot; REAL RESULTS BELOW</span>', '<span class="ainote">""" + ("APPLICATION INTRO &middot; REAL RESULTS BELOW" if INTRO else "INTRO VIDEO IN PRODUCTION &middot; REAL RESULTS BELOW") + """</span>')
 one('<button class="unmute" id="unmute">&#128266; UNMUTE REEL</button>', '""" + (\'<button class="unmute" id="unmute">&#128266; UNMUTE INTRO</button>\' if INTRO else "") + """')
-one("var R=['Full-Stack Developer','WordPress Developer','SEO Specialist','AEO Specialist']", "var R=['Senior Product Manager','Salesforce PM','GTM Systems Owner','Agentforce Lead']")
+one("var R=['Full-Stack Developer','WordPress Developer','SEO Specialist','AEO Specialist']", "var R=['Salesforce Product Manager','AI Product Manager','GTM Business Leader','Digital Transformation Solutions Leader','AI-Enabled Project Manager','Security+ Certified PM']")
 
 # ---------------------------------------------------------------- proof band
 one(r'<div class="proofband" aria-label="Evidence highlights"><div class="mq-track">.*?</div></div>',
@@ -213,12 +213,13 @@ one(r'<div class="cinfo">\n.*?\n    </div>', f'''<div class="cinfo">
       <div><b>// Senior Product Manager</b>Salesforce CRM &amp; GTM systems<br>Agentforce &amp; AI governance</div>
       <div><b>// Status</b><span class="st">Open to senior PM roles</span><br>Atlanta &middot; remote across the US</div>
       <div><b>// Book a call</b><a href="{CAL}" target="_blank" rel="noopener">calendly.com/dbrowntech15/30min</a></div>
+      <div><b>// Resume</b><a href="{PDF}" target="_blank" rel="noopener">Download PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Download DOCX</a></div>
       <div><b>// Verify</b><a href="{TB}" target="_blank" rel="noopener">Trailblazer profile</a> &middot; <a href="{LI}" target="_blank" rel="noopener">LinkedIn</a></div>
     </div>''', True)
 one('<div class="bigname">MARK EDCEL</div>', '<div class="bigname">DEDRIC BROWN</div>')
 one(r'<div class="foot">\n.*?\n  </div>', f'''<div class="foot">
     <div>Contact Transmission<br>{EMAIL} &middot; {PHONE}</div>
-    <div><a href="{LI}">LinkedIn</a> &middot; <a href="{TB}">Trailblazer</a> &middot; <a href="{PDF}">Resume PDF</a> &middot; <a href="world/">3D World</a></div>
+    <div><a href="{LI}">LinkedIn</a> &middot; <a href="{TB}">Trailblazer</a> &middot; <a href="{PDF}">Resume PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a> &middot; <a href="world/">3D World</a></div>
     <div>&copy; 2026 Dedric Brown &middot; v1 &middot; September 2026</div>
   </div>''', True)
 
@@ -320,17 +321,20 @@ nav .nlinks a{color:#d9d6e6}nav .nlinks a:hover{color:#fff}
 .cinfo .st,.cinfo b,.form .mono.red,.hello{color:#fff!important}
 .pin.solid .xnum{color:#d9c7ff!important}
 .icon img{filter:none!important}
+.proofband{overflow:hidden!important}
+@media(max-width:980px){html,body{overflow-x:clip}}
+.hero h1 .rot{white-space:normal!important;min-width:0!important}
 .hero video{object-position:50% 12%}
 @media(min-width:981px){.hero video{left:auto!important;right:0;width:46%!important;object-position:50% 8%!important;filter:brightness(1.1) contrast(1.04);-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}.hero h1{font-size:clamp(36px,4.1vw,56px)!important;max-width:50vw!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .shade{background:linear-gradient(90deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,.25) 42%,rgba(5,5,7,0) 58%),linear-gradient(180deg,rgba(5,5,7,.3),transparent 22%,transparent 70%,#050507 100%)!important}}
 @media(max-width:980px){
 .hero{align-items:flex-end!important}
-.hero .hcontent{padding:58vh 0 96px!important}
+.hero .hcontent{padding-top:58vh!important;padding-bottom:96px!important;padding-left:24px!important;padding-right:24px!important}
 .hero video{object-position:58% 8%!important}
 .hero .shade{background:linear-gradient(180deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,0) 14%,rgba(5,5,7,0) 36%,rgba(5,5,7,.9) 56%,#050507 100%)!important}
 .hero h1{max-width:100%}
 .flabel.tr{max-width:min(62vw,340px);font-size:10px}
 }
-@media(max-width:520px){.hero h1{font-size:clamp(28px,8.6vw,38px)!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .cta{flex-wrap:wrap}.hero .hcontent{padding:52vh 0 110px!important}}
+@media(max-width:520px){.hero h1{font-size:clamp(28px,8.6vw,38px)!important}.hero h1 .rot{white-space:normal!important;min-width:0!important}.hero .cta{flex-wrap:wrap}.hero .hcontent{padding-top:52vh!important;padding-bottom:110px!important}}
 #about h2,#about .atext p{color:#fff!important}
 .loomfacade{background:#14131d!important;color:#FAFAFA!important}
 """
