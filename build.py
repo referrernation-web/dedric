@@ -23,8 +23,7 @@ def webp(p, maxw=1280, q=80):
 PHOTO = ""
 HERO = webp("dedric-frame.jpg", 1280, 82)
 ABOUT = webp("headshot.jpg", 720, 82)
-INTRO = "video/intro.mp4" if (pathlib.Path(__file__).parent / "video" / "intro.mp4").exists() else ""
-THUMBS = {k: webp("thumb-" + k + ".jpg", 1280, 78) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "blazer2role"]}
+THUMBS = {k: webp("thumb-" + k + ".jpg", 1280, 78) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email", "b2r-commerce"]}
 
 EXPERTISE = [
     ("01", "Product Strategy &amp; Roadmap Ownership",
@@ -69,10 +68,26 @@ FEATURED = [
      "Access-related incidents kept landing on $25M+ of regulated contracts. I stood up enterprise IAM frameworks, integrated IAM with the security stack and drove SSO/MFA to the full user base.",
      "Access incidents down 40% &mdash; 10+ critical findings closed, one access story for compliance and audit",
      ["IAM", "SSO", "MFA", "Zero trust"], "salesforce-iam", "#career"),
-    ("SIDE PROJECT • SPEAKING", "Blazer2Role",
-     "A side project for people making a mid-career move into tech: short talks and a free resume scorer. It is where the Why Tech series lives. The day job is the roadmap above.",
-     "Seven approved talks published &mdash; Sept 2026",
-     ["Speaking", "Community", "Side project"], "blazer2role", "https://blazer2role.com"),
+    ("FOUNDER • BLAZER2ROLE", "Blazer2Role, the platform I founded",
+     "A career-transition platform for people moving into tech. I own product, roadmap and the build: React and Express on Postgres, Clerk auth, Stripe and CourseCreator360 commerce, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
+     "Courses run as modules and lessons with quizzes, 90% watch-through soft gating and auto-issued certificates &mdash; live at blazer2role.com",
+     ["Founder", "LMS", "Clerk", "Stripe", "Postgres"], "b2r-platform", "https://blazer2role.com"),
+    ("AI AUTOMATION • BLAZER2ROLE", "AI Resume Scorer",
+     "The free lead magnet on the homepage. Claude scores a resume for ATS fit and transition readiness against admin-tunable criteria weights, shows a few free insights and gates the rest behind the paid track.",
+     "Claude-scored and admin-tunable, with an OpenAI fallback &mdash; every score saved for coaching follow-up",
+     ["Claude API", "ATS scoring", "Lead magnet", "Admin config"], "b2r-resume", "https://blazer2role.com"),
+    ("AI AUTOMATION • BLAZER2ROLE", "Job Radar",
+     "Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each posting for career-changer fit against the student&rsquo;s latest resume scan. Salary ranges roll up into a live histogram.",
+     "Daily rescan caps and saved leads per student &mdash; job data the coaching calls can point at",
+     ["Firecrawl", "AI fit scoring", "Salary data", "Subscriptions"], "b2r-jobradar", "https://blazer2role.com"),
+    ("AUTOMATION • BLAZER2ROLE", "Email automation engine",
+     "Event-triggered rules for signup, payment and manual sends, with merge-field templates and database-enforced exactly-once delivery, plus broadcasts with signed unsubscribe links. Booking reminders run on a scheduler.",
+     "Exactly-once delivery enforced in the database &mdash; no double sends, no lost follow-ups",
+     ["Resend", "Event rules", "Exactly-once", "Broadcasts"], "b2r-email", "https://blazer2role.com"),
+    ("AUTOMATION • BLAZER2ROLE", "Commerce and credits webhooks",
+     "Stripe and CourseCreator360 events are verified, mapped to package entitlements and coaching credits, and logged for replay. Passing a course auto-issues a certificate with a signed public verification link.",
+     "One webhook path for payments, memberships and refunds &mdash; entitlements the app enforces server-side",
+     ["Stripe", "Webhooks", "Entitlements", "Certificates"], "b2r-commerce", "https://blazer2role.com"),
 ]
 
 SYSLOG = [
@@ -81,6 +96,7 @@ SYSLOG = [
     ("Salesforce &middot; Customer Platforms", "$15M+ retained &middot; $10M+ renewal book &middot; lead gen up 35%", "Retention", "#career"),
     ("NCR &middot; CRM modernization", "2M+ records migrated with zero downtime &middot; $1.8M+ cost savings", "Migration", "#career"),
     ("Dreamforce", "Regular attendee and speaker-track alumni &middot; San Francisco", "Community", "https://www.salesforce.com/dreamforce/"),
+    ("Blazer2Role &middot; Founder", "Career-transition platform &middot; product, roadmap and build &middot; since 2025", "Founder", "https://blazer2role.com"),
     ("Why Tech series", "Five approved talks for mid-career changers &middot; Blazer2Role", "Speaking", "https://blazer2role.com"),
 ]
 
@@ -88,20 +104,24 @@ SYSLOG = [
 
 
 CERTS = [
-    ("SALESFORCE", "01", "Agentforce Specialist", "formerly AI Specialist \u00b7 Oct 2024", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "02", "AI Associate", "Oct 2024", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "03", "Agentforce Sales Consultant", "formerly Sales Cloud Consultant \u00b7 Apr 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "04", "Platform Strategy Designer", "formerly Strategy Designer \u00b7 Apr 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "05", "Business Analyst", "Jan 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "06", "Platform Administrator II", "formerly Advanced Administrator \u00b7 Sep 2022", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "07", "Platform Foundations", "formerly Salesforce Associate \u00b7 Sep 2022", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "08", "Agentforce Service Consultant", "formerly Service Cloud Consultant \u00b7 Dec 2021", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SALESFORCE", "09", "Platform Administrator", "formerly Administrator \u00b7 Oct 2020", "https://www.salesforce.com/trailblazer/dbrown6422"),
-    ("SCALED AGILE", "10", "SAFe 6 Product Owner / Product Manager", "Jun 2024", "https://www.linkedin.com/in/dbrowntech"),
-    ("SCRUM ALLIANCE", "11", "Certified ScrumMaster (CSM)", "Jan 2023", "https://www.linkedin.com/in/dbrowntech"),
-    ("GOOGLE", "12", "Google AI Essentials", "Coursera \u00b7 Jun 2026", "https://www.linkedin.com/in/dbrowntech"),
-    ("COMPTIA", "13", "Security+", "CompTIA", "https://www.linkedin.com/in/dbrowntech"),
-    ("TRAILHEAD", "14", "Security Specialist Superbadge", "Salesforce Trailhead", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("ANTHROPIC", "01", "Claude Code 101", "Anthropic Academy \u00b7 2026", "assets/certs/anthropic-claude-code-101.pdf"),
+    ("ANTHROPIC", "02", "Claude 101", "Anthropic Academy \u00b7 No. stbjocvx3vov", "assets/certs/anthropic-claude-101.pdf"),
+    ("ANTHROPIC", "03", "AI Automation with Claude", "Advancing Women in Tech \u00b7 Coursera \u00b7 Jun 2026", "https://www.coursera.org/account/accomplishments/verify/HDOOT53LX8B5"),
+    ("ANTHROPIC", "04", "AI Fundamentals with Claude", "Advancing Women in Tech \u00b7 Coursera \u00b7 Jun 2026", "https://www.coursera.org/account/accomplishments/verify/6WJCHV2PTT9B"),
+    ("SALESFORCE", "05", "Agentforce Specialist", "formerly AI Specialist \u00b7 Oct 2024", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "06", "AI Associate", "Oct 2024", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "07", "Agentforce Sales Consultant", "formerly Sales Cloud Consultant \u00b7 Apr 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "08", "Platform Strategy Designer", "formerly Strategy Designer \u00b7 Apr 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "09", "Business Analyst", "Jan 2023", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "10", "Platform Administrator II", "formerly Advanced Administrator \u00b7 Sep 2022", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "11", "Platform Foundations", "formerly Salesforce Associate \u00b7 Sep 2022", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "12", "Agentforce Service Consultant", "formerly Service Cloud Consultant \u00b7 Dec 2021", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SALESFORCE", "13", "Platform Administrator", "formerly Administrator \u00b7 Oct 2020", "https://www.salesforce.com/trailblazer/dbrown6422"),
+    ("SCALED AGILE", "14", "SAFe 6 Product Owner / Product Manager", "Jun 2024", "https://www.linkedin.com/in/dbrowntech"),
+    ("SCRUM ALLIANCE", "15", "Certified ScrumMaster (CSM)", "Jan 2023", "https://www.linkedin.com/in/dbrowntech"),
+    ("GOOGLE", "16", "Google AI Essentials", "Coursera \u00b7 Jun 2026", "https://www.coursera.org/verify/WWY4TVNKUIN2"),
+    ("COMPTIA", "17", "Security+", "CompTIA", "https://www.linkedin.com/in/dbrowntech"),
+    ("TRAILHEAD", "18", "Security Specialist Superbadge", "Salesforce Trailhead", "https://www.salesforce.com/trailblazer/dbrown6422"),
 ]
 
 
@@ -122,7 +142,7 @@ for gname, icons in SKILL_GROUPS:
         for slug, label in icons)
     skills_html += '<div class="sgroup"><h3>' + gname + '</h3><div class="igrid">' + cells + "</div></div>"
 
-LQ = {k: __import__("patch8_lqip").lqip(A / ("thumb-" + k + ".jpg")) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "blazer2role"]}
+LQ = {k: __import__("patch8_lqip").lqip(A / ("thumb-" + k + ".jpg")) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email", "b2r-commerce"]}
 feat_html = ""
 for cat, title, desc, ev, tags, thumb, url in FEATURED:
     shot = ('<div class="shot"><img class="lq" src="data:image/jpeg;base64,' + LQ[thumb] + '" data-src="' + THUMBS[thumb] + '" alt="' + title + '" loading="lazy" decoding="async"></div>'
@@ -609,7 +629,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 .mg-play:hover{transform:translateY(-2px)}
 .mg-play.on{background:linear-gradient(180deg,#7c3ae6,#5a22b8);color:#fff}
 @media(max-width:700px){.mg-play{display:none}}
-</style></head><body>
+.hero video{object-fit:contain!important;object-position:50% 50%!important}@media(max-width:980px){.hero video{object-position:50% 0!important}}</style></head><body>
 
 <a class="skip" href="#about">Skip to content</a>
 <nav><div class="prog" id="prog"></div><div class="wrap">
@@ -621,8 +641,8 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 <nav class="dock" id="dock" aria-label="Sections"><a href="#home" title="Home">&#8962;<span>Home</span></a><a href="#about" title="About">&#9786;<span>About</span></a><a href="#journey" title="Journey">&#10148;<span>Journey</span></a><a href="#expertise" title="Expertise">&#9733;<span>Expertise</span></a><a href="#skills" title="Skills">&#9881;<span>Skills</span></a><a href="#projects" title="Projects">&#9638;<span>Projects</span></a><a href="#certifications" title="Certifications">&#10004;<span>Certs</span></a><a href="#contact" title="Contact">&#9993;<span>Contact</span></a><span class="dsel" id="dsel"></span></nav>
 
 <header class="hero" id="home">
-  <video id="reel" data-depth="-6"\"""" + (" src=\"" + INTRO + "\"" if INTRO else "") + """ poster=\"""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>
-  <div class="shade"></div><div class="spot" id="spot"></div>
+  <video id="reel" data-depth="-6" src="video/hero-reel.mp4" poster="""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>
+  <div class="shade"></div><button class="unmute" id="unmute" type="button" aria-label="Unmute intro video">&#128266; UNMUTE REEL</button><div class="spot" id="spot"></div>
   <div class="wrap hcontent" data-depth="8">
     <h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Salesforce Product Manager</span><span class="uline"></span></h1>
     <p class="sub">I own Salesforce CRM and go-to-market systems roadmaps, from NetSuite integrations to Agentforce governance, and turn fragmented, manual processes into platforms Finance signs off on.</p>
@@ -631,8 +651,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
   <span class="flabel tr">// Salesforce &middot; GTM Systems &middot; Agentforce<br>Centene, since Jan 2026</span>
   <span class="flabel bl">// Atlanta &middot; remote US<br>$150M+ pipeline roadmap</span>
   <a class="cue" href="#about" aria-label="Scroll down">&#8964;</a>
-  <span class="ainote">""" + ("APPLICATION INTRO &middot; REAL RESULTS BELOW" if INTRO else "INTRO VIDEO IN PRODUCTION &middot; REAL RESULTS BELOW") + """</span>
-  """ + ('<button class="unmute" id="unmute">&#128266; UNMUTE INTRO</button>' if INTRO else "") + """
+  <span class="ainote">INTRO VIDEO &middot; TAP TO UNMUTE &middot; REAL RESULTS BELOW</span>
 </header>
 
 <div class="proofband" aria-label="Evidence highlights"><div class="mq-track"><span class="pf"><b>$150M+</b>annual pipeline · Sales Cloud roadmap · Cloudflare</span><span class="pf"><b>40%</b>faster time-to-insight · 12+ teams</span><span class="pf"><b>35%</b>Salesforce adoption lift · GTM users</span><span class="pf"><b>$15M+</b>enterprise contracts retained · Salesforce</span><span class="pf"><b>8,000+</b>users on SSO / MFA · incidents down 40%</span><span class="pf"><b>2M+</b>CRM records migrated · zero downtime · NCR</span><span class="pf"><b>9</b>Salesforce credentials · Agentforce Specialist</span><span class="pf"><b>Atlanta</b>open to remote across the US</span><span class="pf"><b>$150M+</b>annual pipeline · Sales Cloud roadmap · Cloudflare</span><span class="pf"><b>40%</b>faster time-to-insight · 12+ teams</span><span class="pf"><b>35%</b>Salesforce adoption lift · GTM users</span><span class="pf"><b>$15M+</b>enterprise contracts retained · Salesforce</span><span class="pf"><b>8,000+</b>users on SSO / MFA · incidents down 40%</span><span class="pf"><b>2M+</b>CRM records migrated · zero downtime · NCR</span><span class="pf"><b>9</b>Salesforce credentials · Agentforce Specialist</span><span class="pf"><b>Atlanta</b>open to remote across the US</span></div></div>
@@ -656,9 +675,9 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 
 <section id="journey" class="lz"><div class="wrap">
   <div class="shead center"><span class="mono">CAREER JOURNEY</span><h2>From CRM Records to the AI Roadmap</h2>
-  <p>Five roles, three Fortune 500 logos and one hypergrowth company. The same knot every time, untied at a bigger scale.</p></div>
+  <p>Five roles, three Fortune 500 logos, one hypergrowth company and one company of my own. The same knot every time, untied at a bigger scale.</p></div>
   <blockquote class="jquote glass" data-rv="zoom"><p>&ldquo;Every role was the same knot in a bigger company: two teams, two systems, no shared truth. Untie it, then put the automation on data that can carry it.&rdquo;</p><footer>&mdash; the line I open with in every roadmap review</footer></blockquote>
-  <div class="jwrap"><svg class="jtree" id="jtree" aria-hidden="true"><defs><linearGradient id="jg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6C2BD9"/><stop offset="1" stop-color="#c4a8ff"/></linearGradient><filter id="jglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter></defs><path id="jhalo" d=""/><path id="jtrunk" d=""/><g id="jbr"></g><g id="jtw"></g><g id="jlv"></g></svg><ol class="jline"><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2014&ndash;2017</span><h3>BA, Business Administration, Morris Brown College</h3><p>Atlanta. The business side first; the platform came after.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2018&ndash;2020</span><h3>Product Manager, CRM Platforms, NCR Corporation</h3><p>Sales Cloud modernization: $1.8M+ cost savings, 2M+ legacy records migrated with zero downtime, data accuracy up 35%.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2020&ndash;2021</span><h3>Product Manager, Identity &amp; Security, Salesforce</h3><p>SSO and MFA across 8,000+ users on $25M+ of regulated contracts. Access incidents down 40%, 10+ critical findings closed.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2021&ndash;2023</span><h3>Product Manager, Customer Platforms, Salesforce</h3><p>Vlocity / OmniStudio and Marketing Cloud roadmap. $15M+ retained, $10M+ renewal book, lead generation up 35%.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2023&ndash;2026</span><h3>Product Manager, GTM Business Systems, Cloudflare</h3><p>Sales Cloud roadmap behind $150M+ in pipeline. NetSuite ERP integration, time-to-insight down 40%, adoption up 35%.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2026</span><h3>Senior Salesforce Product Manager, Centene</h3><p>Health Cloud roadmap for specialty pharmacy. Agentforce governance, NPI-keyed provider identity, HIPAA-ready controls.</p></div></li></ol></div>
+  <div class="jwrap"><svg class="jtree" id="jtree" aria-hidden="true"><defs><linearGradient id="jg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6C2BD9"/><stop offset="1" stop-color="#c4a8ff"/></linearGradient><filter id="jglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter></defs><path id="jhalo" d=""/><path id="jtrunk" d=""/><g id="jbr"></g><g id="jtw"></g><g id="jlv"></g></svg><ol class="jline"><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2018&ndash;2020</span><h3>Product Manager, CRM Platforms, NCR Corporation</h3><p>Sales Cloud modernization: $1.8M+ cost savings, 2M+ legacy records migrated with zero downtime, data accuracy up 35%.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2020&ndash;2021</span><h3>Product Manager, Identity &amp; Security, Salesforce</h3><p>SSO and MFA across 8,000+ users on $25M+ of regulated contracts. Access incidents down 40%, 10+ critical findings closed.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2021&ndash;2023</span><h3>Product Manager, Customer Platforms, Salesforce</h3><p>Vlocity / OmniStudio and Marketing Cloud roadmap. $15M+ retained, $10M+ renewal book, lead generation up 35%.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2023&ndash;2026</span><h3>Product Manager, GTM Business Systems, Cloudflare</h3><p>Sales Cloud roadmap behind $150M+ in pipeline. NetSuite ERP integration, time-to-insight down 40%, adoption up 35%.</p></div></li><li class="jt" data-rv="right"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2026</span><h3>Senior Salesforce Product Manager, Centene</h3><p>Health Cloud roadmap for specialty pharmacy. Agentforce governance, NPI-keyed provider identity, HIPAA-ready controls.</p></div></li><li class="jt" data-rv="left"><span class="jdot"></span><div class="jcard hv"><span class="jyear">2025&ndash;Present</span><h3>Founder, Blazer2Role</h3><p>A career-transition platform for people moving into tech. Built the product end to end: React and Express on Postgres with Clerk auth, Stripe and CourseCreator360 commerce, and Claude-powered tools such as the resume scorer and job radar. Courses run as modules and lessons with quizzes, soft gating and auto-issued certificates.</p></div></li></ol></div>
   <div class="note">Next: your roadmap.</div>
 </div></section>
 
@@ -696,14 +715,9 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 <section id="certifications"><div class="wrap">
   <div class="shead"><div><span class="mono">SYSTEM BADGES</span><h2>Professional Credentials</h2></div><div class="arrows"><button id="cprev" aria-label="Previous">&#8249;</button><button id="cnext" aria-label="Next">&#8250;</button></div></div>
   <div class="cgrid" id="cgrid">""" + certs_html + """</div>
-  <div class="certnote">Hover a card to flip and verify &bull; Total of """ + str(len(CERTS)) + """ credentials, 9 from Salesforce. Official names as of July 2026.</div>
+  <div class="certnote">Hover a card to flip and verify &bull; Total of """ + str(len(CERTS)) + """ credentials, """ + str(sum(1 for c in CERTS if c[0] == "SALESFORCE")) + """ from Salesforce. Official names as of September 2026.</div>
 </div></section>
 
-<section id="intro" class="lz"><div class="wrap">
-  <div class="shead center"><span class="mono">INTRO TRANSMISSION</span><h2>Meet Me in Forty Seconds</h2></div>
-  <div class="introwrap glow" id="loomwrap">""" + ('<video src="' + INTRO + '" poster="' + HERO + '" controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;background:#000"></video>' if INTRO else '<button class="loomfacade" id="loomplay" aria-label="Intro video in production" type="button" disabled><span class="playbtn">&#9654;</span><span>Application intro: in production</span></button>') + """</div>
-  <p class="intronote">""" + ("Who I am, what I own, three numbers, and what to do next." if INTRO else "Recording this week. The receipts above do not wait.") + """</p>
-</div></section>
 
 <dialog id="csd" class="csd" aria-labelledby="csdTitle"><div class="csdIn glass"><button class="csdX" id="csdX" aria-label="Close">&times;</button><div class="csdShot" id="csdShot"></div><div class="csdBody"><div class="cat" id="csdCat"></div><h3 id="csdTitle"></h3><p id="csdDesc"></p><div class="ev" id="csdEv"></div><div class="tags" id="csdTags"></div><a class="btn light" id="csdUrl" rel="noopener">See the role &rarr;</a></div></div></dialog>
 <section class="contact" id="contact"><div class="wrap">
@@ -723,6 +737,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
     </form>
     <div class="cinfo">
       <div><b>// Senior Product Manager</b>Salesforce CRM &amp; GTM systems<br>Agentforce &amp; AI governance</div>
+      <div><b>// Education</b>Business Administration coursework<br>Morris Brown College, Atlanta</div>
       <div><b>// Status</b><span class="st">Open to senior PM roles</span><br>Atlanta &middot; remote across the US</div>
       <div><b>// Book a call</b><a href="https://calendly.com/dbrowntech15/30min" target="_blank" rel="noopener">calendly.com/dbrowntech15/30min</a></div>
       <div><b>// Resume</b><a href="assets/Dedric-Brown-Resume-2026.pdf" target="_blank" rel="noopener">Download PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Download DOCX</a></div>
@@ -739,7 +754,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 
 <script>
 (function(){var v=document.getElementById('reel'),b=document.getElementById('unmute');if(!v||!b)return;function tg(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play();}b.innerHTML=v.muted?'&#128266; UNMUTE REEL':'&#128263; MUTE REEL';b.style.animation=v.muted?'':'none';}b.onclick=tg;v.onclick=tg;var once=function(e){if(e&&e.target&&(e.target===b||b.contains(e.target)))return;if(v.muted){tg();}document.removeEventListener('pointerdown',once,true);document.removeEventListener('keydown',once,true);};document.addEventListener('pointerdown',once,true);document.addEventListener('keydown',once,true);})();
-(function(){var R=['Salesforce Product Manager','AI Product Manager','GTM Business Leader','Digital Transformation Solutions Leader','AI-Enabled Project Manager','Security+ Certified PM'],el=document.getElementById('rot'),i=0,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;var G='ABCDEFGHJKLMNPQRSTUVWXYZ';function scramble(to){var from=el.textContent,len=Math.max(from.length,to.length),q=[],t0=performance.now(),tok=(el._tok=(el._tok||0)+1);for(var k=0;k<len;k++){var st=Math.random()*160,en=st+120+Math.random()*180;q.push({t:to[k]||'',s:st,e:en,c:''});}function step(){if(el._tok!==tok)return;var ms=performance.now()-t0,out='',done=0;for(var k=0;k<q.length;k++){var it=q[k];if(ms>=it.e){done++;out+=it.t;}else if(ms>=it.s){if(!it.c||Math.random()<.35)it.c=G[Math.floor(Math.random()*G.length)];out+='<span class="dud">'+it.c+'</span>';}else out+=(from[k]||'');}if(done<q.length&&ms<650){el.innerHTML=out;setTimeout(step,30);}else el.textContent=to;}step();}
+(function(){var R=['Salesforce Product Manager','Founder, Blazer2Role','AI Product Manager','GTM Business Leader','Digital Transformation Solutions Leader','AI-Enabled Project Manager','Security+ Certified PM'],el=document.getElementById('rot'),i=0,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;var G='ABCDEFGHJKLMNPQRSTUVWXYZ';function scramble(to){var from=el.textContent,len=Math.max(from.length,to.length),q=[],t0=performance.now(),tok=(el._tok=(el._tok||0)+1);for(var k=0;k<len;k++){var st=Math.random()*160,en=st+120+Math.random()*180;q.push({t:to[k]||'',s:st,e:en,c:''});}function step(){if(el._tok!==tok)return;var ms=performance.now()-t0,out='',done=0;for(var k=0;k<q.length;k++){var it=q[k];if(ms>=it.e){done++;out+=it.t;}else if(ms>=it.s){if(!it.c||Math.random()<.35)it.c=G[Math.floor(Math.random()*G.length)];out+='<span class="dud">'+it.c+'</span>';}else out+=(from[k]||'');}if(done<q.length&&ms<650){el.innerHTML=out;setTimeout(step,30);}else el.textContent=to;}step();}
 setInterval(function(){i=(i+1)%R.length;if(rm){el.textContent=R[i];}else scramble(R[i]);},3600);})();
 (function(){var els=document.querySelectorAll('.pwrap,.atext,.xcard,.pin,.jt,.jquote,.proj,.icon,.flip,.lrow,.stat,.shead,.introwrap,.cgrid2');var i=0;els.forEach(function(e){e.classList.add('rv');e.style.transitionDelay=((i++%6)*60)+'ms';});if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.08});els.forEach(function(e){io.observe(e)});})();
 (function(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;var els=document.querySelectorAll('[data-count]');var io=new IntersectionObserver(function(en){en.forEach(function(x){if(!x.isIntersecting)return;var b=x.target;io.unobserve(b);var to=parseFloat(b.dataset.count),dec=parseInt(b.dataset.dec||'0'),pre=b.dataset.prefix||'',suf=b.dataset.suffix||'',t0=null;var fin=pre+(dec?to.toFixed(dec):Math.round(to).toLocaleString())+suf;function tick(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/1300);var e=1-Math.pow(1-p,3);var v=to*e;b.textContent=pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;if(p<1)requestAnimationFrame(tick);else b.textContent=fin;}requestAnimationFrame(tick);setTimeout(function(){b.textContent=fin;},1600);});},{threshold:.6});els.forEach(function(e){io.observe(e)});})();

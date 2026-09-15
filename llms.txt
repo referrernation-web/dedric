@@ -8,8 +8,12 @@
 - LinkedIn: https://www.linkedin.com/in/dbrowntech
 - Trailblazer: https://www.salesforce.com/trailblazer/dbrown6422
 
+- 2025 – Present: Founder, Blazer2Role (https://blazer2role.com): career-transition platform for people moving into tech; built the LMS, Claude-powered resume scorer, Firecrawl job radar, email automations and Stripe commerce
 - Jan 2026 – Present: Senior Salesforce Product Manager, Centene Corporation (Atlanta, GA)
 - Apr 2023 – Jan 2026: Product Manager, GTM Business Systems, Cloudflare (Atlanta, GA)
 - Jun 2021 – Apr 2023: Product Manager, Customer Platforms, Salesforce (Atlanta, GA)
 - Jan 2020 – Jun 2021: Product Manager, Identity &amp; Security, Salesforce (Atlanta, GA)
 - Jan 2018 – Jan 2020: Product Manager, CRM Platforms, NCR Corporation (Atlanta, GA)
+
+- Education: Business Administration coursework, Morris Brown College, Atlanta
+- 2026 certifications: Claude Code 101 and Claude 101 (Anthropic Academy); AI Automation with Claude and AI Fundamentals with Claude (Advancing Women in Tech and Anthropic, Coursera); Google AI Essentials (Coursera)
