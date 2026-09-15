@@ -641,7 +641,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 <nav class="dock" id="dock" aria-label="Sections"><a href="#home" title="Home">&#8962;<span>Home</span></a><a href="#about" title="About">&#9786;<span>About</span></a><a href="#journey" title="Journey">&#10148;<span>Journey</span></a><a href="#expertise" title="Expertise">&#9733;<span>Expertise</span></a><a href="#skills" title="Skills">&#9881;<span>Skills</span></a><a href="#projects" title="Projects">&#9638;<span>Projects</span></a><a href="#certifications" title="Certifications">&#10004;<span>Certs</span></a><a href="#contact" title="Contact">&#9993;<span>Contact</span></a><span class="dsel" id="dsel"></span></nav>
 
 <header class="hero" id="home">
-  <video id="reel" data-depth="-6" src="video/hero-reel.mp4" poster="""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>
+  <video id="reel" data-depth="-6" src="video/hero-reel.mp4?v=20260915b" poster="""" + HERO + """" muted autoplay loop playsinline preload="metadata"></video>
   <div class="shade"></div><button class="unmute" id="unmute" type="button" aria-label="Unmute intro video">&#128266; UNMUTE REEL</button><div class="spot" id="spot"></div>
   <div class="wrap hcontent" data-depth="8">
     <h1><span class="kt" id="kt">Hi, I&rsquo;m Dedric, a</span><br><span class="rot" id="rot" aria-live="polite">Salesforce Product Manager</span><span class="uline"></span></h1>
