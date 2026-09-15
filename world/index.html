@@ -334,7 +334,7 @@ function buildWorld(){
  mp(BX(1,1.4,.7),0x2f8fd6,s.x-3,y+1.3,s.z+13);mp(CY(.08,.08,1,6),0x555555,s.x-3,y+.5,s.z+13);   // mailbox
  vehicle(s.x-8,s.z+6,1.2,0xf4c430,4);
  mbEnd();
- label('ST. LOUIS',s.x,y+26,s.z,'CONTACT · hire me',1.3);lampsAround(s.x,s.z,12,5);
+ label('ST. LOUIS',s.x,y+26,s.z,'CONTACT · book a call',1.3);lampsAround(s.x,s.z,12,5);
  // ---------- scenery: trees, rocks ----------
  for(var i=0;i<170;i++){var x=(Math.random()-.5)*230,z=(Math.random()-.5)*230;if(Math.hypot(x,z)<18)continue;var near=ST.some(function(s){return Math.hypot(x-s.x,z-s.z)<s.r+2});if(near)continue;if(hgt(x,z)<1.3)continue;if(x>60&&z<-10)rock(x,z,1+Math.random()*1.5);else tree(x,z,.7+Math.random()*.8)}
  dress([['bench',6,10,1.6],['bench',-7,12,.4],['planter',9,7,0,0,1.1],['planter',-9,7,0,0,1.1],['bollard',11,3,0],['bollard',11,6,0],
@@ -830,7 +830,7 @@ function toast(msg){var d=document.createElement('div');d.className='toast';d.te
 var tipEl=document.getElementById('tip');function tip(html,x,y){if(!html){tipEl.style.display='none';return}tipEl.innerHTML=html;tipEl.style.display='block';tipEl.style.left=Math.min(x,W-240)+'px';tipEl.style.top=Math.min(y,H-70)+'px'}
 // objectives (RA3 mission list)
 var objl=document.getElementById('objl'),objn=document.getElementById('objn');
-function objUpdate(){objl.innerHTML=ST.map(function(s){return '<div class="'+(SEEN[s.id]?'done':'')+'"><i>'+(SEEN[s.id]?'&#10003;':'')+'</i>'+s.n+'</div>'}).join('');var n=nextObj();objn.textContent=n?'NEXT: '+n.n.toUpperCase()+' · '+Math.round(Math.hypot(P.x-n.x,P.z-n.z))+' m':'ALL 7 DONE · HIRE ME';}
+function objUpdate(){objl.innerHTML=ST.map(function(s){return '<div class="'+(SEEN[s.id]?'done':'')+'"><i>'+(SEEN[s.id]?'&#10003;':'')+'</i>'+s.n+'</div>'}).join('');var n=nextObj();objn.textContent=n?'NEXT: '+n.n.toUpperCase()+' · '+Math.round(Math.hypot(P.x-n.x,P.z-n.z))+' m':'ALL 7 DONE · BOOK A CALL';}
 function nextObj(){var best=null,bd=1e9;ST.forEach(function(s){if(SEEN[s.id])return;var d=Math.hypot(P.x-s.x,P.z-s.z);if(d<bd){bd=d;best=s}});return best}
 // 3D objective arrow + selection ring (RA3-style)
 var ARROW=new THREE.Mesh(new THREE.ConeGeometry(.45,1.3,6),new THREE.MeshBasicMaterial({color:0x6C2BD9}));ARROW.geometry.rotateX(Math.PI/2);S.add(ARROW);
