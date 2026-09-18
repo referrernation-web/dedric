@@ -2,9 +2,9 @@
 
 > Senior Salesforce Product Manager (CRM, GTM systems, Agentforce), Atlanta GA, open to remote US.
 
-- Resume site: https://referrernation-web.github.io/dedric/
-- 3D resume: https://referrernation-web.github.io/dedric/world/
-- Resume PDF: https://referrernation-web.github.io/dedric/assets/Dedric-Brown-Resume-2026.pdf
+- Resume site: https://dedricbrown.com/
+- 3D resume: https://dedricbrown.com/world/
+- Resume PDF: https://dedricbrown.com/assets/Dedric-Brown-Resume-2026.pdf
 - LinkedIn: https://www.linkedin.com/in/dbrowntech
 - Trailblazer: https://www.salesforce.com/trailblazer/dbrown6422
 

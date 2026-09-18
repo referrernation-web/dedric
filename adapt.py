@@ -9,7 +9,7 @@ assert "Mark Edcel" in s, "build.py is not the fresh copy of Mark's"
 
 EMAIL, PHONE = "dedric.brown55@gmail.com", "470-262-7774"
 LI, TB, CAL = "https://www.linkedin.com/in/dbrowntech", "https://www.salesforce.com/trailblazer/dbrown6422", "https://calendly.com/dbrowntech15/30min"
-BASE = "https://referrernation-web.github.io/dedric/"
+BASE = "https://dedricbrown.com/"
 PDF = "assets/Dedric-Brown-Resume-2026.pdf"
 
 
@@ -207,7 +207,7 @@ one(r'<section id="intro" class="lz"><div class="wrap">.*?</div></section>',
 
 # ---------------------------------------------------------------- contact + footer
 one('action="https://formsubmit.co/markedcel06@gmail.com"', f'action="https://formsubmit.co/{EMAIL}"')
-one('<input type="hidden" name="_subject" value="Portfolio inquiry &mdash; referrernation-web.github.io">', '<input type="hidden" name="_subject" value="Inquiry &mdash; referrernation-web.github.io/dedric">')
+one('<input type="hidden" name="_subject" value="Portfolio inquiry &mdash; referrernation-web.github.io">', '<input type="hidden" name="_subject" value="Inquiry &mdash; dedricbrown.com">')
 one('placeholder="Tell me about your site and what it should rank for."', 'placeholder="The role, the platform, the problem."')
 one(r'<div class="cinfo">\n.*?\n    </div>', f'''<div class="cinfo">
       <div><b>// Senior Product Manager</b>Salesforce CRM &amp; GTM systems<br>Agentforce &amp; AI governance</div>

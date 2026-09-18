@@ -506,8 +506,8 @@ HTML = """<!doctype html>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Dedric Brown &mdash; Senior Salesforce Product Manager">
 <meta property="og:description" content="Salesforce CRM, GTM systems and Agentforce product leadership. $150M+ pipeline roadmap, $15M+ retained, 8,000-user SSO/MFA. Atlanta, open to remote.">
-<meta property="og:url" content="https://referrernation-web.github.io/dedric/">
-<meta property="og:image" content="https://referrernation-web.github.io/dedric/assets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://dedricbrown.com/">
+<meta property="og:image" content="https://dedricbrown.com/assets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
@@ -725,10 +725,10 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
   <div class="cgrid2">
     <form class="form" id="cform" action="https://formsubmit.co/dedric.brown55@gmail.com" method="POST">
       <span class="mono red">REACH ME</span>
-      <input type="hidden" name="_subject" value="Inquiry &mdash; referrernation-web.github.io/dedric">
+      <input type="hidden" name="_subject" value="Inquiry &mdash; dedricbrown.com">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="https://referrernation-web.github.io/dedric/#contact">
+      <input type="hidden" name="_next" value="https://dedricbrown.com/#contact">
       <label for="fn">Name</label><input id="fn" name="name" required placeholder="Your name">
       <label for="fe">Email</label><input id="fe" name="email" type="email" required placeholder="you@company.com">
       <label for="fm">Message</label><textarea id="fm" name="message" required placeholder="The role, the platform, the problem."></textarea>

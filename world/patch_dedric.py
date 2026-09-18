@@ -5,7 +5,7 @@ import re, pathlib, json
 
 P = pathlib.Path(__file__).parent / "index.html"
 s = P.read_text(encoding="utf-8")
-BASE = "https://referrernation-web.github.io/dedric/"
+BASE = "https://dedricbrown.com/"
 EMAIL, PHONE = "dedric.brown55@gmail.com", "470-262-7774"
 LI, TB, CAL = "https://www.linkedin.com/in/dbrowntech", "https://www.salesforce.com/trailblazer/dbrown6422", "https://calendly.com/dbrowntech15/30min"
 PDF = "../assets/Dedric-Brown-Resume-2026.pdf"
@@ -246,7 +246,7 @@ s = s.replace("Manila and come back", "Atlanta and come back").replace("Manila c
 s = s.replace("8a1c2b", "6C2BD9").replace("f0b323", "BFFF00").replace("d8293f", "6C2BD9")
 s = s.replace("Mark's", "Dedric's").replace("Mark&#39;s", "Dedric&#39;s").replace("Mark\\'s", "Dedric\\'s").replace("Mark Edcel Lopez", "Dedric Brown")
 s = s.replace("markedcel06@gmail.com", EMAIL).replace("https://www.linkedin.com/in/mark-edcel-lopez-513509216/", LI)
-s = s.replace("referrernation-web.github.io/portfolio", "referrernation-web.github.io/dedric")
+s = s.replace("referrernation-web.github.io/portfolio", "dedricbrown.com")
 s = s.replace("Kimpoy", "Rev").replace("Dianna", "Dedric").replace("bark", "honk").replace("Bark", "Honk")
 s = s.replace("world traveler'", "world traveler'")
 s = s.replace("BABA (G)", "GET OFF (G)")
