@@ -6,4 +6,9 @@ author: Dedric Brown
 permalink: /blog/:title/
 timezone: America/New_York
 plugins: [jekyll-sitemap]
-exclude: ["*.py", "__pycache__", "world/test", "README.md", ".pages.yml"]
+exclude: ["*.py", "__pycache__", "world/test", "README.md", ".pages.yml", "video/*.md"]
+defaults:
+  - scope: { path: "admin" }
+    values: { sitemap: false }
+  - scope: { path: "assets" }
+    values: { sitemap: false }

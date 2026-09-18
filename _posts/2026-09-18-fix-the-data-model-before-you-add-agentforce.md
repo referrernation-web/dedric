@@ -6,6 +6,7 @@ date: 2026-09-18
 tags: [Agentforce, Data governance, Salesforce]
 cover:
 hidden: true
+sitemap: false
 ---
 
 > DRAFT FOR DEDRIC'S REVIEW. This page is not listed on the blog and search engines are told not to index it. Edit it in the admin, then switch "Hidden" off to publish.
