@@ -73,23 +73,62 @@ FEATURED = [
      "A career-transition platform for people moving into tech. I own product, roadmap and the build: React and Express on Postgres, Clerk auth, Stripe and CourseCreator360 commerce, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
      "Courses run as modules and lessons with quizzes, 90% watch-through soft gating and auto-issued certificates &mdash; live at blazer2role.com",
      ["Founder", "LMS", "Clerk", "Stripe", "Postgres"], "b2r-platform", "https://blazer2role.com"),
-    ("AI AUTOMATION • BLAZER2ROLE", "AI Resume Scorer",
-     "The free lead magnet on the homepage. Claude scores a resume for ATS fit and transition readiness against admin-tunable criteria weights, shows a few free insights and gates the rest behind the paid track.",
-     "Claude-scored and admin-tunable, with an OpenAI fallback &mdash; every score saved for coaching follow-up",
-     ["Claude API", "ATS scoring", "Lead magnet", "Admin config"], "b2r-resume", "https://blazer2role.com"),
-    ("AI AUTOMATION • BLAZER2ROLE", "Job Radar",
-     "Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each posting for career-changer fit against the student&rsquo;s latest resume scan. Salary ranges roll up into a live histogram.",
-     "Daily rescan caps and saved leads per student &mdash; job data the coaching calls can point at",
-     ["Firecrawl", "AI fit scoring", "Salary data", "Subscriptions"], "b2r-jobradar", "https://blazer2role.com"),
-    ("AUTOMATION • BLAZER2ROLE", "Email automation engine",
-     "Event-triggered rules for signup, payment and manual sends, with merge-field templates and database-enforced exactly-once delivery, plus broadcasts with signed unsubscribe links. Booking reminders run on a scheduler.",
-     "Exactly-once delivery enforced in the database &mdash; no double sends, no lost follow-ups",
-     ["Resend", "Event rules", "Exactly-once", "Broadcasts"], "b2r-email", "https://blazer2role.com"),
-    ("AUTOMATION • BLAZER2ROLE", "Commerce and credits webhooks",
-     "Stripe and CourseCreator360 events are verified, mapped to package entitlements and coaching credits, and logged for replay. Passing a course auto-issues a certificate with a signed public verification link.",
-     "One webhook path for payments, memberships and refunds &mdash; entitlements the app enforces server-side",
-     ["Stripe", "Webhooks", "Entitlements", "Certificates"], "b2r-commerce", "https://blazer2role.com"),
 ]
+
+# In-depth case study shown when a card opens. (role line, situation, what I did, skills shown, results)
+DEEP = {
+    "cloudflare": ("Product Manager, GTM Business Systems &middot; Cloudflare &middot; Apr 2023 &ndash; Jan 2026",
+        "Cloudflare&rsquo;s Sales Cloud org supported $150M+ in annual pipeline, but opportunity, order, billing and revenue recognition lived in Salesforce and NetSuite separately, and the two never agreed. Finance and Sales Operations reconciled by hand at month-end, and leadership waited on reports.",
+        ["Owned the Sales Cloud roadmap for GTM business systems and directed a developer team on a SAFe Program Increment (PI) planning cadence.",
+         "Led the Salesforce&ndash;NetSuite ERP integration across order-to-cash, billing, invoicing and revenue recognition, settling external IDs and reconciliation rules before committing the roadmap.",
+         "Shipped KPI dashboards and forecasting reports for Finance and Sales Operations on top of the reconciled data.",
+         "Owned UAT quality gates tied to release success metrics, and restructured backlog grooming, sprint planning and release execution.",
+         "Paired every enhancement and automation framework with outcome-focused release notes to drive adoption."],
+        ["Roadmap ownership", "ERP integration design", "SAFe PI planning", "Data integrity &amp; external IDs", "UAT &amp; release management", "Finance &amp; Sales Ops stakeholder alignment"],
+        ["Time-to-insight cut 40%; dashboards adopted by 12+ teams", "Platform adoption up 35%", "Post-launch defects down 20%, feature delivery 15% faster", "Better data integrity and a faster month-end close"]),
+    "centene-ai": ("Senior Salesforce Product Manager &middot; Centene (Fortune 500, 27M+ members) &middot; Jan 2026 &ndash; Present",
+        "Prior authorization, benefits investigation and referral-to-therapy were the obvious AI targets for the specialty pharmacy and managed care lines. But the org was a 10-year-old call-logging system, and the source data behind some of those workflows could not be trusted yet. In a HIPAA-regulated business, automating on bad data is a compliance problem, not a quick win.",
+        ["Own the AI enablement roadmap: evaluate Agentforce, Einstein and predictive models against each clinical workflow.",
+         "Gate every use case on data readiness before automation and AI, so nothing ships on records Compliance cannot stand behind.",
+         "Define requirements and prioritize the Health Cloud backlog with IT, Clinical Operations and Compliance.",
+         "Drive the transformation from call logging to a structured CRM: lead-to-opportunity pipeline, stage exit criteria and a forecastable view for leadership."],
+        ["AI product strategy", "Agentforce &amp; Einstein evaluation", "Data-readiness gating", "HIPAA-aware governance", "Health Cloud roadmap", "Cross-functional prioritization"],
+        ["Two workflows held back from production until their data was fixed", "The use cases that shipped carry controls Compliance can review", "Operating rule proven in practice: fix the data model and automation before layering AI on top"]),
+    "centene-id": ("Senior Salesforce Product Manager &middot; Centene &middot; Jan 2026 &ndash; Present",
+        "ScriptMed (Inovalon), the Centene prescriber file and Symphony Health each described the same provider differently. Duplicate provider and member records meant no report, no pipeline and no AI use case could be trusted, and every roadmap item downstream depended on fixing it.",
+        ["Standardized the provider and member data models across the three source systems.",
+         "Implemented National Provider Identifier (NPI)-keyed external IDs so each provider resolves to one record regardless of source.",
+         "Eliminated duplicate records and set the rules that keep them from coming back.",
+         "Established this as the data governance backbone the rest of the CRM modernization builds on."],
+        ["Master data management", "Data modeling", "External ID strategy", "Deduplication", "Data governance", "Healthcare data (NPI)"],
+        ["One provider identity across ScriptMed, Centene prescriber and Symphony Health data", "Duplicate records eliminated", "The governance backbone for the Health Cloud roadmap and every AI use case gated on it"]),
+    "salesforce-iam": ("Product Manager, Identity &amp; Security &middot; Salesforce &middot; Jan 2020 &ndash; Jun 2021",
+        "Access-related incidents kept landing on $25M+ of regulated enterprise contracts. Identity and access processes differed between environments, so compliance and audit had no single access story to point to.",
+        ["Ran the enterprise identity and access management (IAM) program: SSO and MFA rollout across 8,000+ users.",
+         "Instituted enterprise IAM frameworks and business rules, then drove SSO/MFA adoption across the full user base.",
+         "Integrated IAM with the existing security infrastructure to close findings and shrink the attack surface.",
+         "Standardized identity and access processes across regulated environments for compliance, risk management and platform governance."],
+        ["Security product management", "IAM, SSO &amp; MFA", "Large-scale rollout &amp; change management", "Compliance &amp; risk", "Platform governance"],
+        ["Access-related incidents down 40%", "10+ critical security vulnerabilities remediated", "SSO/MFA live for 8,000+ users", "One access story for compliance and audit"]),
+    "b2r-platform": ("Founder &middot; Blazer2Role &middot; 2025 &ndash; Present &middot; live at blazer2role.com",
+        "People moving into tech mid-career get generic advice and no system. I founded Blazer2Role to give them one: Salesforce and Agentforce coursework, coaching, and AI-assisted resume scanning and job matching. I own product, roadmap and the build.",
+        ["Platform: React and Express on Postgres with Clerk auth, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
+         "Learning: courses run as modules and lessons with quizzes, 90% watch-through soft gating and auto-issued certificates with a signed public verification link.",
+         "AI Resume Scorer: Claude scores a resume for ATS fit and transition readiness against admin-tunable criteria weights, with an OpenAI fallback; every score is saved for coaching follow-up.",
+         "Job Radar: Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each for career-changer fit against the student&rsquo;s latest resume scan; salary ranges roll up into a live histogram.",
+         "Email automation: event-triggered rules for signup, payment and manual sends, with database-enforced exactly-once delivery, broadcasts with signed unsubscribe links and scheduled booking reminders.",
+         "Commerce: Stripe and CourseCreator360 webhooks are verified, mapped to package entitlements and coaching credits, and logged for replay; entitlements are enforced server-side."],
+        ["0-to-1 product ownership", "AI product design (Claude API)", "LMS &amp; commerce architecture", "Automation design", "Roadmap &amp; prioritization", "Hands-on delivery"],
+        ["A live product: courses, coaching, AI resume scoring and job matching in one platform", "AI features that feed the coaching calls, not just a demo", "No double sends, no lost follow-ups, one webhook path for payments, memberships and refunds"]),
+}
+
+
+def deep_html(slug):
+    role, situation, did, skills, results = DEEP[slug]
+    li = lambda xs: "".join("<li>" + x + "</li>" for x in xs)
+    return ('<p class="drole">' + role + '</p><h4>The situation</h4><p>' + situation + '</p><h4>What I did</h4><ul>' + li(did) +
+            '</ul><h4>Skills this shows</h4><div class="tags">' + pills(skills) + '</div><h4>Results</h4><ul class="dres">' + li(results) + "</ul>")
+
 
 SYSLOG = [
     ("Centene &middot; Health Cloud roadmap", "Specialty pharmacy and managed care &middot; 27.6M members &middot; since Jan 2026", "Current", "#career"),
@@ -151,7 +190,7 @@ for cat, title, desc, ev, tags, thumb, url in FEATURED:
     slug = (thumb or url.replace("https://", "").split(".")[0])
     feat_html += ('<article class="proj glow tilt" data-slug="' + slug + '" data-title="' + title + '" data-cat="' + cat + '" data-desc="' + desc.replace('"', '&quot;') + '" data-ev="' + ev.replace('"', '&quot;') + '" data-tags="' + ", ".join(tags) + '" data-url="' + url + '" tabindex="0" role="button" aria-haspopup="dialog">' + shot + '<div class="cat">' + cat + "</div><h3>" + title + "</h3><p>" + desc +
                   '</p><div class="ev">' + ev + '</div><div class="tags">' + pills(tags) +
-                  '</div><span class="visit">Open case study &rarr;</span></article>')
+                  '</div><span class="visit">Open full case study &rarr;</span><template class="deep">' + deep_html(slug) + '</template></article>')
 
 syslog_html = "".join(
     '<a class="lrow hv" href="' + url + '" target="_blank" rel="noopener"><div><b>' + t + "</b><span>" + d +
@@ -191,14 +230,14 @@ a{color:inherit;text-decoration:none}
 .pf{display:inline-flex;align-items:baseline;gap:10px;font:500 12px/1 'JetBrains Mono',monospace;letter-spacing:.06em;white-space:nowrap;color:rgba(255,255,255,.9)}
 .pf b{font:900 20px/1 Inter,sans-serif;letter-spacing:-.02em;color:#14131d}
 @keyframes sc{to{transform:translateX(-50%)}}
-.csd{border:0;padding:0;background:transparent;max-width:min(920px,92vw);width:100%}
+.csd{margin:auto;border:0;padding:0;background:transparent;max-width:min(920px,92vw);width:100%}
 ::view-transition-old(csimg),::view-transition-new(csimg){animation-duration:.45s}
 ::view-transition-group(csimg){animation-timing-function:cubic-bezier(.2,.7,.2,1)}
 .csd::backdrop{background:rgba(17,17,17,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.csdIn{position:relative;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.86);color:#FAFAFA;display:grid;grid-template-columns:1.1fr .9fr}
-.csdShot{background:#f2f2f5;min-height:280px}.csdShot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}.csdShot.noimg{display:flex;align-items:center;justify-content:center;font:500 13px/1 'JetBrains Mono',monospace;color:#a9a6b8}
-.csdBody{padding:30px 30px 30px 26px;display:flex;flex-direction:column;gap:12px}.csdBody h3{font-size:26px;font-weight:800;letter-spacing:-.02em}.csdBody p{color:#555;font-size:14px}.csdBody .btn{align-self:flex-start;margin-top:8px}
-.csdX{position:absolute;top:12px;right:14px;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid #e3e3ea;background:#14131d;font-size:20px;cursor:pointer}
+.csdIn{position:relative;border-radius:22px;overflow:auto;max-height:90vh;background:rgba(255,255,255,.86);color:#FAFAFA;display:block}
+.csdShot{background:#f2f2f5;height:240px}.csdDeep h4{font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#AAFF00;margin:18px 0 8px}.csdBody .csdDeep p,.csdDeep li{color:#c9c6d6;font-size:14.5px;line-height:1.6}.csdBody .csdDeep .drole{font-size:13px;color:#a9a6b8}.csdDeep ul{padding-left:18px;display:grid;gap:6px}.csdDeep .dres li{color:#FAFAFA;font-weight:500}.csdShot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}.csdShot.noimg{display:flex;align-items:center;justify-content:center;font:500 13px/1 'JetBrains Mono',monospace;color:#a9a6b8}
+.csdBody{padding:30px 30px 30px 26px;display:flex;flex-direction:column;gap:12px}.csdBody h3{font-size:26px;font-weight:800;letter-spacing:-.02em}.csdBody p{color:#c9c6d6;font-size:14px}.csdBody .btn{align-self:flex-start;margin-top:8px}
+.csdX{position:sticky;float:right;margin:12px 14px -48px 0;top:12px;right:14px;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid #e3e3ea;background:#14131d;font-size:20px;cursor:pointer}
 .proj[role=button]{cursor:pointer}
 @media(max-width:760px){.csdIn{grid-template-columns:1fr}}
 .tilt{transition:transform .18s ease,box-shadow .18s ease;will-change:transform}
@@ -704,7 +743,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 
 <section id="projects" class="lz"><div class="wrap">
   <div class="shead center"><span class="mono">FEATURED WORK</span><h2>Case Studies That Define the Work</h2>
-  <p>Problem, what I did, result. Every number comes from the resume, not from a template.</p></div>
+  <p>Five projects. Open any one for the full overview: the situation, what I did, the skills it took and the result.</p></div>
   <div class="pgrid">""" + feat_html + """</div>
   <div class="syslog">
     <h3>Roles &amp; Other Engagements</h3>
@@ -720,7 +759,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 </div></section>
 
 
-<dialog id="csd" class="csd" aria-labelledby="csdTitle"><div class="csdIn glass"><button class="csdX" id="csdX" aria-label="Close">&times;</button><div class="csdShot" id="csdShot"></div><div class="csdBody"><div class="cat" id="csdCat"></div><h3 id="csdTitle"></h3><p id="csdDesc"></p><div class="ev" id="csdEv"></div><div class="tags" id="csdTags"></div><a class="btn light" id="csdUrl" rel="noopener">See the role &rarr;</a></div></div></dialog>
+<dialog id="csd" class="csd" aria-labelledby="csdTitle"><div class="csdIn glass"><button class="csdX" id="csdX" aria-label="Close">&times;</button><div class="csdShot" id="csdShot"></div><div class="csdBody"><div class="cat" id="csdCat"></div><h3 id="csdTitle"></h3><p id="csdDesc"></p><div class="ev" id="csdEv"></div><div class="tags" id="csdTags"></div><div class="csdDeep" id="csdDeep"></div><a class="btn light" id="csdUrl" rel="noopener">See the role &rarr;</a></div></div></dialog>
 <section class="contact" id="contact"><div class="wrap">
   <div class="ghost">CONTACT</div>
   <div class="cgrid2">
@@ -888,11 +927,11 @@ draw();window.addEventListener('resize',draw);window.addEventListener('load',dra
 (function(){var p=document.getElementById('prog');function up(){var h=document.documentElement;var m=h.scrollHeight-h.clientHeight;p.style.width=(m>0?(h.scrollTop/m*100):0)+'%';}window.addEventListener('scroll',up,{passive:true});up();var links=[].slice.call(document.querySelectorAll('.nlinks a'));var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))}).filter(Boolean);var so=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){links.forEach(function(a){var on=a.getAttribute('href')==='#'+x.target.id;a.classList.toggle('active',on);if(on){var sl=document.getElementById('slide');if(sl){sl.style.left=a.offsetLeft+'px';sl.style.width=a.offsetWidth+'px';}}});}});},{rootMargin:'-45% 0px -50% 0px'});secs.forEach(function(s){so.observe(s)});})();
 (function(){var kt=document.getElementById('kt');if(kt){var t=kt.textContent;kt.textContent='';var i=0;for(var c of t){var sp=document.createElement('span');sp.textContent=c===' '?'\u00a0':c;sp.style.animationDelay=(i++*35)+'ms';kt.appendChild(sp);}}})();
 (function(){var imgs=document.querySelectorAll('img.lq[data-src]');var io=new IntersectionObserver(function(en){en.forEach(function(x){if(!x.isIntersecting)return;var im=x.target;var full=new Image();full.onload=function(){im.src=im.dataset.src;im.classList.remove('lq');};full.src=im.dataset.src;io.unobserve(im);});},{rootMargin:'200px'});imgs.forEach(function(i){io.observe(i)});})();
-(function(){var d=document.getElementById('csd');if(!d||!d.showModal)return;var cards=document.querySelectorAll('.proj[data-slug]');function open(c){document.getElementById('csdCat').textContent=c.dataset.cat;document.getElementById('csdTitle').textContent=c.dataset.title;document.getElementById('csdDesc').innerHTML=c.dataset.desc;document.getElementById('csdEv').innerHTML=c.dataset.ev;document.getElementById('csdTags').innerHTML=c.dataset.tags.split(', ').map(function(t){return '<span class="pill">'+t+'</span>'}).join('');var u=document.getElementById('csdUrl');u.href=c.dataset.url;var sh=document.getElementById('csdShot');var ci=c.querySelector('.shot img');if(ci){sh.className='csdShot';sh.innerHTML='<img src="'+(ci.dataset.src||ci.src)+'" alt="">';}else{sh.className='csdShot noimg';sh.textContent=c.dataset.url.replace('https://','');}var ci2=c.querySelector('.shot img');function go(){d.showModal();}if(document.startViewTransition&&ci2&&!matchMedia('(prefers-reduced-motion:reduce)').matches){ci2.style.viewTransitionName='csimg';var vt=document.startViewTransition(function(){ci2.style.viewTransitionName='';go();var mi=document.querySelector('#csdShot img');if(mi)mi.style.viewTransitionName='csimg';});vt.finished.then(function(){var mi=document.querySelector('#csdShot img');if(mi)mi.style.viewTransitionName='';});}else go();history.replaceState(null,'','#project-'+c.dataset.slug);}
+(function(){var d=document.getElementById('csd');if(!d||!d.showModal)return;var cards=document.querySelectorAll('.proj[data-slug]');function open(c){document.getElementById('csdCat').textContent=c.dataset.cat;document.getElementById('csdTitle').textContent=c.dataset.title;document.getElementById('csdDesc').innerHTML=c.dataset.desc;document.getElementById('csdEv').innerHTML=c.dataset.ev;document.getElementById('csdTags').innerHTML=c.dataset.tags.split(', ').map(function(t){return '<span class="pill">'+t+'</span>'}).join('');var dp=c.querySelector('template.deep');document.getElementById('csdDeep').innerHTML=dp?dp.innerHTML:'';d.scrollTop=0;var u=document.getElementById('csdUrl');u.href=c.dataset.url;var sh=document.getElementById('csdShot');var ci=c.querySelector('.shot img');if(ci){sh.className='csdShot';sh.innerHTML='<img src="'+(ci.dataset.src||ci.src)+'" alt="">';}else{sh.className='csdShot noimg';sh.textContent=c.dataset.url.replace('https://','');}var ci2=c.querySelector('.shot img');function go(){d.showModal();}if(document.startViewTransition&&ci2&&!matchMedia('(prefers-reduced-motion:reduce)').matches){ci2.style.viewTransitionName='csimg';var vt=document.startViewTransition(function(){ci2.style.viewTransitionName='';go();var mi=document.querySelector('#csdShot img');if(mi)mi.style.viewTransitionName='csimg';});vt.finished.then(function(){var mi=document.querySelector('#csdShot img');if(mi)mi.style.viewTransitionName='';});}else go();history.replaceState(null,'','#project-'+c.dataset.slug);}
 cards.forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('a'))return;open(c)});c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open(c)}});});
 function close(){d.close();if(location.hash.indexOf('#project-')===0)history.replaceState(null,'',' ');}
 document.getElementById('csdX').onclick=close;d.addEventListener('click',function(e){if(e.target===d)close()});d.addEventListener('close',function(){if(location.hash.indexOf('#project-')===0)history.replaceState(null,'',' ')});
-var m=location.hash.match(/^#project-([a-z0-9]+)/);if(m){var c=document.querySelector('.proj[data-slug="'+m[1]+'"]');if(c)setTimeout(function(){open(c)},300);}})();
+var m=location.hash.match(/^#project-([a-z0-9-]+)/);if(m){var c=document.querySelector('.proj[data-slug="'+m[1]+'"]');if(c)setTimeout(function(){open(c)},300);}})();
 (function(){if(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(hover:hover)').matches)return;document.querySelectorAll('.tilt').forEach(function(el){el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform='perspective(900px) rotateX('+(-y*6)+'deg) rotateY('+(x*6)+'deg) translateY(-3px)';});el.addEventListener('mouseleave',function(){el.style.transform='';});});var h=document.querySelector('.hero'),sp=document.getElementById('spot');if(h&&sp){h.addEventListener('mousemove',function(e){var r=h.getBoundingClientRect();sp.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');sp.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});}})();
 (function(){var g=document.getElementById('cgrid');var step=322;function nxt(){if(g.scrollLeft+g.clientWidth>=g.scrollWidth-4){g.scrollTo({left:0,behavior:'smooth'});}else{g.scrollBy({left:step,behavior:'smooth'});}}document.getElementById('cprev').onclick=function(){g.scrollBy({left:-step,behavior:'smooth'});rest();};document.getElementById('cnext').onclick=function(){nxt();rest();};var t=null,paused=false;function start(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;clearInterval(t);t=setInterval(function(){if(!paused)nxt();},2800);}function rest(){clearInterval(t);start();}(function(){var down=false,sx=0,sl=0,vx=0,lx=0,lt=0,raf=null;function onDown(e){if(e.pointerType==='mouse'&&e.button!==0)return;down=true;g.classList.add('dragging');sx=e.clientX;sl=g.scrollLeft;lx=e.clientX;lt=performance.now();vx=0;cancelAnimationFrame(raf);paused=true;}function onMove(e){if(!down)return;var dx=e.clientX-sx;var target=sl-dx;var max=g.scrollWidth-g.clientWidth;var over=target<0?target:(target>max?target-max:0);g.scrollLeft=over?(over<0?0:max):target;g.style.transform=over?('translateX('+(-over*0.35)+'px)'):'';var now=performance.now();vx=(e.clientX-lx)/Math.max(1,now-lt);lx=e.clientX;lt=now;}function onUp(){if(!down)return;down=false;g.classList.remove('dragging');g.style.transition='transform .35s cubic-bezier(.2,.7,.2,1)';g.style.transform='';setTimeout(function(){g.style.transition=''},380);var v=-vx*16;function step(){v*=.92;g.scrollLeft+=v;if(Math.abs(v)>.4)raf=requestAnimationFrame(step);else paused=false;}raf=requestAnimationFrame(step);}g.addEventListener('pointerdown',onDown);window.addEventListener('pointermove',onMove,{passive:true});window.addEventListener('pointerup',onUp);window.addEventListener('pointercancel',onUp);g.addEventListener('click',function(e){if(Math.abs(vx)>.2)e.preventDefault()},true);})();
 g.addEventListener('mouseenter',function(){paused=true});g.addEventListener('mouseleave',function(){paused=false});g.addEventListener('touchstart',function(){paused=true},{passive:true});g.addEventListener('touchend',function(){paused=false},{passive:true});start();})();
