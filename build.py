@@ -681,7 +681,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 <a class="skip" href="#about">Skip to content</a>
 <nav><div class="prog" id="prog"></div><div class="wrap">
   <span class="logo">Dedric Brown<i> .</i></span>
-  <div class="nlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#journey">Journey</a><a href="#expertise">Expertise</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#certifications">Certifications</a><a href="#contact">Contact</a><span class="slide" id="slide"></span></div>
+  <div class="nlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#journey">Journey</a><a href="#expertise">Expertise</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="blog/">Blog</a><a href="#certifications">Certifications</a><a href="#contact">Contact</a><span class="slide" id="slide"></span></div>
   <a class="hire" href="https://calendly.com/dbrowntech15/30min" target="_blank" rel="noopener">Book a call</a>
   
 </div></nav>
@@ -794,7 +794,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
   <div class="bigname">DEDRIC BROWN</div>
   <div class="foot">
     <div>Contact Transmission<br>dedric.brown55@gmail.com &middot; <a href="https://www.linkedin.com/in/dbrowntech" target="_blank" rel="noopener">linkedin.com/in/dbrowntech</a></div>
-    <div><a href="https://www.linkedin.com/in/dbrowntech">LinkedIn</a> &middot; <a href="https://www.salesforce.com/trailblazer/dbrown6422">Trailblazer</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.pdf">Resume PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a> &middot; <a href="world/">3D World</a></div>
+    <div><a href="https://www.linkedin.com/in/dbrowntech">LinkedIn</a> &middot; <a href="https://www.salesforce.com/trailblazer/dbrown6422">Trailblazer</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.pdf">Resume PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a> &middot; <a href="world/">3D World</a> &middot; <a href="blog/">Blog</a></div>
     <div>&copy; 2026 Dedric Brown &middot; v1 &middot; September 2026</div>
   </div>
 </div></section>

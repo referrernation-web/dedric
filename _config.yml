@@ -1,0 +1,9 @@
+# Jekyll runs natively on GitHub Pages. The main site (index.html, world/) is prebuilt by build.py and copied as-is;
+# Jekyll only renders the blog (_posts, _layouts, blog/).
+title: Dedric Brown
+url: https://dedricbrown.com
+author: Dedric Brown
+permalink: /blog/:title/
+timezone: America/New_York
+plugins: [jekyll-sitemap]
+exclude: ["*.py", "__pycache__", "world/test", "README.md", ".pages.yml"]

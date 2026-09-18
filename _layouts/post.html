@@ -1,0 +1,16 @@
+---
+layout: blog
+---
+{% assign words = content | strip_html | number_of_words %}{% assign mins = words | divided_by: 200 | at_least: 1 %}
+<article class="art">
+  <a class="back" href="/blog/">&larr; All articles</a>
+  <h1>{{ page.title }}</h1>
+  {% if page.description %}<p class="dek">{{ page.description }}</p>{% endif %}
+  <div class="by"><img src="/assets/img/dedric-frame.webp" alt="Dedric Brown"><div><b>Dedric Brown</b><span class="meta"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%B %-d, %Y' }}</time> &middot; {{ mins }} min read</span></div></div>
+  {% if page.cover %}<img class="cover" src="{{ page.cover }}" alt="{{ page.cover_alt | default: page.title | escape }}">{% endif %}
+  <div class="prose">{{ content }}</div>
+  {% if page.tags.size > 0 %}<div class="tags">{% for t in page.tags %}<span>{{ t }}</span>{% endfor %}</div>{% endif %}
+  <aside class="abox"><img src="/assets/img/dedric-frame.webp" alt=""><div><b>Dedric Brown</b><p>Senior Salesforce Product Manager. I own CRM and go-to-market systems roadmaps and fix the data model before layering AI on top.</p></div><a class="cta" href="https://calendly.com/dbrowntech15/30min" target="_blank" rel="noopener">Book a call</a></aside>
+  {% unless page.hidden %}<nav class="pn">{% if page.previous and page.previous.hidden != true %}<a href="{{ page.previous.url }}"><small>&larr; Previous</small>{{ page.previous.title }}</a>{% else %}<span></span>{% endif %}{% if page.next and page.next.hidden != true %}<a href="{{ page.next.url }}"><small>Next &rarr;</small>{{ page.next.title }}</a>{% endif %}</nav>{% endunless %}
+</article>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":{{ page.title | jsonify }},"description":{{ page.description | jsonify }},"datePublished":"{{ page.date | date_to_xmlschema }}","image":"{{ site.url }}{{ page.cover | default: '/assets/og.jpg' }}","mainEntityOfPage":"{{ site.url }}{{ page.url }}","author":{"@type":"Person","name":"Dedric Brown","url":"{{ site.url }}/","sameAs":["https://www.linkedin.com/in/dbrowntech"]},"publisher":{"@type":"Person","name":"Dedric Brown"}}</script>

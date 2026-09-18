@@ -1,0 +1,29 @@
+# Pages CMS (https://app.pagescms.org) — the blog admin. Sign in with GitHub; only people with write access
+# to this repo (or invited by email from Pages CMS) can edit. Saving a post commits it here and GitHub Pages
+# publishes it in about a minute.
+media:
+  input: assets/blog
+  output: /assets/blog
+content:
+  - name: posts
+    label: Blog posts
+    type: collection
+    path: _posts
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, date, hidden]
+      primary: title
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: layout, type: string, hidden: true, default: post }
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: "Summary (shown under the title, in cards and on Google)", type: text }
+      - { name: date, label: Publish date, type: date, required: true }
+      - { name: cover, label: Cover image (16:9), type: image }
+      - { name: cover_alt, label: Cover image description, type: string }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: hidden, label: "Hidden (preview only: not listed, not indexed)", type: boolean, default: true }
+      - { name: body, label: Article, type: rich-text }

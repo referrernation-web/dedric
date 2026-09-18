@@ -1,0 +1,16 @@
+---
+layout: blog
+title: Blog
+description: Notes on Salesforce roadmaps, GTM business systems and putting AI on top of clean data, by Dedric Brown.
+---
+<header class="bhead wrap"><span class="mono">Field notes</span><h1>Writing on Salesforce, GTM systems &amp; AI</h1><p>What I have learned owning CRM roadmaps at NCR, Salesforce, Cloudflare and Centene, and building Blazer2Role.</p></header>
+<main class="wrap"><div class="grid">
+{% assign shown = site.posts | where_exp: "p", "p.hidden != true" %}
+{% for post in shown %}{% assign mins = post.content | strip_html | number_of_words | divided_by: 200 | at_least: 1 %}
+<a class="card{% if forloop.first and shown.size > 2 %} first{% endif %}" href="{{ post.url }}">
+  {% if post.cover %}<img src="{{ post.cover }}" alt="{{ post.cover_alt | default: post.title | escape }}" loading="lazy">{% else %}<div class="noimg">{{ post.tags | first | default: 'Article' }}</div>{% endif %}
+  <div class="in"><span class="meta">{{ post.date | date: '%b %-d, %Y' }} &middot; {{ mins }} min read</span><h2>{{ post.title }}</h2><p>{{ post.description | default: post.excerpt | strip_html | truncate: 150 }}</p></div>
+</a>
+{% endfor %}
+{% if shown.size == 0 %}<div class="empty">First article coming soon.</div>{% endif %}
+</div></main>
