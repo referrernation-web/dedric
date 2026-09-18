@@ -24,7 +24,7 @@ PHOTO = ""
 HERO = webp("dedric-frame.jpg", 1280, 82)
 # ponytail: mp4s are served from GitHub Pages (referrernation-web.github.io/dedric/video/) because Replit static hosting ignores Range requests (no seeking, breaks iOS Safari). Do not rewrite those URLs to dedricbrown.com; move to a range-capable host if Pages is ever turned off.
 ABOUT = webp("headshot.jpg", 720, 82)
-THUMBS = {k: webp("thumb-" + k + ".jpg", 1280, 78) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email", "b2r-commerce"]}
+THUMBS = {k: webp("thumb-" + k + ".jpg", 1280, 78) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "sf-contracts", "b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email", "b2r-commerce"]}
 
 EXPERTISE = [
     ("01", "Product Strategy &amp; Roadmap Ownership",
@@ -57,22 +57,30 @@ FEATURED = [
      "Opportunity, order, billing and revenue recognition lived in two systems that never agreed. I owned the Salesforce-to-NetSuite integration end to end: external IDs and reconciliation rules first, then the roadmap.",
      "Time-to-insight down 40% &mdash; KPI dashboards adopted by 12+ teams; fewer manual handoffs at month-end close",
      ["Sales Cloud", "NetSuite", "External IDs", "Rev rec"], "cloudflare", "#career"),
-    ("AI GOVERNANCE • CENTENE", "Agentforce that clears a HIPAA gate",
-     "Prior authorization, benefits investigation and referral-to-therapy were the obvious AI targets, but the source data behind two of them could not be trusted yet. I built the readiness path before the use case.",
-     "Two workflows held back from production until the data was fixed &mdash; the ones that shipped carry controls Compliance can review",
-     ["Agentforce", "Einstein", "Health Cloud", "HIPAA"], "centene-ai", "#career"),
-    ("PROVIDER IDENTITY • CENTENE", "Three prescriber systems, one provider",
-     "ScriptMed (Inovalon), the Centene prescriber file and Symphony Health each described the same provider differently. I standardized the data models and keyed external IDs on the NPI.",
-     "One provider identity the roadmap can build on &mdash; the governance backbone for the CRM modernization",
-     ["Master data", "NPI", "Deduplication", "Governance"], "centene-id", "#career"),
     ("IDENTITY &amp; ACCESS • SALESFORCE", "SSO and MFA for 8,000 users",
      "Access-related incidents kept landing on $25M+ of regulated contracts. I stood up enterprise IAM frameworks, integrated IAM with the security stack and drove SSO/MFA to the full user base.",
      "Access incidents down 40% &mdash; 10+ critical findings closed, one access story for compliance and audit",
      ["IAM", "SSO", "MFA", "Zero trust"], "salesforce-iam", "#career"),
+    ("PROCESS OPTIMIZATION • SALESFORCE", "$15M+ in contracts protected through a migration",
+     "A high-stakes platform migration put $15M+ in enterprise contract value at risk right at renewal time. I reprioritized the roadmap around the customer workflows that could not break, and ran the migration in phases.",
+     "$15M+ in enterprise contract value protected &mdash; zero critical customer escalations during the migration",
+     ["Customer Platforms", "Marketing Cloud", "Risk management", "Migration"], "sf-contracts", "#career"),
     ("FOUNDER • BLAZER2ROLE", "Blazer2Role, the platform I founded",
-     "A career-transition platform for people moving into tech. I own product, roadmap and the build: React and Express on Postgres, Clerk auth, Stripe and CourseCreator360 commerce, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
+     "A career-transition platform for people moving into tech. I own product, roadmap and the build: React and Express on Postgres, Clerk auth, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
      "Courses run as modules and lessons with quizzes, 90% watch-through soft gating and auto-issued certificates &mdash; live at blazer2role.com",
      ["Founder", "LMS", "Clerk", "Stripe", "Postgres"], "b2r-platform", "https://blazer2role.com"),
+    ("AI AUTOMATION • BLAZER2ROLE", "AI Resume Scorer",
+     "The free lead magnet on the homepage. Claude scores a resume for ATS fit and transition readiness against admin-tunable criteria weights, shows a few free insights and gates the rest behind the paid track.",
+     "Claude-scored and admin-tunable, with an OpenAI fallback &mdash; every score saved for coaching follow-up",
+     ["Claude API", "ATS scoring", "Lead magnet", "Admin config"], "b2r-resume", "https://blazer2role.com"),
+    ("AI AUTOMATION • BLAZER2ROLE", "Job Radar",
+     "Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each posting for career-changer fit against the student&rsquo;s latest resume scan. Salary ranges roll up into a live histogram.",
+     "Daily rescan caps and saved leads per student &mdash; job data the coaching calls can point at",
+     ["Firecrawl", "AI fit scoring", "Salary data", "Subscriptions"], "b2r-jobradar", "https://blazer2role.com"),
+    ("AUTOMATION • BLAZER2ROLE", "Email automation engine",
+     "Event-triggered rules for signup, payment and manual sends, with merge-field templates and database-enforced exactly-once delivery, plus broadcasts with signed unsubscribe links. Booking reminders run on a scheduler.",
+     "Exactly-once delivery enforced in the database &mdash; no double sends, no lost follow-ups",
+     ["Resend", "Event rules", "Exactly-once", "Broadcasts"], "b2r-email", "https://blazer2role.com"),
 ]
 
 # In-depth case study shown when a card opens. (role line, situation, what I did, skills shown, results)
@@ -86,22 +94,6 @@ DEEP = {
          "Paired every enhancement and automation framework with outcome-focused release notes to drive adoption."],
         ["Roadmap ownership", "ERP integration design", "SAFe PI planning", "Data integrity &amp; external IDs", "UAT &amp; release management", "Finance &amp; Sales Ops stakeholder alignment"],
         ["Time-to-insight cut 40%; dashboards adopted by 12+ teams", "Platform adoption up 35%", "Post-launch defects down 20%, feature delivery 15% faster", "Better data integrity and a faster month-end close"]),
-    "centene-ai": ("Senior Salesforce Product Manager &middot; Centene (Fortune 500, 27M+ members) &middot; Jan 2026 &ndash; Present",
-        "Prior authorization, benefits investigation and referral-to-therapy were the obvious AI targets for the specialty pharmacy and managed care lines. But the org was a 10-year-old call-logging system, and the source data behind some of those workflows could not be trusted yet. In a HIPAA-regulated business, automating on bad data is a compliance problem, not a quick win.",
-        ["Own the AI enablement roadmap: evaluate Agentforce, Einstein and predictive models against each clinical workflow.",
-         "Gate every use case on data readiness before automation and AI, so nothing ships on records Compliance cannot stand behind.",
-         "Define requirements and prioritize the Health Cloud backlog with IT, Clinical Operations and Compliance.",
-         "Drive the transformation from call logging to a structured CRM: lead-to-opportunity pipeline, stage exit criteria and a forecastable view for leadership."],
-        ["AI product strategy", "Agentforce &amp; Einstein evaluation", "Data-readiness gating", "HIPAA-aware governance", "Health Cloud roadmap", "Cross-functional prioritization"],
-        ["Two workflows held back from production until their data was fixed", "The use cases that shipped carry controls Compliance can review", "Operating rule proven in practice: fix the data model and automation before layering AI on top"]),
-    "centene-id": ("Senior Salesforce Product Manager &middot; Centene &middot; Jan 2026 &ndash; Present",
-        "ScriptMed (Inovalon), the Centene prescriber file and Symphony Health each described the same provider differently. Duplicate provider and member records meant no report, no pipeline and no AI use case could be trusted, and every roadmap item downstream depended on fixing it.",
-        ["Standardized the provider and member data models across the three source systems.",
-         "Implemented National Provider Identifier (NPI)-keyed external IDs so each provider resolves to one record regardless of source.",
-         "Eliminated duplicate records and set the rules that keep them from coming back.",
-         "Established this as the data governance backbone the rest of the CRM modernization builds on."],
-        ["Master data management", "Data modeling", "External ID strategy", "Deduplication", "Data governance", "Healthcare data (NPI)"],
-        ["One provider identity across ScriptMed, Centene prescriber and Symphony Health data", "Duplicate records eliminated", "The governance backbone for the Health Cloud roadmap and every AI use case gated on it"]),
     "salesforce-iam": ("Product Manager, Identity &amp; Security &middot; Salesforce &middot; Jan 2020 &ndash; Jun 2021",
         "Access-related incidents kept landing on $25M+ of regulated enterprise contracts. Identity and access processes differed between environments, so compliance and audit had no single access story to point to.",
         ["Ran the enterprise identity and access management (IAM) program: SSO and MFA rollout across 8,000+ users.",
@@ -110,16 +102,46 @@ DEEP = {
          "Standardized identity and access processes across regulated environments for compliance, risk management and platform governance."],
         ["Security product management", "IAM, SSO &amp; MFA", "Large-scale rollout &amp; change management", "Compliance &amp; risk", "Platform governance"],
         ["Access-related incidents down 40%", "10+ critical security vulnerabilities remediated", "SSO/MFA live for 8,000+ users", "One access story for compliance and audit"]),
+    "sf-contracts": ("Product Manager, Customer Platforms &middot; Salesforce &middot; Jun 2021 &ndash; Apr 2023",
+        "A high-stakes platform migration placed $15M+ in enterprise contract value at risk, with the potential for service disruptions that could erode customer trust at a pivotal renewal period. It demanded precise coordination across engineering, customer success and senior business stakeholders, on aggressive timelines with no margin for critical failures.",
+        ["Built a risk-based roadmap reprioritization framework that identified the critical customer workflows first.",
+         "Sequenced the migration in phases to minimize disruption for health-insurance and commercial partner accounts.",
+         "Set up proactive communication channels with enterprise stakeholders so nobody learned about a change from an outage.",
+         "Ran a dedicated war room for real-time issue escalation and resolution, so no customer-impacting gap fell through the cracks.",
+         "Worked across Enterprise Customer Success, Engineering Leadership, the Customer Platforms team and Legal/Compliance."],
+        ["Roadmap reprioritization", "Risk management", "Migration planning", "Executive &amp; customer stakeholder management", "Process optimization", "Customer Platforms &amp; Marketing Cloud"],
+        ["$15M+ in enterprise contract value protected", "Zero critical customer escalations during the migration", "Improved campaign performance metrics", "Stronger enterprise customer trust and retention"]),
+    "b2r-resume": ("Founder &middot; Blazer2Role &middot; AI Resume Scorer",
+        "Career changers do not know how their resume reads to an applicant tracking system, and a generic score does not tell them what to fix. Blazer2Role needed a free, useful first step that also shows who is ready for coaching.",
+        ["Designed the scorer as the free lead magnet on the homepage.",
+         "Claude scores each resume for ATS fit and transition readiness against criteria weights an admin can tune without a deploy.",
+         "Shows a few free insights and gates the rest behind the paid track.",
+         "Added an OpenAI fallback so scoring stays up, and saved every score for coaching follow-up."],
+        ["AI product design", "Claude API", "Scoring criteria design", "Lead-generation funnel", "Admin configurability"],
+        ["Claude-scored and admin-tunable, with an OpenAI fallback", "Every score saved for coaching follow-up", "A free tool that feeds the paid track"]),
+    "b2r-jobradar": ("Founder &middot; Blazer2Role &middot; Job Radar",
+        "Students were searching nine job boards by hand and guessing which postings fit a career changer. Coaching calls had no shared job data to point at.",
+        ["Firecrawl searches and extracts postings from nine job boards.",
+         "An AI pass scores each posting for career-changer fit against the student&rsquo;s latest resume scan.",
+         "Salary ranges roll up into a live histogram.",
+         "Daily rescan caps and saved leads per student keep usage and cost under control."],
+        ["AI fit scoring", "Data extraction (Firecrawl)", "Product analytics", "Usage &amp; cost controls", "Subscription features"],
+        ["Nine job boards searched and scored automatically", "Saved leads per student", "Job data the coaching calls can point at"]),
+    "b2r-email": ("Founder &middot; Blazer2Role &middot; Email automation engine",
+        "A learning platform sends signup, payment, reminder and broadcast email. Double sends and lost follow-ups are the two ways that goes wrong, and both cost trust.",
+        ["Event-triggered rules for signup, payment and manual sends, with merge-field templates.",
+         "Exactly-once delivery enforced in the database, not in application code.",
+         "Broadcasts with signed unsubscribe links.",
+         "Booking reminders run on a scheduler."],
+        ["Automation design", "Event-driven architecture", "Data integrity", "Lifecycle messaging", "Resend"],
+        ["Exactly-once delivery enforced in the database", "No double sends, no lost follow-ups"]),
     "b2r-platform": ("Founder &middot; Blazer2Role &middot; 2025 &ndash; Present &middot; live at blazer2role.com",
         "People moving into tech mid-career get generic advice and no system. I founded Blazer2Role to give them one: Salesforce and Agentforce coursework, coaching, and AI-assisted resume scanning and job matching. I own product, roadmap and the build.",
         ["Platform: React and Express on Postgres with Clerk auth, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
          "Learning: courses run as modules and lessons with quizzes, 90% watch-through soft gating and auto-issued certificates with a signed public verification link.",
-         "AI Resume Scorer: Claude scores a resume for ATS fit and transition readiness against admin-tunable criteria weights, with an OpenAI fallback; every score is saved for coaching follow-up.",
-         "Job Radar: Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each for career-changer fit against the student&rsquo;s latest resume scan; salary ranges roll up into a live histogram.",
-         "Email automation: event-triggered rules for signup, payment and manual sends, with database-enforced exactly-once delivery, broadcasts with signed unsubscribe links and scheduled booking reminders.",
-         "Commerce: Stripe and CourseCreator360 webhooks are verified, mapped to package entitlements and coaching credits, and logged for replay; entitlements are enforced server-side."],
-        ["0-to-1 product ownership", "AI product design (Claude API)", "LMS &amp; commerce architecture", "Automation design", "Roadmap &amp; prioritization", "Hands-on delivery"],
-        ["A live product: courses, coaching, AI resume scoring and job matching in one platform", "AI features that feed the coaching calls, not just a demo", "No double sends, no lost follow-ups, one webhook path for payments, memberships and refunds"]),
+         "AI and automation on top: the AI Resume Scorer, Job Radar and the email automation engine, each its own case study in this section."],
+        ["0-to-1 product ownership", "AI product design (Claude API)", "LMS architecture", "Automation design", "Roadmap &amp; prioritization", "Hands-on delivery"],
+        ["A live product: courses, coaching, AI resume scoring and job matching in one platform", "AI features that feed the coaching calls, not just a demo", "One founder owning product, roadmap and delivery end to end"]),
 }
 
 
@@ -129,6 +151,10 @@ def deep_html(slug):
     return ('<p class="drole">' + role + '</p><h4>The situation</h4><p>' + situation + '</p><h4>What I did</h4><ul>' + li(did) +
             '</ul><h4>Skills this shows</h4><div class="tags">' + pills(skills) + '</div><h4>Results</h4><ul class="dres">' + li(results) + "</ul>")
 
+
+# Card slug -> category heading, in display order.
+GROUPS = [("Salesforce &amp; Enterprise Systems", ["cloudflare", "salesforce-iam", "sf-contracts"]),
+          ("Blazer2Role &middot; Founder &amp; AI Builds", ["b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email"])]
 
 SYSLOG = [
     ("Centene &middot; Health Cloud roadmap", "Specialty pharmacy and managed care &middot; 27.6M members &middot; since Jan 2026", "Current", "#career"),
@@ -182,15 +208,17 @@ for gname, icons in SKILL_GROUPS:
         for slug, label in icons)
     skills_html += '<div class="sgroup"><h3>' + gname + '</h3><div class="igrid">' + cells + "</div></div>"
 
-LQ = {k: __import__("patch8_lqip").lqip(A / ("thumb-" + k + ".jpg")) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email", "b2r-commerce"]}
-feat_html = ""
+LQ = {k: __import__("patch8_lqip").lqip(A / ("thumb-" + k + ".jpg")) for k in ["cloudflare", "centene-ai", "centene-id", "salesforce-iam", "sf-contracts", "b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email", "b2r-commerce"]}
+CARD = {}
 for cat, title, desc, ev, tags, thumb, url in FEATURED:
     shot = ('<div class="shot"><img class="lq" src="data:image/jpeg;base64,' + LQ[thumb] + '" data-src="' + THUMBS[thumb] + '" alt="' + title + '" loading="lazy" decoding="async"></div>'
             if thumb and THUMBS.get(thumb) else '<div class="shot noimg"><span>' + url.replace("https://", "") + "</span></div>")
     slug = (thumb or url.replace("https://", "").split(".")[0])
-    feat_html += ('<article class="proj glow tilt" data-slug="' + slug + '" data-title="' + title + '" data-cat="' + cat + '" data-desc="' + desc.replace('"', '&quot;') + '" data-ev="' + ev.replace('"', '&quot;') + '" data-tags="' + ", ".join(tags) + '" data-url="' + url + '" tabindex="0" role="button" aria-haspopup="dialog">' + shot + '<div class="cat">' + cat + "</div><h3>" + title + "</h3><p>" + desc +
+    CARD[slug] = ('<article class="proj glow tilt" data-slug="' + slug + '" data-title="' + title + '" data-cat="' + cat + '" data-desc="' + desc.replace('"', '&quot;') + '" data-ev="' + ev.replace('"', '&quot;') + '" data-tags="' + ", ".join(tags) + '" data-url="' + url + '" tabindex="0" role="button" aria-haspopup="dialog">' + shot + '<div class="cat">' + cat + "</div><h3>" + title + "</h3><p>" + desc +
                   '</p><div class="ev">' + ev + '</div><div class="tags">' + pills(tags) +
                   '</div><span class="visit">Open full case study &rarr;</span><template class="deep">' + deep_html(slug) + '</template></article>')
+
+feat_html = "".join('<h3 class="pcat">' + g + '</h3><div class="pgrid">' + "".join(CARD[k] for k in ks) + "</div>" for g, ks in GROUPS)
 
 syslog_html = "".join(
     '<a class="lrow hv" href="' + url + '" target="_blank" rel="noopener"><div><b>' + t + "</b><span>" + d +
@@ -410,6 +438,7 @@ html[data-theme=light] .icon img{filter:invert(1)}
 .icon span{font:500 11px/1.2 'JetBrains Mono',monospace;color:var(--mut);text-align:center}
 .icon.noico img{display:none}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pcat{font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#AAFF00;margin:34px 0 16px;padding-left:12px;border-left:3px solid #6C2BD9}
 .proj{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column}
 .shot{border-radius:11px;overflow:hidden;border:1px solid var(--line);margin-bottom:15px;aspect-ratio:720/380;background:#0a0a0a}
 .shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;opacity:.94;transition:filter .5s}.shot img.lq{filter:blur(14px);transform:scale(1.06)}
@@ -743,8 +772,8 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
 
 <section id="projects" class="lz"><div class="wrap">
   <div class="shead center"><span class="mono">FEATURED WORK</span><h2>Case Studies That Define the Work</h2>
-  <p>Five projects. Open any one for the full overview: the situation, what I did, the skills it took and the result.</p></div>
-  <div class="pgrid">""" + feat_html + """</div>
+  <p>Grouped by where the work happened. Open any project for the full overview: the situation, what I did, the skills it took and the result.</p></div>
+  """ + feat_html + """
   <div class="syslog">
     <h3>Roles &amp; Other Engagements</h3>
     """ + syslog_html + """
