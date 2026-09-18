@@ -815,7 +815,7 @@ body.modal-open .hero video,body.modal-open .proofband{filter:blur(6px) saturate
   </div>
   <div class="bigname">DEDRIC BROWN</div>
   <div class="foot">
-    <div>Contact Transmission<br>dedric.brown55@gmail.com &middot; 470-262-7774</div>
+    <div>Contact Transmission<br>dedric.brown55@gmail.com &middot; <a href="https://www.linkedin.com/in/dbrowntech" target="_blank" rel="noopener">linkedin.com/in/dbrowntech</a></div>
     <div><a href="https://www.linkedin.com/in/dbrowntech">LinkedIn</a> &middot; <a href="https://www.salesforce.com/trailblazer/dbrown6422">Trailblazer</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.pdf">Resume PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a> &middot; <a href="world/">3D World</a></div>
     <div>&copy; 2026 Dedric Brown &middot; v1 &middot; September 2026</div>
   </div>

@@ -7,7 +7,7 @@ P = HERE / "build.py"
 s = P.read_text(encoding="utf-8")
 assert "Mark Edcel" in s, "build.py is not the fresh copy of Mark's"
 
-EMAIL, PHONE = "dedric.brown55@gmail.com", "470-262-7774"
+EMAIL, PHONE = "dedric.brown55@gmail.com", ""  # phone removed at Dedric's request (Sept 2026); LinkedIn shown instead
 LI, TB, CAL = "https://www.linkedin.com/in/dbrowntech", "https://www.salesforce.com/trailblazer/dbrown6422", "https://calendly.com/dbrowntech15/30min"
 BASE = "https://dedricbrown.com/"
 PDF = "assets/Dedric-Brown-Resume-2026.pdf"
@@ -218,7 +218,7 @@ one(r'<div class="cinfo">\n.*?\n    </div>', f'''<div class="cinfo">
     </div>''', True)
 one('<div class="bigname">MARK EDCEL</div>', '<div class="bigname">DEDRIC BROWN</div>')
 one(r'<div class="foot">\n.*?\n  </div>', f'''<div class="foot">
-    <div>Contact Transmission<br>{EMAIL} &middot; {PHONE}</div>
+    <div>Contact Transmission<br>{EMAIL}</div>
     <div><a href="{LI}">LinkedIn</a> &middot; <a href="{TB}">Trailblazer</a> &middot; <a href="{PDF}">Resume PDF</a> &middot; <a href="assets/Dedric-Brown-Resume-2026.docx" download>Resume DOCX</a> &middot; <a href="world/">3D World</a></div>
     <div>&copy; 2026 Dedric Brown &middot; v1 &middot; September 2026</div>
   </div>''', True)
