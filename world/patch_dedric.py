@@ -70,13 +70,13 @@ contact:{k:'ST. LOUIS · CONTACT',t:'Let’s talk about your roadmap',h:'<p><b>S
 one(r"var DATA=\{\n.*?\n\};\n", DATA, re.S, True)
 
 PROJECTS = r"""var PROJECTS=[
-['Called When It Breaks','hero','The welcome video. You are the one they call when it breaks; that is not a job title, that is a career.','../video/hero.mp4',['31s','approved welcome video','Dedric, Sept 2026']],
-['Why Tech, Part 1','whytech1','Thinking about a career in tech but not sure it is for you?','../video/whytech1.mp4',['1 / 5','Why Tech series','published Sept 1, 2026']],
-['Why Tech, Part 2','whytech2','Feeling stuck in a job that pays the bills but not much else?','../video/whytech2.mp4',['2 / 5','Why Tech series','published Sept 1, 2026']],
-['Why Tech, Part 3','whytech3','No degree? No experience? Here is what tech actually asks for.','../video/whytech3.mp4',['3 / 5','Why Tech series','published Sept 2, 2026']],
-['Why Tech, Part 4','whytech4','The tech industry does not care where you started.','../video/whytech4.mp4',['4 / 5','Why Tech series','published Sept 2, 2026']],
-['Why Tech, Part 5','whytech5','Ready to make the jump? Start with the free resume scorer.','../video/whytech5.mp4',['5 / 5','Why Tech series','published Sept 3, 2026']],
-['Entry-Level Now Means You','topic01','PwC counted: AI-exposed entry-level roles are seven times more likely to ask for senior judgment.','../video/topic01.mp4',['7x','more likely to ask for senior skills','PwC AI Jobs Barometer 2026']]];
+['Called When It Breaks','hero','The welcome video. You are the one they call when it breaks; that is not a job title, that is a career.','https://referrernation-web.github.io/dedric/video/hero.mp4',['31s','approved welcome video','Dedric, Sept 2026']],
+['Why Tech, Part 1','whytech1','Thinking about a career in tech but not sure it is for you?','https://referrernation-web.github.io/dedric/video/whytech1.mp4',['1 / 5','Why Tech series','published Sept 1, 2026']],
+['Why Tech, Part 2','whytech2','Feeling stuck in a job that pays the bills but not much else?','https://referrernation-web.github.io/dedric/video/whytech2.mp4',['2 / 5','Why Tech series','published Sept 1, 2026']],
+['Why Tech, Part 3','whytech3','No degree? No experience? Here is what tech actually asks for.','https://referrernation-web.github.io/dedric/video/whytech3.mp4',['3 / 5','Why Tech series','published Sept 2, 2026']],
+['Why Tech, Part 4','whytech4','The tech industry does not care where you started.','https://referrernation-web.github.io/dedric/video/whytech4.mp4',['4 / 5','Why Tech series','published Sept 2, 2026']],
+['Why Tech, Part 5','whytech5','Ready to make the jump? Start with the free resume scorer.','https://referrernation-web.github.io/dedric/video/whytech5.mp4',['5 / 5','Why Tech series','published Sept 3, 2026']],
+['Entry-Level Now Means You','topic01','PwC counted: AI-exposed entry-level roles are seven times more likely to ask for senior judgment.','https://referrernation-web.github.io/dedric/video/topic01.mp4',['7x','more likely to ask for senior skills','PwC AI Jobs Barometer 2026']]];
 """
 one(r"var PROJECTS=\[\n.*?\]\]\];\n", PROJECTS, re.S, True)
 one(r"DATA\.projects\.h=.*?\n",
@@ -239,7 +239,7 @@ one("a.play().catch(function(){subEl.classList.remove('on')})", "a.play().catch(
 # rider lines (were Tagalog, Dianna's voice) -> Dedric's own asides
 one(r"var DL=\{.*?\};", "var DL={home:'Atlanta first. Home base, and where every one of these roles happened.',journey:'Five roles. Same knot each time: two teams, two systems, one truth to build.',expertise:'Four things I do. The tower is the Salesforce years.',skills:'The stack behind the roadmap. Racks, not slides.',projects:'The talks I recorded. Press Enter on a board to play one.',certs:'Fourteen banners. Nine are Salesforce.',contact:'Book a call, or press Enter on a pad. I read every message.'};", re.S, True)
 one("q.fillText('HERO REEL',256,130);", "q.fillText('INTRO REEL',256,130);")
-one("v.src='../video/heroreel.mp4';", "v.src='../video/intro.mp4';")
+one("v.src='https://referrernation-web.github.io/dedric/video/heroreel.mp4';", "v.src='https://referrernation-web.github.io/dedric/video/intro.mp4';")
 s = s.replace("Manila and come back", "Atlanta and come back").replace("Manila circuit", "Atlanta circuit").replace("Manila playground", "Atlanta playground").replace("Manila plaza", "Atlanta plaza").replace("Manila to every landmark", "Atlanta to every landmark")
 
 # ---------------------------------------------------------------- palette + names
