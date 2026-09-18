@@ -73,14 +73,6 @@ FEATURED = [
      "The free lead magnet on the homepage. Claude scores a resume for ATS fit and transition readiness against admin-tunable criteria weights, shows a few free insights and gates the rest behind the paid track.",
      "Claude-scored and admin-tunable, with an OpenAI fallback &mdash; every score saved for coaching follow-up",
      ["Claude API", "ATS scoring", "Lead magnet", "Admin config"], "b2r-resume", "https://blazer2role.com"),
-    ("AI AUTOMATION • BLAZER2ROLE", "Job Radar",
-     "Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each posting for career-changer fit against the student&rsquo;s latest resume scan. Salary ranges roll up into a live histogram.",
-     "Daily rescan caps and saved leads per student &mdash; job data the coaching calls can point at",
-     ["Firecrawl", "AI fit scoring", "Salary data", "Subscriptions"], "b2r-jobradar", "https://blazer2role.com"),
-    ("AUTOMATION • BLAZER2ROLE", "Email automation engine",
-     "Event-triggered rules for signup, payment and manual sends, with merge-field templates and database-enforced exactly-once delivery, plus broadcasts with signed unsubscribe links. Booking reminders run on a scheduler.",
-     "Exactly-once delivery enforced in the database &mdash; no double sends, no lost follow-ups",
-     ["Resend", "Event rules", "Exactly-once", "Broadcasts"], "b2r-email", "https://blazer2role.com"),
 ]
 
 # In-depth case study shown when a card opens. (role line, situation, what I did, skills shown, results)
@@ -119,27 +111,13 @@ DEEP = {
          "Added an OpenAI fallback so scoring stays up, and saved every score for coaching follow-up."],
         ["AI product design", "Claude API", "Scoring criteria design", "Lead-generation funnel", "Admin configurability"],
         ["Claude-scored and admin-tunable, with an OpenAI fallback", "Every score saved for coaching follow-up", "A free tool that feeds the paid track"]),
-    "b2r-jobradar": ("Founder &middot; Blazer2Role &middot; Job Radar",
-        "Students were searching nine job boards by hand and guessing which postings fit a career changer. Coaching calls had no shared job data to point at.",
-        ["Firecrawl searches and extracts postings from nine job boards.",
-         "An AI pass scores each posting for career-changer fit against the student&rsquo;s latest resume scan.",
-         "Salary ranges roll up into a live histogram.",
-         "Daily rescan caps and saved leads per student keep usage and cost under control."],
-        ["AI fit scoring", "Data extraction (Firecrawl)", "Product analytics", "Usage &amp; cost controls", "Subscription features"],
-        ["Nine job boards searched and scored automatically", "Saved leads per student", "Job data the coaching calls can point at"]),
-    "b2r-email": ("Founder &middot; Blazer2Role &middot; Email automation engine",
-        "A learning platform sends signup, payment, reminder and broadcast email. Double sends and lost follow-ups are the two ways that goes wrong, and both cost trust.",
-        ["Event-triggered rules for signup, payment and manual sends, with merge-field templates.",
-         "Exactly-once delivery enforced in the database, not in application code.",
-         "Broadcasts with signed unsubscribe links.",
-         "Booking reminders run on a scheduler."],
-        ["Automation design", "Event-driven architecture", "Data integrity", "Lifecycle messaging", "Resend"],
-        ["Exactly-once delivery enforced in the database", "No double sends, no lost follow-ups"]),
     "b2r-platform": ("Founder &middot; Blazer2Role &middot; 2025 &ndash; Present &middot; live at blazer2role.com",
         "People moving into tech mid-career get generic advice and no system. I founded Blazer2Role to give them one: Salesforce and Agentforce coursework, coaching, and AI-assisted resume scanning and job matching. I own product, roadmap and the build.",
         ["Platform: React and Express on Postgres with Clerk auth, Google Cloud storage and about 33 admin screens for courses, pricing, pages, blog and integrations.",
          "Learning: courses run as modules and lessons with quizzes, 90% watch-through soft gating and auto-issued certificates with a signed public verification link.",
-         "AI and automation on top: the AI Resume Scorer, Job Radar and the email automation engine, each its own case study in this section."],
+         "Job Radar: Firecrawl searches and extracts postings from nine job boards, then an AI pass scores each for career-changer fit against the student&rsquo;s latest resume scan; salary ranges roll up into a live histogram.",
+         "Email automation: event-triggered rules for signup, payment and manual sends, with database-enforced exactly-once delivery, broadcasts with signed unsubscribe links and scheduled booking reminders.",
+         "AI Resume Scorer: the free lead magnet on the homepage, covered in its own case study."],
         ["0-to-1 product ownership", "AI product design (Claude API)", "LMS architecture", "Automation design", "Roadmap &amp; prioritization", "Hands-on delivery"],
         ["A live product: courses, coaching, AI resume scoring and job matching in one platform", "AI features that feed the coaching calls, not just a demo", "One founder owning product, roadmap and delivery end to end"]),
 }
@@ -154,7 +132,7 @@ def deep_html(slug):
 
 # Card slug -> category heading, in display order.
 GROUPS = [("Salesforce &amp; Enterprise Systems", ["cloudflare", "salesforce-iam", "sf-contracts"]),
-          ("Blazer2Role &middot; Founder &amp; AI Builds", ["b2r-platform", "b2r-resume", "b2r-jobradar", "b2r-email"])]
+          ("Blazer2Role &middot; Founder &amp; AI Builds", ["b2r-platform", "b2r-resume"])]
 
 SYSLOG = [
     ("Centene &middot; Health Cloud roadmap", "Specialty pharmacy and managed care &middot; 27.6M members &middot; since Jan 2026", "Current", "#career"),
